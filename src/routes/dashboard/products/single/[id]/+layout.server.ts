@@ -11,12 +11,15 @@ import {
 	orderItems,
 	orders,
 	prices,
-	productImages
+	productImages,
+	tags,
+	productTags,
+	categoriesProducts
 } from '$lib/server/db/schema';
 import { eq, and, sql, isNotNull, desc, min } from 'drizzle-orm';
 import type { LayoutServerLoad } from './$types';
 
-export const load: LayoutServerLoad = async ({ params, locals }) => {
+export const load: LayoutServerLoad = async ({ params }) => {
 	const { id } = params;
 	const form = await superValidate(zod4(edit));
 	const adjustForm = await superValidate(zod4(adjust));
@@ -33,6 +36,12 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 		})
 		.from(productCategories)
 		.where(eq(productCategories.isActive, true));
+	const allTags = await db
+		.select({
+			value: tags.id,
+			name: tags.name
+		})
+		.from(tags);
 
 	const supplierList = await db
 		.select({
@@ -57,8 +66,6 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 			name: products.name,
 			price: min(prices.price),
 			description: products.description,
-			category: productCategories.name,
-			categoryId: productCategories.id,
 			quantity: products.quantity,
 			reorderLevel: products.reorderLevel,
 			supplier: suppliers.name,
@@ -69,7 +76,6 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 			createdAt: sql<string>`DATE_FORMAT(${products.createdAt}, '%Y-%m-%d')`
 		})
 		.from(products)
-		.leftJoin(productCategories, eq(productCategories.id, products.categoryId))
 		.leftJoin(prices, eq(prices.productId, products.id))
 		.leftJoin(suppliers, eq(suppliers.id, products.supplierId))
 		.leftJoin(orderItems, eq(products.id, orderItems.productId))
@@ -82,7 +88,6 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 			prices.price,
 			orderItems.quantity,
 			products.description,
-			productCategories.name,
 			products.quantity,
 			suppliers.name,
 			products.reorderLevel
@@ -106,6 +111,22 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 		})
 		.from(productCategories);
 
+	const tagged = await db
+		.select({
+			value: tags.id,
+			name: tags.name
+		})
+		.from(tags)
+		.innerJoin(productTags, eq(productTags.productId, Number(id)));
+	const categorized = await db
+		.select({
+			value: productCategories.id,
+			name: productCategories.name,
+			description: productCategories.description
+		})
+		.from(productCategories)
+		.innerJoin(categoriesProducts, eq(categoriesProducts.productId, Number(id)));
+
 	return {
 		product,
 		form,
@@ -118,6 +139,9 @@ export const load: LayoutServerLoad = async ({ params, locals }) => {
 		images,
 		priceList,
 		priceEdit,
-		priceAdd
+		priceAdd,
+		allTags,
+		tagged,
+		categorized
 	};
 };

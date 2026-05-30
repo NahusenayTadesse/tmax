@@ -30,7 +30,6 @@
 
 	let singleTable = $derived([
 		{ name: 'Name', value: data.product?.name },
-		{ name: 'Category', value: data.product.category },
 		{ name: 'Price', value: data.product?.price },
 		{ name: 'Available Quantity', value: data.product?.quantity },
 		{ name: 'Product Description', value: data.product?.description },
@@ -57,7 +56,8 @@
 	);
 
 	(($form.productName = data.product.name),
-		($form.category = data.product.categoryId),
+		($form.category = data.categorized.map((c) => c.value)),
+		($form.tag = data.tagged.map((c) => c.value)),
 		($form.commission = data.product.commission),
 		($form.description = data.product.description),
 		($form.productId = data.product.id),
@@ -201,7 +201,63 @@
 		</div>
 	{/if}
 	{#if editForm === false}
-		<div class="w-full p-4"><SingleTable {singleTable} /></div>
+		<div class="w-full p-4">
+			<SingleTable {singleTable} />
+			<section
+				class="mx-auto w-full max-w-4xl space-y-8 rounded-xl border border-border bg-background p-6 text-foreground"
+			>
+				<div class="space-y-4">
+					<div class="border-b border-border pb-2">
+						<h3 class="text-lg font-semibold tracking-tight text-foreground">Categories</h3>
+						<p class="text-sm text-muted-foreground">
+							The primary classifications for this product.
+						</p>
+					</div>
+
+					{#if data?.categorized.length === 0}
+						<p class="text-sm text-muted-foreground italic">No categories assigned.</p>
+					{:else}
+						<div class="grid gap-4 sm:grid-cols-2">
+							{#each data?.categorized as category (category.value)}
+								<div
+									class="rounded-lg border border-border bg-card p-4 text-card-foreground shadow-sm transition-colors hover:bg-accent/50"
+								>
+									<h4 class="text-sm font-medium text-foreground sm:text-base">
+										{category.name}
+									</h4>
+									{#if category.description}
+										<p class="mt-1 line-clamp-2 text-xs text-muted-foreground sm:text-sm">
+											{category.description}
+										</p>
+									{/if}
+								</div>
+							{/each}
+						</div>
+					{/if}
+				</div>
+
+				<div class="space-y-4">
+					<div class="border-b border-border pb-2">
+						<h3 class="text-lg font-semibold tracking-tight text-foreground">Tags</h3>
+						<p class="text-sm text-muted-foreground">Keywords and discoverability labels.</p>
+					</div>
+
+					{#if data?.tagged.length === 0}
+						<p class="text-sm text-muted-foreground italic">No tags assigned.</p>
+					{:else}
+						<div class="flex flex-wrap gap-2">
+							{#each data?.tagged as tag (tag.value)}
+								<span
+									class="inline-flex cursor-default items-center rounded-full border border-border bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground transition-colors hover:bg-secondary/80"
+								>
+									{tag.name}
+								</span>
+							{/each}
+						</div>
+					{/if}
+				</div>
+			</section>
+		</div>
 	{/if}
 	{#if editForm}
 		<div class="w-full p-4">
@@ -237,12 +293,22 @@
 				<InputComp
 					{form}
 					{errors}
-					type="select"
+					type="checkbox"
 					name="category"
 					label="Product Category"
 					placeholder="Enter Product Name"
 					required
 					items={data?.allCategories}
+				/>
+				<InputComp
+					{form}
+					{errors}
+					type="checkbox"
+					name="tag"
+					label="Product Tags"
+					placeholder="Enter Product Name"
+					required
+					items={data?.allTags}
 				/>
 
 				<InputComp

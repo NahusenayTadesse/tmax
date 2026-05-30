@@ -1,5 +1,5 @@
 <script lang="ts">
-	import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import * as Dialog from '$lib/components/ui/sheet/index.js';
 	import { Button, type ButtonVariant } from '$lib/components/ui/button/index.js';
 	import { Trash } from '@lucide/svelte';
 	import type { Snippet } from 'svelte';
@@ -11,7 +11,7 @@
 	let {
 		title,
 		children,
-		variant,
+		variant = 'default',
 		IconComp,
 
 		class: className = ''
@@ -38,12 +38,12 @@
 			</Button>
 		{/snippet}
 	</Dialog.Trigger>
-	<Dialog.Content class="w-lg! {className}">
+	<Dialog.Content class="w-full {className}">
 		<Dialog.Header>
 			<Dialog.Title>{title}</Dialog.Title>
 		</Dialog.Header>
-		<ScrollArea class="h-auto w-full! min-w-0!  px-2 pr-4" orientation="both">
-			<div class="h-auto max-h-96 w-full lg:max-h-[calc(100vh-10rem)]">
+		<ScrollArea class="h-[90vh] w-full! min-w-0! px-2  py-4 pr-4" orientation="both">
+			<div class="h-auto w-full">
 				{@render children()}
 			</div>
 		</ScrollArea>

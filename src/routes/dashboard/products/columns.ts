@@ -5,13 +5,36 @@ import DataTableSort from '$lib/components/Table/data-table-sort.svelte';
 import ImageViewer from '$lib/components/Table/image-viewer.svelte';
 import PriceList from './priceList.svelte';
 import CatList from './catList.svelte';
+import type { ColumnDef } from '@tanstack/table-core';
+import { Checkbox } from '$lib/components/ui/checkbox/index.js';
 
 export const columns = [
+	{
+		id: 'select',
+		accessorKey: 'id',
+		header: ({ table }) =>
+			renderComponent(Checkbox, {
+				checked: table.getIsAllPageRowsSelected(),
+				class: 'bg-primary text-foreground',
+				indeterminate: table.getIsSomePageRowsSelected() && !table.getIsAllPageRowsSelected(),
+				onCheckedChange: (value) => table.toggleAllPageRowsSelected(!!value),
+				'aria-label': 'Select all'
+			}),
+		cell: ({ row }) =>
+			renderComponent(Checkbox, {
+				class: 'bg-primary text-foreground',
+				checked: row.getIsSelected(),
+				onCheckedChange: (value) => row.toggleSelected(!!value),
+				'aria-label': 'Select row'
+			}),
+		enableSorting: false,
+		enableHiding: false
+	},
 	{
 		accessorKey: 'index',
 		header: '#',
 		cell: (info) => info.row.index + 1,
-		sortable: false
+		enableSorting: false
 	},
 
 	{

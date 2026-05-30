@@ -47,6 +47,7 @@
 					name: row.original.name,
 					position: row.original.position,
 					testimonial: row.original.testimonial,
+					avatar: row.original.avatar,
 					action: '?/edit',
 					data: data.editForm,
 					icon: false
@@ -100,6 +101,7 @@
 					name: row.original.name,
 					position: row.original.position,
 					testimonial: row.original.testimonial,
+					avatar: row.original.avatar,
 					action: '?/edit',
 					data: data.editForm,
 					icon: true

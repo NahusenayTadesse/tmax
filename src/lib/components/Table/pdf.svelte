@@ -81,16 +81,20 @@
 			</Button>
 		{/snippet}
 	</DropdownMenu.Trigger>
-	<DropdownMenu.Content align="end">
+	<DropdownMenu.Content class="flex w-auto flex-col gap-2 p-2">
 		<DropdownMenu.Item class="capitalize">
-			<Button variant="default" class="w-full justify-start gap-2" onclick={generatedPdf}>
-				<FileDown class="size-4 text-white dark:text-black" /> Download in PDF
-			</Button>
+			{#snippet child({ props })}
+				<Button {...props} variant="default" onclick={generatedPdf}>
+					<FileDown class="size-4 text-white dark:text-black" /> Download in PDF
+				</Button>
+			{/snippet}
 		</DropdownMenu.Item>
 		<DropdownMenu.Item class="capitalize">
-			<Button variant="default" class="w-full justify-start gap-2" onclick={exportTableToCSV}>
-				<Grid3x3 class="size-4 text-white dark:text-black" /> Export to CSV
-			</Button>
+			{#snippet child({ props })}
+				<Button {...props} variant="default" onclick={exportTableToCSV}>
+					<Grid3x3 class="size-4 text-white dark:text-black" /> Export to CSV
+				</Button>
+			{/snippet}
 		</DropdownMenu.Item>
 	</DropdownMenu.Content>
 </DropdownMenu.Root>

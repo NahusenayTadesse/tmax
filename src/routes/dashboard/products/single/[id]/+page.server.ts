@@ -43,7 +43,6 @@ export const actions: Actions = {
 					.set({
 						name: productName,
 						description,
-						categoryId: category,
 						quantity,
 						supplierId: supplier ? supplier : 1,
 						reorderLevel,

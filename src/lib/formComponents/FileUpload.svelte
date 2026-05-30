@@ -148,12 +148,12 @@
 				</Button>
 			</div>
 
-			<div class="overflow-hidden rounded-lg border bg-muted/30">
+			<div class="rounded-lg border bg-muted/30">
 				{#if image.toLowerCase().endsWith('.pdf')}
 					<iframe src="/files/{image}" class="h-64 w-full" frameborder="0" title="pdf-preview"
 					></iframe>
 				{:else}
-					<img src="/files/{image}" class="max-h-80 w-full object-contain" alt="Preview" />
+					<img src="/files/{image}" alt="Preview" class="h-full w-full object-cover" />
 				{/if}
 			</div>
 		</div>
@@ -200,8 +200,8 @@
 				{:else if $file[0]?.type.startsWith('image/')}
 					<img
 						src={URL.createObjectURL($file[0])}
-						class="max-h-80 w-full object-contain"
 						alt="Preview"
+						class="h-full w-full object-cover"
 					/>
 				{/if}
 			</div>

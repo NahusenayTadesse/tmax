@@ -9,7 +9,12 @@ import {
 } from '$lib/server/db/schema';
 import { eq, inArray } from 'drizzle-orm';
 import type { PageServerLoad } from '../$types';
+import { superValidate } from 'sveltekit-superforms';
+import { zod4 } from 'sveltekit-superforms/adapters';
+import { schema } from './schema';
 export const load: PageServerLoad = async () => {
+	const form = await superValidate(zod4(schema));
+
 	// First, get products
 	const productsData = await db
 		.select({
@@ -58,6 +63,7 @@ export const load: PageServerLoad = async () => {
 	}));
 
 	return {
-		productList
+		productList,
+		form
 	};
 };

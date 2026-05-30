@@ -101,6 +101,7 @@
 
 	import { toast } from 'svelte-sonner';
 	import InputComp from '$lib/formComponents/InputComp.svelte';
+	import DialogComp from '$lib/formComponents/DialogComp.svelte';
 	$effect(() => {
 		if ($message) {
 			if ($message.type === 'error') {
@@ -116,174 +117,149 @@
 <!-- <Tooltip.Provider>
     	<Tooltip.Root>
     		<Tooltip.Trigger class="{buttonVariants({ variant: 'ghost' })} justify-self-start p-0!"> -->
-<Dialog.Root bind:open>
-	<Dialog.Trigger class="flex w-auto flex-row items-center justify-center gap-2 border-0">
-		<Tooltip.Root>
-			<Tooltip.Trigger>
-				{#if icon}
-					<SquarePen /> Edit
-				{:else}
-					{customerName}
-				{/if}
-			</Tooltip.Trigger>
-			<Tooltip.Content>Edit {customerName}</Tooltip.Content>
-		</Tooltip.Root>
-	</Dialog.Trigger>
+<DialogComp
+	title={icon ? 'Edit' : customerName}
+	variant="ghost"
+	IconComp={icon ? SquarePen : undefined}
+>
+	<form
+		action="/dashboard/orders/?/edit"
+		use:enhance
+		method="post"
+		id="edit"
+		class="mt-4 flex flex-col gap-4"
+		enctype="multipart/form-data"
+	>
+		<Errors allErrors={$allErrors} />
+		<input type="hidden" name="id" value={$form.id} />
+		<InputComp label="Customer" name="customer" type="combo" {form} {errors} items={customerList} />
+		<div class="mb-4 flex justify-end">
+			<Button type="button" size="sm" class="gap-2" onclick={() => addProduct()}>
+				<Plus class="h-4 w-4" />
+				<span>Add Product</span>
+			</Button>
+		</div>
 
-	<Dialog.Content class="bg-background px-4">
-		<ScrollArea class="h-128 w-full px-2" orientation="both">
-			<Dialog.Header>
-				<Dialog.Title class="text-center text-4xl">Edit {customerName}</Dialog.Title>
-			</Dialog.Header>
-			<form
-				action="/dashboard/orders/?/edit"
-				use:enhance
-				method="post"
-				id="edit"
-				class="mt-4 flex flex-col gap-4"
-				enctype="multipart/form-data"
+		{#each $form.selectedProducts as product, i (product)}
+			<div
+				class="group relative mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all dark:border-white/10 dark:bg-white/5"
+				transition:fly={{ y: 20, duration: 200 }}
 			>
-				<Errors allErrors={$allErrors} />
-				<input type="hidden" name="id" value={$form.id} />
-				<InputComp
-					label="Customer"
-					name="customer"
-					type="combo"
-					{form}
-					{errors}
-					items={customerList}
-				/>
-				<div class="mb-4 flex justify-end">
-					<Button type="button" size="sm" class="gap-2" onclick={() => addProduct()}>
-						<Plus class="h-4 w-4" />
-						<span>Add Product</span>
+				<div
+					class="mb-4 flex items-center justify-between border-b border-slate-100 pb-2 dark:border-white/5"
+				>
+					<span class="text-xs font-bold tracking-widest text-muted-foreground uppercase">
+						Product Entry #{i + 1}
+					</span>
+
+					<Button
+						type="button"
+						variant="ghost"
+						size="sm"
+						class="h-8 w-8 rounded-full p-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+						onclick={() => {
+							$form.selectedProducts.splice(i, 1);
+							$form.selectedProducts = $form.selectedProducts;
+						}}
+					>
+						<X class="h-4 w-4" />
+						<span class="sr-only">Remove item</span>
 					</Button>
 				</div>
 
-				{#each $form.selectedProducts as product, i (product)}
-					<div
-						class="group relative mb-6 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all dark:border-white/10 dark:bg-white/5"
-						transition:fly={{ y: 20, duration: 200 }}
-					>
-						<div
-							class="mb-4 flex items-center justify-between border-b border-slate-100 pb-2 dark:border-white/5"
-						>
-							<span class="text-xs font-bold tracking-widest text-muted-foreground uppercase">
-								Product Entry #{i + 1}
-							</span>
-
-							<Button
-								type="button"
-								variant="ghost"
-								size="sm"
-								class="h-8 w-8 rounded-full p-0 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-								onclick={() => {
-									$form.selectedProducts.splice(i, 1);
-									$form.selectedProducts = $form.selectedProducts;
-								}}
-							>
-								<X class="h-4 w-4" />
-								<span class="sr-only">Remove item</span>
-							</Button>
-						</div>
-
-						<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
-							<div class="space-y-1.5">
-								<Label class="text-xs font-medium text-slate-500">Selling Product</Label>
-								<ComboboxComp
-									items={productList}
-									name="selectedProducts"
-									required={true}
-									bind:value={$form.selectedProducts[i].product}
-								/>
-								{#if $errors.selectedProducts?.[i]?.product}
-									<p class="text-[11px] font-medium text-destructive">
-										{$errors.selectedProducts[i].product}
-									</p>
-								{/if}
-							</div>
-
-							<div class="space-y-1.5">
-								<Label class="text-xs font-medium text-slate-500">Price Amount</Label>
-								<ComboboxComp
-									items={$form.selectedProducts[i].product
-										? priceList.filter(
-												(p) => Number(p.productId) === $form.selectedProducts[i].product
-											)
-										: [{ value: '', name: 'Select a product first' }]}
-									name="selectedProducts"
-									required={true}
-									bind:value={$form.selectedProducts[i].amount}
-								/>
-								{#if $errors.selectedProducts?.[i]?.amount}
-									<p class="text-[11px] font-medium text-destructive">
-										{$errors.selectedProducts[i].amount}
-									</p>
-								{/if}
-							</div>
-
-							<div class="space-y-1.5 lg:col-span-2">
-								<Label class="text-xs font-medium text-slate-500">Quantity</Label>
-								<Input
-									type="number"
-									min="1"
-									placeholder="Enter quantity..."
-									bind:value={$form.selectedProducts[i].quantity}
-								/>
-								{#if $errors.selectedProducts?.[i]?.quantity}
-									<p class="text-[11px] font-medium text-destructive">
-										{$errors.selectedProducts[i].quantity}
-									</p>
-								{/if}
-							</div>
-						</div>
+				<div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
+					<div class="space-y-1.5">
+						<Label class="text-xs font-medium text-slate-500">Selling Product</Label>
+						<ComboboxComp
+							items={productList}
+							name="selectedProducts"
+							required={true}
+							bind:value={$form.selectedProducts[i].product}
+						/>
+						{#if $errors.selectedProducts?.[i]?.product}
+							<p class="text-[11px] font-medium text-destructive">
+								{$errors.selectedProducts[i].product}
+							</p>
+						{/if}
 					</div>
-				{/each}
 
-				<InputComp
-					label="Status"
-					name="status"
-					type="select"
-					{form}
-					{errors}
-					items={[
-						{ value: 'pending', name: 'Pending' },
-						{ value: 'delivered', name: 'Delivered' },
-						{ value: 'cancelled', name: 'Cancelled' }
-					]}
-				/>
+					<div class="space-y-1.5">
+						<Label class="text-xs font-medium text-slate-500">Price Amount</Label>
+						<ComboboxComp
+							items={$form.selectedProducts[i].product
+								? priceList.filter((p) => Number(p.productId) === $form.selectedProducts[i].product)
+								: [{ value: '', name: 'Select a product first' }]}
+							name="selectedProducts"
+							required={true}
+							bind:value={$form.selectedProducts[i].amount}
+						/>
+						{#if $errors.selectedProducts?.[i]?.amount}
+							<p class="text-[11px] font-medium text-destructive">
+								{$errors.selectedProducts[i].amount}
+							</p>
+						{/if}
+					</div>
 
-				{#if $form.status === 'delivered'}
-					<InputComp
-						label="Payment Method"
-						name="paymentMethod"
-						type="combo"
-						{form}
-						{errors}
-						items={paymentMethodList}
-					/>
+					<div class="space-y-1.5 lg:col-span-2">
+						<Label class="text-xs font-medium text-slate-500">Quantity</Label>
+						<Input
+							type="number"
+							min="1"
+							placeholder="Enter quantity..."
+							bind:value={$form.selectedProducts[i].quantity}
+						/>
+						{#if $errors.selectedProducts?.[i]?.quantity}
+							<p class="text-[11px] font-medium text-destructive">
+								{$errors.selectedProducts[i].quantity}
+							</p>
+						{/if}
+					</div>
+				</div>
+			</div>
+		{/each}
 
-					<InputComp
-						label="Reciept"
-						name="reciept"
-						type="file"
-						{form}
-						{image}
-						{errors}
-						placeholder="Upload Screenshot or PDF of Reciept"
-					/>
-				{/if}
+		<InputComp
+			label="Status"
+			name="status"
+			type="select"
+			{form}
+			{errors}
+			items={[
+				{ value: 'pending', name: 'Pending' },
+				{ value: 'delivered', name: 'Delivered' },
+				{ value: 'cancelled', name: 'Cancelled' }
+			]}
+		/>
 
-				<Button type="submit" class="mt-4" form="edit">
-					{#if $delayed}
-						<LoadingBtn name="Saving Changes" />
-					{:else}
-						<Save class="h-4 w-4" />
+		{#if $form.status === 'delivered'}
+			<InputComp
+				label="Payment Method"
+				name="paymentMethod"
+				type="combo"
+				{form}
+				{errors}
+				items={paymentMethodList}
+			/>
 
-						Save Changes
-					{/if}
-				</Button>
-			</form>
-		</ScrollArea>
-	</Dialog.Content>
-</Dialog.Root>
+			<InputComp
+				label="Reciept"
+				name="reciept"
+				type="file"
+				{form}
+				{image}
+				{errors}
+				placeholder="Upload Screenshot or PDF of Reciept"
+			/>
+		{/if}
+
+		<Button type="submit" class="mt-4" form="edit">
+			{#if $delayed}
+				<LoadingBtn name="Saving Changes" />
+			{:else}
+				<Save class="h-4 w-4" />
+
+				Save Changes
+			{/if}
+		</Button>
+	</form>
+</DialogComp>
