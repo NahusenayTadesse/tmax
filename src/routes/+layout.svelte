@@ -25,16 +25,14 @@
 
 	import Header from '$lib/components/header.svelte';
 	import Footer from '$lib/components/footer.svelte';
+	import Cart from '$lib/components/floating-cart/cart.svelte';
+	import { setCart } from '$lib/hooks/cart.svelte'; // Adjust path
 
 	// This initializes the class and puts it into Svelte's context
 
 	let { data, children } = $props();
+	setCart();
 
-	// async function requestNotificationPermission() {
-	// 	if (!('Notification' in window)) return;
-	// 	await Notification.requestPermission();
-	// }
-	// let iconify = $state('h-6 w-6 animate-ping');
 	$effect(() => {
 		if (!$flash) return;
 		if (page.data.flash?.type === 'success') toast.success($flash.message);
@@ -61,9 +59,10 @@
 <ProgressBar color="#28b6f6" zIndex={1000} />
 
 {#if !page.url.pathname.startsWith('/dashboard')}
-	<Header data={data?.user} />
+	<Header data={data?.user ?? ''} />
 	{@render children()}
-	<!-- <Footer /> -->
+	<Footer />
+	<Cart />
 {:else}
 	{@render children()}
 {/if}

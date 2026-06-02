@@ -10,7 +10,8 @@ const ACCEPTED_FILE_TYPES = [
 ];
 
 export const add = z.object({
-	productName: z.string().min(1, { message: 'Product Name is required.' }),
+	productName: z.string().min(1, 'Product Name is required.'),
+	brand: z.string().min(1, 'Brand Name is required.'),
 	category: z.number('Category cannot be empty. Please select categories').array(),
 	tag: z.number('Tag cannot be empty. Please select tags').array().optional(),
 

@@ -26,7 +26,7 @@
 </script>
 
 <svelte:head>
-	<title>{data?.product.productName} | Amy Bakes</title>
+	<title>{data?.product.productName} |Tmax</title>
 	<meta name="description" content={data?.product.description?.substring(0, 160)} />
 
 	<meta property="og:type" content="product" />

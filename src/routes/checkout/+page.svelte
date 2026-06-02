@@ -195,7 +195,7 @@
 					{#if cart.items.length > 0}
 						<ScrollArea class="max-h-100 pr-4">
 							<div class="divide-y divide-border">
-								{#each cart.items as item (item.productId)}
+								{#each cart.items as item (item)}
 									<div class="py-3">
 										<CartItem {item} />
 									</div>

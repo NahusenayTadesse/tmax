@@ -49,6 +49,7 @@ export const paymentMethods = mysqlTable('payment_methods', {
 export const products = mysqlTable('products', {
 	id: int('id').primaryKey().autoincrement(),
 	name: varchar('name', { length: 50 }).notNull(),
+	brand: varchar('brand', { length: 100 }),
 	featuredImage: varchar('featured_image', { length: 255 }),
 	description: varchar('description', { length: 255 }),
 	quantity: int('quantity').notNull().default(0),

@@ -56,6 +56,7 @@
 	);
 
 	(($form.productName = data.product.name),
+		($form.brand = data.product.brand),
 		($form.category = data.categorized.map((c) => c.value)),
 		($form.tag = data.tagged.map((c) => c.value)),
 		($form.commission = data.product.commission),
@@ -288,6 +289,15 @@
 					name="productName"
 					label="Product Name"
 					placeholder="Enter Product Name"
+					required
+				/>
+				<InputComp
+					{form}
+					{errors}
+					type="text"
+					name="brand"
+					label="Brand"
+					placeholder="Enter Product Brand"
 					required
 				/>
 				<InputComp

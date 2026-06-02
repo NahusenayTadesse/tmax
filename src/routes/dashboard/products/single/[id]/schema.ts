@@ -11,6 +11,7 @@ const ACCEPTED_FILE_TYPES = [
 
 export const edit = z.object({
 	productName: z.string().min(1, { message: 'Product Name is required.' }),
+	brand: z.string().min(1, { message: 'Brand is required.' }),
 	category: z.number('Category cannot be empty. Please select a Category').array(),
 	tag: z.number('Tag cannot be empty. Please select a Tag').array().optional(),
 

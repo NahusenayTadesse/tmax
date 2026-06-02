@@ -65,6 +65,7 @@ export const actions: Actions = {
 
 		const {
 			productName,
+			brand,
 			category,
 			tag,
 			description,
@@ -87,6 +88,7 @@ export const actions: Actions = {
 				.values({
 					name: productName,
 					description,
+					brand,
 					quantity,
 					supplierId: supplier ? supplier : null,
 					reorderLevel,

@@ -31,7 +31,7 @@ export const actions: Actions = {
 			return fail(400, { form });
 		}
 
-		const { productName, category, description, quantity, supplier, reorderLevel, image } =
+		const { productName, brand, category, description, quantity, supplier, reorderLevel, image } =
 			form.data;
 
 		try {
@@ -43,8 +43,9 @@ export const actions: Actions = {
 					.set({
 						name: productName,
 						description,
+						brand,
 						quantity,
-						supplierId: supplier ? supplier : 1,
+						supplierId: supplier ? supplier : null,
 						reorderLevel,
 						updatedBy: locals?.user?.id,
 						featuredImage
@@ -56,9 +57,9 @@ export const actions: Actions = {
 					.set({
 						name: productName,
 						description,
-						categoryId: category,
+						brand,
 						quantity,
-						supplierId: supplier ? supplier : 1,
+						supplierId: supplier ? supplier : null,
 						reorderLevel,
 						updatedBy: locals?.user?.id
 					})

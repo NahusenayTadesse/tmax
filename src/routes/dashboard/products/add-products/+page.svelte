@@ -71,6 +71,16 @@
 			placeholder="Enter Product Name"
 			required
 		/>
+
+		<InputComp
+			{form}
+			{errors}
+			type="text"
+			name="brand"
+			label="Brand Name"
+			placeholder="Enter Brand Name"
+			required
+		/>
 		<InputComp
 			{form}
 			{errors}

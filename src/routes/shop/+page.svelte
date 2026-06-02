@@ -7,24 +7,39 @@
 	import Label from '$lib/components/ui/label/label.svelte';
 	import { goto } from '$app/navigation';
 	import { page as sveltePage } from '$app/state';
+	import Slider from '$lib/components/ui/slider/slider.svelte';
+	import { toast } from 'svelte-sonner';
 
 	let { data } = $props();
 
 	let searchQuery = $state(sveltePage.url.searchParams.get('search') ?? '');
-	let minPrice = $state(Number(sveltePage.url.searchParams.get('min')) || 0);
-	let maxPrice = $state(Number(sveltePage.url.searchParams.get('max')) || 2000);
+	let minPrice = $derived(Number(data?.priceRange?.minPrice) || 0);
+	let maxPrice = $derived(Number(data?.priceRange?.maxPrice));
+
+	let sliderPrices = $state([minPrice, maxPrice]);
 	let selectedCategories = $state(
 		sveltePage.url.searchParams.get('categories')?.split(',').filter(Boolean) ?? []
 	);
-
 	const hasActiveFilters = $derived(sveltePage.url.searchParams.toString() !== '');
 
 	// All unique categories from the current product list
-	const categories = $derived(
-		Array.from(new Set(data?.productList.map((p) => p.category).filter(Boolean))).sort()
+	const categories = $derived(data?.categories);
+
+	const brands = $derived(data?.brandList.map((b) => b.name));
+
+	const tags = $derived(data?.tagList);
+
+	let selectedTags = $state(
+		sveltePage.url.searchParams.get('tags')?.split(',').filter(Boolean) ?? []
+	);
+
+	let selectedBrands = $state(
+		sveltePage.url.searchParams.get('brands')?.split(',').filter(Boolean) ?? []
 	);
 
 	const isAllSelected = $derived(selectedCategories.length === 0);
+	const isAllTagsSelected = $derived(selectedTags.length === 0);
+	const isAllBrandsSelected = $derived(selectedBrands.length === 0);
 
 	function updateFilters(newParams: Record<string, string | number | undefined>) {
 		const newUrl = new URL(sveltePage.url);
@@ -42,11 +57,20 @@
 	function handleSearch() {
 		updateFilters({ search: searchQuery });
 	}
+	let debounceTimer = $state();
+	function handleSliderChange() {
+		clearTimeout(debounceTimer);
+
+		debounceTimer = setTimeout(() => {
+			applyPriceFilter();
+		}, 300);
+	}
 
 	function applyPriceFilter() {
+		toast.success('Price filter applied');
 		const newUrl = new URL(sveltePage.url);
-		newUrl.searchParams.set('min', minPrice.toString());
-		newUrl.searchParams.set('max', maxPrice.toString());
+		newUrl.searchParams.set('min', sliderPrices[0].toString());
+		newUrl.searchParams.set('max', sliderPrices[1].toString());
 		newUrl.searchParams.set('page', '1');
 		goto(newUrl, { keepFocus: true, noScroll: true });
 	}
@@ -67,10 +91,56 @@
 		goto(newUrl, { keepFocus: true, noScroll: true });
 	}
 
+	function applyBrandFilter(brand: string) {
+		if (selectedBrands.includes(brand)) {
+			selectedBrands = selectedBrands.filter((c) => c !== brand);
+		} else {
+			selectedBrands = [...selectedBrands, brand];
+		}
+		const newUrl = new URL(sveltePage.url);
+		if (selectedBrands.length > 0) {
+			newUrl.searchParams.set('brands', selectedBrands.join(','));
+		} else {
+			newUrl.searchParams.delete('brands');
+		}
+		newUrl.searchParams.set('page', '1');
+		goto(newUrl, { keepFocus: true, noScroll: true });
+	}
+
+	function applyTagFilter(tag: string) {
+		if (selectedTags.includes(tag)) {
+			selectedTags = selectedTags.filter((t) => t !== tag);
+		} else {
+			selectedTags = [...selectedTags, tag];
+		}
+		const newUrl = new URL(sveltePage.url);
+		if (selectedTags.length > 0) {
+			newUrl.searchParams.set('tags', selectedTags.join(','));
+		} else {
+			newUrl.searchParams.delete('tags');
+		}
+		newUrl.searchParams.set('page', '1');
+		goto(newUrl, { keepFocus: true, noScroll: true });
+	}
+
 	function clearCategories() {
 		selectedCategories = [];
 		const newUrl = new URL(sveltePage.url);
 		newUrl.searchParams.delete('categories');
+		goto(newUrl, { keepFocus: true, noScroll: true });
+	}
+
+	function clearBrands() {
+		selectedBrands = [];
+		const newUrl = new URL(sveltePage.url);
+		newUrl.searchParams.delete('brands');
+		goto(newUrl, { keepFocus: true, noScroll: true });
+	}
+
+	function clearTags() {
+		selectedTags = [];
+		const newUrl = new URL(sveltePage.url);
+		newUrl.searchParams.delete('tags');
 		goto(newUrl, { keepFocus: true, noScroll: true });
 	}
 
@@ -93,31 +163,16 @@
 	/>
 </svelte:head>
 
-<!-- Hero Banner -->
-<section
-	class="relative flex h-96 flex-col items-center justify-center overflow-hidden border-b bg-cover bg-center px-6 py-20 lg:px-8"
-	style="background-image: url('/tools (3).webp')"
->
-	<div class="absolute inset-0 bg-black/40"></div>
-	<div class="relative mx-auto max-w-4xl text-center">
-		<h1 class="scroll-m-20 text-4xl font-extrabold tracking-tight text-white lg:text-5xl">
-			Products & Solutions
-		</h1>
-		<p class="mt-6 text-2xl leading-8 font-bold text-gray-100 text-shadow-sm">
-			Professional-grade equipment and structured procurement models designed to meet high-frequency
-			industrial demands.
-		</p>
-	</div>
-</section>
-
 <div class="min-h-dvh bg-background pb-8 text-foreground transition-colors duration-300">
 	<!-- Sticky Header + Search -->
 	<header class="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-sm">
 		<div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
 			<div class="mb-6 flex items-center justify-between">
 				<div>
-					<h2 class="text-3xl font-bold">Shop</h2>
-					<p class="mt-1 text-muted-foreground">Industrial & Construction Supply Solutions</p>
+					<h2 class="text-3xl font-bold">Smartphones</h2>
+					<p class="mt-1 text-muted-foreground">
+						{Number(data?.productCount.count)} Powerbanks, {brands.length} brands - all warranty-backed
+					</p>
 				</div>
 				{#if hasActiveFilters}
 					<Button variant="outline" size="sm" onclick={resetFilters}>
@@ -151,46 +206,47 @@
 					<!-- Price Range -->
 					<div class="flex flex-col gap-4 border-b pb-6">
 						<h4 class="text-sm font-medium">Price Range</h4>
-						<div class="flex gap-2">
-							<div class="flex-1">
-								<Label class="mb-1 block text-xs text-muted-foreground">Min</Label>
-								<Input
-									type="number"
-									bind:value={minPrice}
-									onchange={applyPriceFilter}
-									class="h-9 text-sm"
-								/>
-							</div>
-							<div class="flex-1">
-								<Label class="mb-1 block text-xs text-muted-foreground">Max</Label>
-								<Input
-									type="number"
-									bind:value={maxPrice}
-									onchange={applyPriceFilter}
-									class="h-9 text-sm"
-								/>
-							</div>
-						</div>
-						<input
-							type="range"
-							bind:value={minPrice}
-							min="0"
-							max="2000"
-							onchange={applyPriceFilter}
-							class="h-2 w-full cursor-pointer appearance-none rounded-lg bg-muted accent-primary"
+						Showing Prices {sliderPrices[0]} - {sliderPrices[1]}
+						<Slider
+							type="multiple"
+							bind:value={sliderPrices}
+							step={1}
+							min={minPrice}
+							max={maxPrice}
+							onValueChange={handleSliderChange}
 						/>
-						<input
-							type="range"
-							bind:value={maxPrice}
-							min="0"
-							max="2000"
-							onchange={applyPriceFilter}
-							class="h-2 w-full cursor-pointer appearance-none rounded-lg bg-muted accent-primary"
-						/>
+
 						<div class="flex justify-between text-xs text-muted-foreground">
 							<span>{minPrice} ETB</span>
 							<span>{maxPrice} ETB</span>
 						</div>
+					</div>
+					<!-- Brands -->
+
+					<div class="flex flex-col gap-3">
+						<h4 class="text-sm font-medium">Brands</h4>
+						<div class="flex items-center gap-3">
+							<Checkbox
+								id="brand-all"
+								checked={isAllBrandsSelected}
+								onCheckedChange={clearBrands}
+								class="cursor-pointer"
+							/>
+							<Label for="category-all" class="flex-1 cursor-pointer text-sm">All</Label>
+						</div>
+						{#each brands as brand (brand)}
+							<div class="flex items-center gap-3">
+								<Checkbox
+									id={`brand-${brand}`}
+									checked={selectedBrands?.includes(brand)}
+									onCheckedChange={() => applyBrandFilter(brand)}
+									class="cursor-pointer"
+								/>
+								<Label for={`category-${brand}`} class="flex-1 cursor-pointer text-sm">
+									{brand}
+								</Label>
+							</div>
+						{/each}
 					</div>
 
 					<!-- Categories -->
@@ -205,7 +261,7 @@
 							/>
 							<Label for="category-all" class="flex-1 cursor-pointer text-sm">All</Label>
 						</div>
-						{#each data?.categories as category (category)}
+						{#each categories as category (category)}
 							<div class="flex items-center gap-3">
 								<Checkbox
 									id={`category-${category}`}
@@ -215,6 +271,32 @@
 								/>
 								<Label for={`category-${category.name}`} class="flex-1 cursor-pointer text-sm">
 									{category.name}
+								</Label>
+							</div>
+						{/each}
+					</div>
+					<!-- Tags -->
+					<div class="flex flex-col gap-3">
+						<h4 class="text-sm font-medium">Tags</h4>
+						<div class="flex items-center gap-3">
+							<Checkbox
+								id="tag-all"
+								checked={isAllTagsSelected}
+								onCheckedChange={clearTags}
+								class="cursor-pointer"
+							/>
+							<Label for="category-all" class="flex-1 cursor-pointer text-sm">All</Label>
+						</div>
+						{#each tags as tag (tag)}
+							<div class="flex items-center gap-3">
+								<Checkbox
+									id={`tag-${tag}`}
+									checked={selectedTags.includes(tag.name)}
+									onCheckedChange={() => applyTagFilter(tag.name)}
+									class="cursor-pointer"
+								/>
+								<Label for={`tag-${tag.name}`} class="flex-1 cursor-pointer text-sm">
+									{tag.name}
 								</Label>
 							</div>
 						{/each}

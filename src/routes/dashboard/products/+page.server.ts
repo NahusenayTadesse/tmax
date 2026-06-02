@@ -15,51 +15,75 @@ import { schema } from './schema';
 export const load: PageServerLoad = async () => {
 	const form = await superValidate(zod4(schema));
 
-	// First, get products
+	// 1. Fetch only active products
 	const productsData = await db
 		.select({
 			id: products.id,
 			name: products.name,
+			brand: products.brand,
 			image: products.featuredImage,
 			description: products.description
 		})
 		.from(products)
-		.leftJoin(productCategories, eq(productCategories.id, products.categoryId))
 		.where(eq(products.isActive, true));
 
-	// Then, get prices for those products
 	const productIds = productsData.map((p) => p.id);
-	const pricesData = await db.select().from(prices);
 
-	// Then filter in memory
+	// If no products, stop early and avoid empty DB calls
+	if (productIds.length === 0) {
+		return { productList: [], form };
+	}
 
-	const relevantPrices = pricesData.filter((p) => productIds.includes(p.productId));
-	const relevantProductCategories = await db
-		.select({
-			name: productCategories.name
-		})
-		.from(categoriesProducts)
-		.leftJoin(productCategories, eq(productCategories.id, categoriesProducts.categoryId))
-		.where(inArray(categoriesProducts.productId, productIds));
-	const relevantProductTags = await db
-		.select({
-			name: tags.name
-		})
-		.from(productTags)
-		.leftJoin(tags, eq(productTags.tagId, tags.id))
-		.where(inArray(productTags.productId, productIds));
+	// 2. Fetch related data CONCURRENTLY and FILTERED by productIds
+	const [rawPrices, rawCategories, rawTags] = await Promise.all([
+		db.select().from(prices).where(inArray(prices.productId, productIds)),
+		db
+			.selectDistinct({
+				productId: categoriesProducts.productId,
+				name: productCategories.name
+			})
+			.from(categoriesProducts)
+			.innerJoin(productCategories, eq(productCategories.id, categoriesProducts.categoryId))
+			.where(inArray(categoriesProducts.productId, productIds)),
+		db
+			.selectDistinct({
+				productId: productTags.productId,
+				name: tags.name
+			})
+			.from(productTags)
+			.innerJoin(tags, eq(productTags.tagId, tags.id))
+			.where(inArray(productTags.productId, productIds))
+	]);
 
-	// Merge in application code
+	// 3. Group data into Dictionaries for O(1) lookup speed
+	const pricesMap: Record<string, typeof rawPrices> = {};
+	const categoriesMap: Record<string, Array<{ name: string }>> = {};
+	const tagsMap: Record<string, Array<{ name: string }>> = {};
+
+	for (const price of rawPrices) {
+		if (!pricesMap[price.productId]) pricesMap[price.productId] = [];
+		pricesMap[price.productId].push(price);
+	}
+
+	for (const cat of rawCategories) {
+		if (!categoriesMap[cat.productId]) categoriesMap[cat.productId] = [];
+		categoriesMap[cat.productId].push({ name: cat.name });
+	}
+
+	for (const tag of rawTags) {
+		if (!tagsMap[tag.productId]) tagsMap[tag.productId] = [];
+		tagsMap[tag.productId].push({ name: tag.name });
+	}
+
+	// 4. Merge data instantly using the maps
 	const productList = productsData.map((p) => ({
 		...p,
-		priceList: relevantPrices
-			.filter((price) => price.productId === p.id)
-			.map((price) => ({
-				amount: price.amount + ' Pieces',
-				price: 'ETB ' + price.price
-			})),
-		categories: relevantProductCategories,
-		tags: relevantProductTags
+		priceList: (pricesMap[p.id] || []).map((price) => ({
+			amount: `${price.amount} Pieces`,
+			price: `ETB ${price.price}`
+		})),
+		categories: categoriesMap[p.id] || [],
+		tags: tagsMap[p.id] || []
 	}));
 
 	return {

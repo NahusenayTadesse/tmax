@@ -65,6 +65,7 @@ export const load: LayoutServerLoad = async ({ params }) => {
 			id: products.id,
 			name: products.name,
 			price: min(prices.price),
+			brand: products.brand,
 			description: products.description,
 			quantity: products.quantity,
 			reorderLevel: products.reorderLevel,
