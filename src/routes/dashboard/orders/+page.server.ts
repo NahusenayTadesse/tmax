@@ -1,8 +1,8 @@
 import { superValidate, message, setError } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { eq, and, sql } from 'drizzle-orm';
-import { sendEmail, customerDeliveredTemplate, adminDeliveredTemplate } from '$lib/server/email';
-import { USER } from '$env/static/private';
+// import { sendEmail, customerDeliveredTemplate, adminDeliveredTemplate } from '$lib/server/email';
+// import { USER } from '$env/static/private';
 
 import { add, edit } from './schema';
 import { db } from '$lib/server/db';
@@ -127,11 +127,12 @@ export const actions: Actions = {
 		if (!form.valid) {
 			return message(form, { type: 'error', text: 'Please check the form for Errors' });
 		}
+		console.log(form);
 
 		const { id, selectedProducts, customer, status, reciept, paymentMethod } = form.data;
 
 		try {
-			await db.transaction(async (tx) => {
+			const result = await db.transaction(async (tx) => {
 				if (status === 'delivered' && !paymentMethod) {
 					setError(form, 'paymentMethod', 'Payment Method Error is required for Delivered Orders');
 					return message(
@@ -143,49 +144,47 @@ export const actions: Actions = {
 					);
 				}
 
+				const recieptLink = reciept ? await saveUploadedFile(reciept) : null;
 				let transactionId: number;
 
-				if (reciept) {
-					const recieptLink = await saveUploadedFile(reciept);
+				const [existingTransaction] = await tx
+					.select({
+						transactionId: orders.transactionId
+					})
+					.from(orders)
+					.where(eq(orders.id, id))
+					.limit(1);
 
-					const existingTransaction = await db
-						.select({
-							transactionId: orders.transactionId
-						})
-						.from(orders)
-						.where(eq(orders.id, id))
-						.then((rows) => rows[0]);
-
-					if (existingTransaction.transactionId) {
-						await db.update(transactions).set({
+				if (existingTransaction.transactionId) {
+					await tx
+						.update(transactions)
+						.set({
 							paymentMethodId: paymentMethod,
 							amount: String(getTotal(selectedProducts)),
 							recieptLink,
 							updatedBy: locals?.user?.id
-						});
+						})
+						.where(eq(transactions.id, existingTransaction.transactionId));
 
-						await tx
-							.update(orders)
-							.set({ customerId: customer, status, updatedBy: locals?.user?.id })
-							.where(eq(orders.id, Number(id)));
-					} else {
-						const [tranId] = await db
-							.insert(transactions)
-							.values({
-								paymentMethodId: paymentMethod,
-								amount: getTotal(selectedProducts),
-								recieptLink,
-								createdBy: locals?.user?.id
-							})
-							.$returningId();
-						transactionId = tranId.id;
+					transactionId = existingTransaction.transactionId;
+				} else {
+					const [newTransaction] = await tx
+						.insert(transactions)
+						.values({
+							paymentMethodId: paymentMethod,
+							amount: String(getTotal(selectedProducts)),
+							recieptLink,
+							updatedBy: locals?.user?.id
+						})
+						.$returningId();
 
-						await tx
-							.update(orders)
-							.set({ customerId: customer, status, transactionId })
-							.where(eq(orders.id, Number(id)));
-					}
+					transactionId = newTransaction.id;
 				}
+
+				await tx
+					.update(orders)
+					.set({ customerId: customer, status, transactionId, updatedBy: locals?.user?.id })
+					.where(eq(orders.id, Number(id)));
 
 				if (selectedProducts.length) {
 					await tx.delete(orderItems).where(eq(orderItems.orderId, Number(id)));
@@ -201,39 +200,43 @@ export const actions: Actions = {
 				}
 			});
 
-			if (status === 'delivered') {
-				const customerId = await db
-					.select({
-						id: orders.customerId
-					})
-					.from(orders)
-					.where(eq(orders.id, id))
-					.then((rows) => rows[0]);
-
-				const customerInfo = await db
-					.select({
-						name: customers.name,
-						email: customers.email
-					})
-					.from(customers)
-					.where(eq(customers.id, customerId.id))
-					.then((rows) => rows[0]);
-
-				const total = getTotal(selectedProducts);
-
-				sendEmail(
-					customerInfo.email,
-					customerDeliveredTemplate(id, selectedProducts, total).subject,
-					customerDeliveredTemplate(id, selectedProducts, total).html
-				).catch((err) => console.error('Email Error (Customer):', err));
-
-				// Send to Admin
-				sendEmail(
-					USER,
-					adminDeliveredTemplate(id, selectedProducts, total).subject,
-					adminDeliveredTemplate(id, selectedProducts, total).html
-				).catch((err) => console.error('Email Error (Admin):', err));
+			if (result) {
+				return message(form, { type: 'success', text: 'Order Successfully Updated' });
 			}
+
+			// if (status === 'delivered') {
+			// 	const customerId = await db
+			// 		.select({
+			// 			id: orders.customerId
+			// 		})
+			// 		.from(orders)
+			// 		.where(eq(orders.id, id))
+			// 		.then((rows) => rows[0]);
+
+			// 	const customerInfo = await db
+			// 		.select({
+			// 			name: customers.name,
+			// 			email: customers.email
+			// 		})
+			// 		.from(customers)
+			// 		.where(eq(customers.id, customerId.id))
+			// 		.then((rows) => rows[0]);
+
+			// 	const total = getTotal(selectedProducts);
+
+			// 	// sendEmail(
+			// 	// 	customerInfo.email,
+			// 	// 	customerDeliveredTemplate(id, selectedProducts, total).subject,
+			// 	// 	customerDeliveredTemplate(id, selectedProducts, total).html
+			// 	).catch((err) => console.error('Email Error (Customer):', err));
+
+			// Send to Admin
+			// 	sendEmail(
+			// 		USER,
+			// 		adminDeliveredTemplate(id, selectedProducts, total).subject,
+			// 		adminDeliveredTemplate(id, selectedProducts, total).html
+			// 	).catch((err) => console.error('Email Error (Admin):', err));
+			// }
 			return message(form, { type: 'success', text: 'Order Successfully Updated' });
 		} catch (err) {
 			console.error(err?.message);

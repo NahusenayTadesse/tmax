@@ -1,7 +1,15 @@
 <script lang="ts">
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
-	import { ShareIcon, PlusIcon, CheckIcon } from '@lucide/svelte';
+	import {
+		ShareIcon,
+		PlusIcon,
+		CheckIcon,
+		LayersIcon,
+		TagIcon,
+		MinusIcon,
+		ShoppingCart
+	} from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
 
 	type Props = {
@@ -10,26 +18,37 @@
 		price: number | string;
 		description: string;
 		image?: string;
-		category?: string;
+		brand?: string;
+		category?: string[];
+		tags?: string[];
 		images?: string[];
 		priceList?: { price: number | string; amount: number | string }[];
 	};
 
-	const { productId, productName, price, description, image, category, images, priceList }: Props =
-		$props();
+	const {
+		productId,
+		productName,
+		price,
+		description,
+		image,
+		brand = 'Tmax',
+		category = [],
+		tags = [],
+		images = [],
+		priceList = []
+	}: Props = $props();
 
 	let quantity = $state(1);
 
 	import { useCart } from '$lib/hooks/cart.svelte.js';
-
 	const cart = useCart();
 
 	let justAdded = $state(false);
+	let currentPrice = $derived(typeof price === 'string' ? parseFloat(price) : price);
+	let currentAmount = $derived(priceList?.[0]?.amount ?? '');
+	let displayImage = $derived(image || (images.length ? images[0] : ''));
 
-	let currentPrice = $state(typeof price === 'string' ? parseFloat(price) : price);
-	let currentAmount = $state(priceList?.[0]?.amount ?? '');
-
-	// Reusable formatter (performance friendly)
+	// Reusable formatter
 	const formatter = new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency: 'ETB'
@@ -37,19 +56,19 @@
 
 	// Derived values for clarity
 	const numericPrice = $derived(
-		typeof price === 'string' ? parseFloat(currentPrice) : currentPrice
+		typeof currentPrice === 'string' ? parseFloat(currentPrice) : currentPrice
 	);
 	const formattedPrice = $derived(formatter.format(numericPrice));
 	const quantityInCart = $derived(cart.items.find((i) => i.productId === productId)?.quantity ?? 0);
 
 	function addToCart() {
-		if (justAdded) return; // Prevent double-clicks during animation
+		if (justAdded) return;
 
 		cart.addItem({ productId, productName, price: numericPrice, amount: currentAmount });
 		justAdded = true;
 
 		toast.success(`${productName} added to cart`, {
-			description: `Total in cart: ${quantityInCart + quantity - 1}`
+			description: `Total in cart: ${quantityInCart + quantity}`
 		});
 
 		setTimeout(() => {
@@ -58,173 +77,251 @@
 	}
 
 	const handleShare = () => {
-		toast.success('Link copied to clipboard');
+		navigator.clipboard.writeText(window.location.href);
+		toast.success('Product link copied to clipboard');
 	};
 
 	const incrementQuantity = () => {
 		quantity += 1;
 	};
-
 	const decrementQuantity = () => {
-		if (quantity > 1) {
-			quantity -= 1;
-		}
+		if (quantity > 1) quantity -= 1;
 	};
 
-	let displayImage = $state(image);
-
-	function changePrice(product: { price: number | string; amount: number | string }) {
-		currentPrice = typeof product.price === 'string' ? parseFloat(product.price) : product.price;
-		currentAmount = product.amount;
+	function changePrice(pkg: { price: number | string; amount: number | string }) {
+		currentPrice = typeof pkg.price === 'string' ? parseFloat(pkg.price) : pkg.price;
+		currentAmount = pkg.amount;
 	}
 </script>
 
-<div class="min-h-dvh bg-linear-to-b from-background via-background to-muted/20">
-	<div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:px-8">
-		<div class="grid gap-8 lg:grid-cols-2 lg:gap-12">
-			<!-- Product Image Section -->
-			<div class="flex flex-col gap-4">
-				<div class="shadow-lg-lg relative overflow-hidden rounded-2xl bg-muted/50">
+<div
+	class="relative min-h-screen bg-gradient-to-b from-background via-background/95 to-muted/30 antialiased selection:bg-primary/20"
+>
+	<!-- Aesthetic Tech Backdrop Glows -->
+	<div
+		class="pointer-events-none absolute top-0 right-1/4 -z-10 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[120px]"
+	></div>
+	<div
+		class="pointer-events-none absolute top-1/3 left-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-blue-500/5 blur-[120px]"
+	></div>
+
+	<div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+		<div class="grid gap-8 lg:grid-cols-12 lg:gap-12">
+			<!-- SECTION 1: Dynamic Vertical Image Layout (Spans 7 columns on large screens) -->
+			<div class="flex flex-col-reverse gap-4 lg:col-span-7 lg:flex-row">
+				<!-- Left Thumbnails Container: Stacked Vertically on Desktop, Horizontal on Mobile -->
+				{#if images && images.length > 0}
+					<div
+						class="flex shrink-0 scrollbar-none flex-row gap-2.5 overflow-x-auto pb-2 lg:flex-col lg:overflow-x-visible lg:pb-0"
+					>
+						{#each images as img, i (i)}
+							{@const isSelected = displayImage === img}
+							<button
+								class="relative aspect-square w-20 overflow-hidden rounded-xl border bg-card/60 p-1 backdrop-blur-sm transition-all duration-300 hover:scale-105
+								{isSelected
+									? 'border-primary shadow-md ring-2 ring-primary/20'
+									: 'border-border hover:border-primary/40'}"
+								aria-label="View product image {i + 1}"
+								onclick={() => (displayImage = img)}
+							>
+								<img
+									src="/files/{img}"
+									alt="Thumbnail {i + 1}"
+									class="h-full w-full rounded-lg object-cover"
+								/>
+							</button>
+						{/each}
+					</div>
+				{/if}
+
+				<!-- Main Showcase Display Panel -->
+				<div
+					class="group relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-card/40 p-2 shadow-lg backdrop-blur-md lg:flex-1"
+				>
+					<div
+						class="pointer-events-none absolute inset-0 bg-gradient-to-tr from-primary/5 via-transparent to-transparent opacity-60"
+					></div>
 					<img
 						src="/files/{displayImage}"
 						alt={productName}
-						class="aspect-square w-full object-cover transition-transform duration-300 hover:scale-105"
+						class="h-full w-full rounded-xl object-contain transition-transform duration-500 ease-out group-hover:scale-102"
 					/>
-					{#if category}
-						<Badge class="absolute top-4 left-4 bg-primary/90 backdrop-blur-sm">
-							{category}
+
+					{#if brand}
+						<Badge
+							class="absolute top-5 left-5 border-border bg-background/80 text-foreground shadow-sm backdrop-blur-md hover:bg-background/90"
+						>
+							{brand}
 						</Badge>
 					{/if}
 				</div>
-				<!-- Thumbnail placeholder -->
-				<div class="flex gap-2">
-					{#each images as image, i (i)}
-						<button
-							class="aspect-square w-20 overflow-hidden rounded-lg border-2 border-transparent bg-muted/50 transition-all duration-200 hover:border-primary"
-							aria-label="View image {i + 1}"
-							onclick={() => (displayImage = image)}
-						>
-							<img
-								src="/files/{image}"
-								alt="Product thumbnail {i + 1}"
-								class="h-full w-full object-cover"
-							/>
-						</button>
-					{/each}
-				</div>
 			</div>
 
-			<!-- Product Info Section -->
-			<div class="flex flex-col">
+			<!-- SECTION 2: Premium Control Panel (Spans 5 columns on large screens) -->
+			<div class="flex flex-col justify-between lg:col-span-5">
 				<div class="space-y-6">
-					<!-- Header -->
+					<!-- Categories Row -->
+					{#if category?.length > 0}
+						<div class="flex flex-wrap items-center gap-1.5">
+							<LayersIcon class="mr-1 size-3.5 text-primary" />
+							{#each category as cat}
+								<span
+									class="rounded bg-muted px-2 py-0.5 text-xs font-semibold tracking-wider text-muted-foreground uppercase"
+								>
+									{cat}
+								</span>
+							{/each}
+						</div>
+					{/if}
+
+					<!-- Title and Pricing -->
 					<div class="space-y-3">
-						<h1 class="text-4xl font-bold tracking-tight text-foreground">
+						<h1
+							class="bg-linear-to-r from-foreground to-foreground/80 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl"
+						>
 							{productName}
 						</h1>
-						<div class="flex items-baseline gap-3">
-							<span class="text-3xl font-bold text-primary">
+
+						<div
+							class="inline-flex items-center rounded-xl border border-primary/20 bg-primary/5 px-4 py-2 backdrop-blur-sm"
+						>
+							<span class="font-mono text-3xl font-black text-primary">
 								{formattedPrice}
 							</span>
 						</div>
 					</div>
 
-					<!-- Description -->
-					<div class="flex flex-col gap-2">
-						<p class="text-base leading-relaxed text-muted-foreground">
+					<!-- Technical Specifications/Description -->
+					<div
+						class="rounded-2xl border border-border bg-card/30 p-4 shadow-inner backdrop-blur-md"
+					>
+						<p class="text-sm leading-relaxed text-muted-foreground">
 							{description}
 						</p>
 					</div>
-				</div>
 
-				<div class="max-w-xl p-4">
-					<h3 class="mb-4 text-sm font-semibold tracking-wider text-gray-500 uppercase">
-						Select Package
-					</h3>
-
-					<div class="grid grid-cols-2 gap-3 sm:grid-cols-3">
-						{#each priceList as product (product)}
-							{@const numericPrice =
-								typeof product.price === 'string' ? parseFloat(product.price) : product.price}
-							{@const isActive = currentPrice === numericPrice}
-
-							<button
-								onclick={() => changePrice(product)}
-								class="group relative flex flex-col items-center justify-center rounded-2xl border-2 border-foreground p-5 transition-all duration-200 ease-out
-								{isActive
-									? 'scale-[1.02] border-primary shadow-md'
-									: 'border-foreground hover:border-accent hover:shadow-sm'}"
+					<!-- Package Selection Matrix -->
+					{#if priceList && priceList.length > 0}
+						<div class="space-y-3">
+							<h3
+								class="flex items-center gap-1.5 text-xs font-bold tracking-widest text-muted-foreground uppercase"
 							>
-								<span
-									class="text-xl font-black tracking-tight transition-colors {isActive
-										? 'text-foreground'
-										: 'text-foreground/80'}"
-								>
-									{product.amount}
-								</span>
+								<span>Select Package Configuration</span>
+							</h3>
 
-								<span
-									class="text-xs font-medium tracking-wider uppercase transition-colors {isActive
-										? 'text-foreground'
-										: 'text-foreground/80'}"
-								>
-									{product.price} ETB
-								</span>
+							<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
+								{#each priceList as pkg}
+									{@const numPkgPrice =
+										typeof pkg.price === 'string' ? parseFloat(pkg.price) : pkg.price}
+									{@const isActive = currentPrice === numPkgPrice}
 
-								{#if isActive}
-									<Badge
-										class="absolute -top-2 px-4 text-[10px] font-bold tracking-widest  uppercase"
+									<button
+										onclick={() => changePrice(pkg)}
+										class="group relative flex flex-col items-center justify-center rounded-xl border p-4 text-center transition-all duration-300 ease-out
+										{isActive
+											? 'scale-[1.02] border-primary bg-primary/5 shadow-md ring-1 ring-primary/30'
+											: 'border-border bg-card/40 hover:border-primary/40 hover:bg-card/80'}"
 									>
-										Selected
+										<span class="text-base font-bold tracking-tight text-foreground">
+											{pkg.amount}
+										</span>
+
+										<span class="mt-1 font-mono text-xs font-medium text-muted-foreground">
+											{pkg.price} ETB
+										</span>
+
+										{#if isActive}
+											<div
+												class="absolute -top-1.5 right-2 rounded-full bg-primary p-0.5 text-primary-foreground shadow-sm"
+											>
+												<CheckIcon class="size-2.5" />
+											</div>
+										{/if}
+									</button>
+								{/each}
+							</div>
+						</div>
+					{/if}
+
+					<!-- Tags Layout Component -->
+					{#if tags?.length > 0}
+						<div class="border-t border-border/60 pt-2">
+							<div class="flex flex-wrap items-center gap-1.5">
+								<TagIcon class="mr-1 size-3.5 text-muted-foreground" />
+								{#each tags as tag}
+									<Badge
+										variant="outline"
+										class="rounded-md border-border/80 bg-background/50 text-[11px] font-normal text-muted-foreground"
+									>
+										#{tag}
 									</Badge>
-								{/if}
-							</button>
-						{/each}
-					</div>
+								{/each}
+							</div>
+						</div>
+					{/if}
 				</div>
 
-				<div class="mt-8 flex flex-col gap-4">
-					<!-- Quantity Selector -->
-					<div class="flex items-center gap-4">
-						<span class="text-sm font-medium text-muted-foreground">Quantity</span>
-						<div class="flex items-center gap-2 rounded-lg border border-input bg-background p-1">
-							<button
+				<!-- SECTION 3: Action Controls Segment -->
+				<div class="mt-8 space-y-4 border-t border-border/80 pt-6">
+					<!-- Quantity Selector Module -->
+					<div
+						class="flex max-w-45 items-center justify-between rounded-xl border border-border bg-card/40 p-2 backdrop-blur-sm"
+					>
+						<span class="pl-2 text-xs font-bold tracking-wider text-muted-foreground uppercase"
+							>Qty</span
+						>
+						<div
+							class="flex items-center gap-1 rounded-lg border border-border bg-background/80 p-0.5 shadow-inner"
+						>
+							<Button
+								variant="ghost"
+								size="icon"
 								onclick={decrementQuantity}
-								class="flex size-8 items-center justify-center rounded transition-colors hover:bg-muted"
-								aria-label="Decrease quantity">−</button
+								class="size-7 rounded-md hover:bg-muted"
+								disabled={quantity <= 1}
+								aria-label="Decrease quantity"
 							>
-							<span class="w-8 text-center font-semibold">{quantity}</span>
-							<button
+								<MinusIcon class="size-3" />
+							</Button>
+							<span class="w-7 text-center font-mono text-sm font-bold">{quantity}</span>
+							<Button
+								variant="ghost"
+								size="icon"
 								onclick={incrementQuantity}
-								class="flex size-8 items-center justify-center rounded transition-colors hover:bg-muted"
-								aria-label="Increase quantity">+</button
+								class="size-7 rounded-md hover:bg-muted"
+								aria-label="Increase quantity"
 							>
+								<PlusIcon class="size-3" />
+							</Button>
 						</div>
 					</div>
 
-					<!-- Main Buttons -->
-					<div class="flex gap-3">
+					<!-- Primary Actions Row -->
+					<div class="flex flex-col gap-3 sm:flex-row">
 						<Button
-							class="w-full transition-all active:scale-95"
+							class="h-12 flex-1 rounded-xl text-sm font-semibold tracking-wide shadow-md transition-all duration-300 active:scale-98"
 							onclick={addToCart}
-							variant={justAdded ? 'outline' : 'default'}
+							variant={justAdded ? 'secondary' : 'default'}
 							disabled={justAdded}
 						>
 							{#if justAdded}
-								<CheckIcon class="mr-2 size-4 text-green-500" />
-								Added to Cart
+								<CheckIcon class="mr-2 size-4 animate-bounce text-green-500" />
+								Item Saved to Cart
 							{:else}
-								<PlusIcon class="mr-2 size-4" />
+								<ShoppingCart class="mr-2 size-4" />
 								Add to Cart
 							{/if}
 						</Button>
-					</div>
 
-					<!-- Share Button -->
-					<Button variant="outline" class="w-full gap-2" onclick={handleShare}>
-						<ShareIcon size={18} />
-						Share Product
-					</Button>
+						<Button
+							variant="outline"
+							class="h-12 gap-2 rounded-xl border-border bg-card/30 px-4 text-muted-foreground backdrop-blur-sm transition-all hover:text-foreground"
+							onclick={handleShare}
+						>
+							<ShareIcon class="size-4" />
+							<span class="sm:hidden lg:inline">Share</span>
+						</Button>
+					</div>
 				</div>
 			</div>
 		</div>

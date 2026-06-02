@@ -1,196 +1,189 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button';
-	import { Input } from '$lib/components/ui/input';
-	import { MailIcon, PhoneIcon, MapPinIcon, MessageCircleIcon, MapPin } from '@lucide/svelte';
+	import { MailIcon, PhoneIcon, MapPinIcon, GlobeIcon, LaptopIcon } from '@lucide/svelte';
+
+	// Svelte 5 state for newsletter, if you decide to add it back
 	let email = $state('');
 
-	const handleNewsletterSubmit = (e: Event) => {
-		e.preventDefault();
-		console.log('Newsletter signup:', email);
-		email = '';
-	};
-
-	import { IconBrandFacebook, IconBrandInstagram, IconBrandTiktok } from '@tabler/icons-svelte';
+	import {
+		IconBrandFacebook,
+		IconBrandInstagram,
+		IconBrandTiktok,
+		IconBrandYoutube
+	} from '@tabler/icons-svelte';
 
 	const socialLinks = [
 		{
 			name: 'Instagram',
-			url: 'https://www.instagram.com/lalobakerysolution?igsh=MTZ1eDNldHl3OW9iNw%3D%3D&utm_source=qr',
+			url: 'https://www.instagram.com/tmaxelectronics',
 			icon: IconBrandInstagram,
-			color: 'hover:text-pink-500'
+			color: 'hover:text-pink-500 hover:border-pink-500/30'
 		},
 		{
 			name: 'TikTok',
-			url: 'https://www.tiktok.com/@lalobakerysolution?_r=1&_t=ZM-91WtG5hY5VY',
+			url: 'https://www.tiktok.com/@tmaxelectronics',
 			icon: IconBrandTiktok,
-			color: 'hover:text-black dark:hover:text-white'
+			color: 'hover:text-foreground hover:border-foreground/30'
 		},
 		{
 			name: 'Facebook',
-			url: 'https://facebook.com',
+			url: 'https://facebook.com/tmaxelectronics',
 			icon: IconBrandFacebook,
-			color: 'hover:text-blue-600'
+			color: 'hover:text-blue-600 hover:border-blue-600/30'
 		},
 		{
-			name: 'Telegram',
-			url: 'https://t.me/LaloBakery',
-			icon: MessageCircleIcon,
-			color: 'hover:text-blue-400'
+			name: 'YouTube',
+			url: 'https://youtube.com',
+			icon: IconBrandYoutube,
+			color: 'hover:text-red-600 hover:border-red-600/30'
 		}
 	];
 </script>
 
-<footer class="border-t bg-card text-card-foreground">
+<!-- Glassmorphism Container with Shadcn border and background alpha -->
+<footer
+	class="relative overflow-hidden border-t border-border bg-card/60 text-card-foreground backdrop-blur-md"
+>
+	<!-- Subtle ambient accent glow behind the glass -->
+	<div
+		class="pointer-events-none absolute -top-24 -left-24 -z-10 h-48 w-48 rounded-full bg-primary/10 blur-3xl"
+	></div>
+
 	<div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-		<!-- Newsletter Section -->
+		<!-- Main Content Grid -->
+		<div class="grid grid-cols-1 gap-10 pb-8 md:grid-cols-3">
+			<!-- Column 1: Company Info -->
+			<div class="flex flex-col gap-4">
+				<div class="flex items-center gap-2">
+					<!-- Replace with your actual SVG logo or local asset if needed -->
+					<img src="/logo.webp" class="w-30" alt="Tmax" />
+					<span class="text-xl font-bold tracking-tight text-foreground">Electronics</span>
+				</div>
+				<p class="text-sm leading-relaxed text-muted-foreground">
+					Your premier destination for cutting-edge consumer electronics, components, and innovative
+					technology solutions.
+				</p>
 
-		<!-- Footer Links Grid -->
-		<div
-			class="align-center mb-8 grid grid-cols-1 items-center justify-center gap-8 md:grid-cols-3"
-		>
-			<!-- Company Info -->
-			<div>
-				<img src="/logo.webp" class="w-30" alt="Lalo Logo" />
-				<h4 class="mb-4 font-semibold">Lalo Bakery Solution</h4>
-
-				<div class="flex flex-col gap-2 text-sm">
+				<div class="mt-2 flex flex-col gap-3 text-sm">
 					<a
-						href="https://maps.app.goo.gl/KMrgwGNNbsE2SAeV7"
+						href="https://maps.google.com"
 						target="_blank"
 						rel="noopener noreferrer"
-						class="flex items-center gap-2 text-foreground/70"
+						class="group flex items-start gap-3 text-muted-foreground transition-colors hover:text-foreground"
 					>
-						<MapPinIcon class="size-4 shrink-0" />
-						<span>Diplomat Building, Mozambique St, Addis Ababa</span>
+						<MapPinIcon class="mt-0.5 size-4 shrink-0 text-primary" />
+						<span>Main HQ Showroom, Addis Ababa, Ethiopia</span>
 					</a>
 					<a
-						href="tel:+251908454545"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="flex items-center gap-2 text-foreground/70"
+						href="tel:+251900000000"
+						class="flex items-center gap-3 text-muted-foreground transition-colors hover:text-foreground"
 					>
-						<PhoneIcon class="size-4 shrink-0" />
-						<span>+251908454545</span>
+						<PhoneIcon class="size-4 shrink-0 text-primary" />
+						<span>+251 900 000 000</span>
 					</a>
 					<a
-						href="tel:+251902645724"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="flex items-center gap-2 text-foreground/70"
+						href="mailto:info@tmaxelectronics.com"
+						class="flex items-center gap-3 text-muted-foreground transition-colors hover:text-foreground"
 					>
-						<PhoneIcon class="size-4 shrink-0" />
-						<span>+251902645724</span>
+						<MailIcon class="size-4 shrink-0 text-primary" />
+						<span>info@tmaxelectronics.com</span>
 					</a>
 					<a
-						href="mailto:info@mohammedlaloie.com"
-						target="_blank"
-						rel="noopener noreferrer"
-						class="flex items-center gap-2 text-foreground/70"
+						href="https://tmaxelectronics.com"
+						class="flex items-center gap-3 text-muted-foreground transition-colors hover:text-foreground"
 					>
-						<MailIcon class="size-4 shrink-0" />
-						<span>info@mohammedlaloie.com</span>
+						<GlobeIcon class="size-4 shrink-0 text-primary" />
+						<span>tmaxelectronics.com</span>
 					</a>
 				</div>
 			</div>
 
-			<!-- Quick Links -->
-			<div class="lg:w-lg">
-				<h4 class="mb-4 font-semibold">Quick Links</h4>
-				<ul class="flex flex-col gap-2 text-sm">
+			<!-- Column 2: Quick Links -->
+			<div class="md:justify-self-center">
+				<h4 class="mb-4 text-sm font-semibold tracking-wider text-foreground uppercase">
+					Quick Links
+				</h4>
+				<ul class="flex flex-col gap-2.5 text-sm">
 					<li>
-						<a href="/" class="text-foreground/70 transition-colors hover:text-foreground">Home</a>
+						<a href="/" class="text-muted-foreground transition-colors hover:text-foreground"
+							>Home</a
+						>
 					</li>
 					<li>
-						<a href="/shop" class="text-foreground/70 transition-colors hover:text-foreground"
+						<a href="/shop" class="text-muted-foreground transition-colors hover:text-foreground"
 							>Products</a
 						>
 					</li>
 					<li>
-						<a href="/orders" class="text-foreground/70 transition-colors hover:text-foreground"
+						<a href="/orders" class="text-muted-foreground transition-colors hover:text-foreground"
 							>Orders</a
 						>
 					</li>
 					<li>
-						<a href="/about-us" class="text-foreground/70 transition-colors hover:text-foreground"
-							>About Us</a
+						<a
+							href="/about-us"
+							class="text-muted-foreground transition-colors hover:text-foreground">About Us</a
 						>
 					</li>
 					<li>
-						<a href="#" class="text-foreground/70 transition-colors hover:text-foreground"
+						<a href="/contact" class="text-muted-foreground transition-colors hover:text-foreground"
 							>Contact Us</a
 						>
 					</li>
 				</ul>
 			</div>
 
-			<!-- Customer Service -->
-			<div>
-				<h4 class="mb-4 flex gap-2 font-semibold"><MapPin /> Location</h4>
-				<section class="relative h-32 w-full">
+			<!-- Column 3: Location / Map View -->
+			<div class="flex flex-col">
+				<h4
+					class="mb-4 flex items-center gap-2 text-sm font-semibold tracking-wider text-foreground uppercase"
+				>
+					<MapPinIcon class="size-4 text-primary" /> Store Location
+				</h4>
+				<div class="relative h-36 w-full overflow-hidden rounded-xl border border-border bg-muted">
+					<!-- Standard placeholder map embed. Replace string with your exact coordinates if necessary -->
 					<iframe
-						src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.6989163918774!2d38.74450221007991!3d8.999827389408697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b8513494db273%3A0x88235dbe171c4224!2sDiplomat%20Building!5e0!3m2!1sen!2set!4v1772532021053!5m2!1sen!2set"
+						src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.6989163918774!2d38.74450221007991!3d8.999827389408697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwNTknNTkuNCJOIDM4wrA0NSc0MC4yIkU!5e0!3m2!1sen!2set!4v1710000000000!5m2!1sen!2set"
 						style="border:0;"
-						class="w-full rounded-3xl"
+						class="absolute inset-0 h-full w-full opacity-80 contrast-125 grayscale invert dark:invert-0"
 						loading="lazy"
 						referrerpolicy="no-referrer-when-downgrade"
-						title="Map"
+						title="Tmax Store Map Location"
 					></iframe>
-				</section>
-			</div>
-
-			<!-- Legal -->
-			<!-- <div>
-				<h4 class="mb-4 font-semibold">Legal</h4>
-				<ul class="flex flex-col gap-2 text-sm">
-					<li>
-						<a href="#" class="text-foreground/70 transition-colors hover:text-foreground"
-							>Privacy Policy</a
-						>
-					</li>
-					<li>
-						<a href="#" class="text-foreground/70 transition-colors hover:text-foreground"
-							>Terms of Service</a
-						>
-					</li>
-					<li>
-						<a href="#" class="text-foreground/70 transition-colors hover:text-foreground"
-							>Cookie Policy</a
-						>
-					</li>
-					<li>
-						<a href="#" class="text-foreground/70 transition-colors hover:text-foreground"
-							>Accessibility</a
-						>
-					</li>
-				</ul>
-			</div>
-		</div> -->
-
-			<!-- Social Links -->
-			<div class="flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
-				<p class="text-sm text-foreground/70">Follow us on social media</p>
-				<div class="grid grid-cols-4 gap-3">
-					{#each socialLinks as social (social.url)}
-						<a
-							href={social.url}
-							target="_blank"
-							rel="noopener noreferrer"
-							class={[
-								'flex flex-col items-center gap-2 rounded-lg border p-4 transition-all hover:border-primary hover:shadow-lg',
-								social.color
-							]}
-							title={social.name}
-						>
-							<social.icon class="h-6 w-6" />
-						</a>
-					{/each}
 				</div>
 			</div>
+		</div>
 
-			<!-- Copyright -->
-			<div class="mt-8 border-t pt-8 text-center text-sm text-foreground/70">
-				<p>&copy; {new Date().getFullYear()} Lalo Bakery. All rights reserved.</p>
+		<!-- Bottom Strip: Social Media & Copyright Info -->
+		<div
+			class="flex flex-col items-center justify-between gap-6 border-t border-border pt-8 md:flex-row"
+		>
+			<div class="flex flex-col items-center gap-1 md:items-start">
+				<p class="text-sm font-medium text-foreground">Connect With Us</p>
+				<p class="text-xs text-muted-foreground">Stay updated with the latest tech drops.</p>
 			</div>
+
+			<!-- Refined grid layouts for custom card-style social chips -->
+			<div class="flex gap-3">
+				{#each socialLinks as social (social.url)}
+					<a
+						href={social.url}
+						target="_blank"
+						rel="noopener noreferrer"
+						class={[
+							'flex items-center justify-center rounded-lg border border-border bg-card/40 p-2.5 text-muted-foreground transition-all duration-300 hover:scale-105 hover:bg-background hover:shadow-md',
+							social.color
+						]}
+						title={social.name}
+					>
+						<social.icon class="h-5 w-5" />
+					</a>
+				{/each}
+			</div>
+		</div>
+
+		<!-- Final Copyright -->
+		<div class="mt-8 pt-4 text-center text-xs text-muted-foreground/60">
+			<p>&copy; {new Date().getFullYear()} Tmax Electronics. All rights reserved.</p>
 		</div>
 	</div>
 </footer>

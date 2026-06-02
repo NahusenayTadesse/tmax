@@ -83,12 +83,15 @@
 			sortable: true,
 			cell: ({ row }) => {
 				// You can pass whatever you need from `row.original` to the component
-				return renderComponent(DataTableLinks, {
-					id: row.original.recieptLink,
-					name: row.original.recieptLink ? 'View Receipt' : 'No Reciept Uploaded',
-					link: '/files',
-					target: '_blank'
-				});
+				return row.original.recieptLink
+					? renderComponent(DataTableLinks, {
+							id: row.original.recieptLink,
+							name: 'View Receipt',
+							link: '/files',
+							target: '_blank',
+							IconComp: Eye
+						})
+					: 'No Reciept Uploaded';
 			}
 		},
 
@@ -131,6 +134,7 @@
 	import OrderItems from '$lib/components/order-items.svelte';
 
 	import Copy from '$lib/Copy.svelte';
+	import { Eye } from '@lucide/svelte';
 </script>
 
 <svelte:head>

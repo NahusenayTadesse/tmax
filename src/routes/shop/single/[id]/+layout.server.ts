@@ -1,5 +1,13 @@
 import { db } from '$lib/server/db';
-import { productCategories, products, prices, productImages } from '$lib/server/db/schema';
+import {
+	productCategories,
+	products,
+	prices,
+	productImages,
+	categoriesProducts,
+	tags,
+	productTags
+} from '$lib/server/db/schema';
 import { eq, sql, min } from 'drizzle-orm';
 import type { LayoutServerLoad } from './$types';
 
@@ -22,6 +30,7 @@ export const load: LayoutServerLoad = async ({ params }) => {
 			productId: products.id,
 			productName: products.name,
 			price: min(prices.price),
+			brand: products.brand,
 			description: products.description,
 			category: productCategories.name,
 			image: products.featuredImage
@@ -44,10 +53,28 @@ export const load: LayoutServerLoad = async ({ params }) => {
 		.from(prices)
 		.where(eq(prices.productId, Number(id)));
 
+	const category = await db
+		.select({
+			name: productCategories.name
+		})
+		.from(productCategories)
+		.innerJoin(categoriesProducts, eq(categoriesProducts.categoryId, productCategories.id))
+		.where(eq(categoriesProducts.productId, Number(id)));
+
+	const tag = await db
+		.select({
+			name: tags.name
+		})
+		.from(tags)
+		.innerJoin(productTags, eq(productTags.tagId, tags.id))
+		.where(eq(productTags.productId, Number(id)));
+
 	return {
 		product,
 		priceList,
 		images,
+		category: category?.map((cat) => cat.name),
+		tag: tag?.map((t) => t.name),
 		result
 	};
 };
