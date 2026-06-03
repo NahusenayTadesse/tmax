@@ -38,6 +38,10 @@
 		unremovable: { icon: BadgeCheck, colour: 'bg-green-400' },
 		removable: { icon: OctagonMinus, colour: 'bg-red-500' },
 
+		out: { icon: OctagonMinus, colour: 'bg-red-500' },
+		low: { icon: Loader, colour: 'bg-yellow-500' },
+		live: { icon: BadgeCheck, colour: 'bg-green-400' },
+
 		/* fallback */
 		unknown: { icon: Loader, colour: 'bg-gray-500' }
 	} as const;

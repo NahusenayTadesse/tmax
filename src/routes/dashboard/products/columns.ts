@@ -7,6 +7,7 @@ import PriceList from './priceList.svelte';
 import CatList from './catList.svelte';
 import type { ColumnDef } from '@tanstack/table-core';
 import { Checkbox } from '$lib/components/ui/checkbox/index.js';
+import Statuses from '$lib/components/Table/statuses.svelte';
 
 export const columns = [
 	{
@@ -67,7 +68,6 @@ export const columns = [
 			});
 		}
 	},
-
 	{
 		accessorKey: 'brand',
 		header: ({ column }) =>
@@ -76,6 +76,31 @@ export const columns = [
 				onclick: column.getToggleSortingHandler()
 			}),
 		sortable: true
+	},
+	{
+		accessorKey: 'quantity',
+		header: ({ column }) =>
+			renderComponent(DataTableSort, {
+				name: 'Quantity',
+				onclick: column.getToggleSortingHandler()
+			}),
+		sortable: true,
+		cell: (info) => {
+			// You can pass whatever you need from `row.original` to the component
+			return info.getValue() + ' Units Left';
+		}
+	},
+	{
+		accessorKey: 'reorderLevel',
+		header: ({ column }) =>
+			renderComponent(DataTableSort, {
+				name: 'Reorder Level',
+				onclick: column.getToggleSortingHandler()
+			}),
+		sortable: true,
+		cell: (info) => {
+			return info.getValue() + ' Units';
+		}
 	},
 
 	{
@@ -89,7 +114,6 @@ export const columns = [
 		sortable: true,
 
 		cell: ({ row }) => {
-			// You can pass whatever you need from `row.original` to the component
 			return renderComponent(PriceList, {
 				priceList: row.original.priceList
 			});
@@ -105,7 +129,6 @@ export const columns = [
 			}),
 		sortable: true,
 		cell: ({ row }) => {
-			// You can pass whatever you need from `row.original` to the component
 			return renderComponent(CatList, {
 				names: row.original.categories,
 				title: 'Categories'
@@ -132,6 +155,27 @@ export const columns = [
 	{
 		accessorKey: 'description',
 		header: 'Description'
+	},
+
+	{
+		accessorKey: 'stockStatus',
+		header: ({ column }) =>
+			renderComponent(DataTableSort, {
+				name: 'Stock Status',
+				onclick: column.getToggleSortingHandler()
+			}),
+		sortable: true,
+		cell: ({ row }) => {
+			// You can pass whatever you need from `row.original` to the component
+			return renderComponent(Statuses, {
+				status:
+					row.original.quantity <= 0
+						? 'out'
+						: row.original.quantity <= row.original.reorderLevel + 5
+							? 'low'
+							: 'live'
+			});
+		}
 	},
 
 	{

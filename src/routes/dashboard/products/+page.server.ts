@@ -22,6 +22,8 @@ export const load: PageServerLoad = async () => {
 			name: products.name,
 			brand: products.brand,
 			image: products.featuredImage,
+			reorderLevel: products.reorderLevel,
+			quantity: products.quantity,
 			description: products.description
 		})
 		.from(products)
@@ -82,8 +84,8 @@ export const load: PageServerLoad = async () => {
 			amount: `${price.amount} Pieces`,
 			price: `ETB ${price.price}`
 		})),
-		categories: categoriesMap[p.id] || [],
-		tags: tagsMap[p.id] || []
+		categories: Object.values(categoriesMap[p.id] || {}).map((cat) => cat.name),
+		tags: Object.values(tagsMap[p.id] || {}).map((tag) => tag.name)
 	}));
 
 	return {

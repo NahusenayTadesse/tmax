@@ -1,146 +1,209 @@
 <script lang="ts">
-	import { MenuIcon, XIcon } from '@lucide/svelte';
+	import {
+		MenuIcon,
+		XIcon,
+		SearchIcon,
+		House as HomeIcon,
+		ShoppingBagIcon,
+		InfoIcon,
+		ContactIcon,
+		PackageCheckIcon,
+		LogInIcon,
+		UserPlusIcon
+	} from '@lucide/svelte';
 	import DarkMode from './DarkMode.svelte';
 	import AvatarSettings from './AvatarSettings.svelte';
 
 	import { Sheet, SheetContent, SheetTrigger } from '$lib/components/ui/sheet';
 	import { Button } from '$lib/components/ui/button';
+	import { Input } from '$lib/components/ui/input';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
+	import Cart from '$lib/components/floating-cart/cart.svelte';
+	import { setCart } from '$lib/hooks/cart.svelte'; // Adjust path
 
+	let { data } = $props();
 	let isOpen = $state(false);
+
+	// Locally control the input string, defaulting to an active search query if present
+	let searchQuery = $state(page.url.searchParams.get('search') ?? '');
 
 	const handleMenuClick = () => {
 		isOpen = false;
 	};
-	import { page } from '$app/state';
 
-	let { data } = $props();
-
+	// Enhanced item objects with matching tech icons for mobile navigation draw pipelines
 	const menuItems = [
-		{ label: 'Home', href: '/' },
-
-		{ label: 'Shop', href: '/shop' },
-
-		{ label: 'About Us', href: '/about-us' },
-		{ label: 'Contact Us', href: '/contact-us' },
-		{ label: 'Orders', href: '/orders' }
+		{ label: 'Home', href: '/', icon: HomeIcon },
+		{ label: 'Shop', href: '/shop', icon: ShoppingBagIcon },
+		{ label: 'Orders', href: '/orders', icon: PackageCheckIcon },
+		{ label: 'About Us', href: '/about-us', icon: InfoIcon },
+		{ label: 'Contact Us', href: '/contact-us', icon: ContactIcon }
 	];
+
+	// Triggers URL changes routing seamlessly to /shop with query parameters
+	function executionDesktopSearch(e: KeyboardEvent) {
+		if (e.key === 'Enter') {
+			const shopUrl = new URL('/shop', window.location.origin);
+			if (searchQuery.trim()) {
+				shopUrl.searchParams.set('search', searchQuery.trim());
+			}
+			goto(shopUrl.toString());
+		}
+	}
 </script>
 
 <header
-	class="sticky top-0 z-50 w-full px-2 py-2 backdrop-blur supports-backdrop-filter:bg-background lg:px-16"
+	class="sticky top-0 z-50 w-full border-b border-border/80 bg-background/60 px-2 py-1.5 backdrop-blur-md transition-all duration-300 lg:px-12"
 >
-	<div class="flex h-14 items-center justify-between px-4 md:px-6">
-		<!-- Logo/Title -->
-		<div class="flex shrink-0 items-center gap-2">
-			<a href="/" class="inline-block">
+	<div class="mx-auto flex h-14 max-w-7xl items-center justify-between px-4">
+		<div class="flex shrink-0 items-center gap-6">
+			<a href="/" class="transition-transform duration-200 active:scale-95">
 				<img
 					src="/logo.webp"
-					class="h-16 w-24 object-contain"
-					alt="Tmax Logo"
+					class="h-6 w-auto object-contain dark:brightness-110"
+					alt="Tmax Electronics Logo"
 					fetchpriority="high"
 				/>
 			</a>
 
-			<!-- <span class="text-xl font-bold text-foreground">Lalo Bakery Solution</span> -->
+			<nav class="hidden items-center gap-1 md:flex">
+				{#each menuItems as item (item.href)}
+					{@const isActive = page.url.pathname === item.href}
+					<Button
+						variant={isActive ? 'default' : 'ghost'}
+						size="sm"
+						href={item.href}
+						class="h-9 rounded-lg text-xs font-semibold tracking-wide uppercase transition-all"
+					>
+						{item.label}
+					</Button>
+				{/each}
+			</nav>
 		</div>
 
-		<!-- Desktop Menu -->
-		<nav class="hidden items-center gap-1 md:flex">
-			{#each menuItems as item (item.href)}
-				<Button
-					variant={page.url.pathname === item.href ? 'default' : 'ghost'}
-					size="sm"
-					href={item.href}
-					onclick={handleMenuClick}
-				>
-					{item.label}
-				</Button>
-			{/each}
-		</nav>
-		<div class="flex flex-row gap-4">
-			<div class="hidden flex-row items-center justify-end lg:flex">
-				<div class="m-2">
-					{#if data === ''}
-						<!-- Search and Auth -->
-						<div class="item-end hidden gap-4 md:flex">
-							<Button href="/login" variant="ghost" size="sm">Sign In</Button>
-							<Button href="/signup" size="sm">Sign Up</Button>
-						</div>
-					{:else}
-						<AvatarSettings {data} />
-					{/if}
-				</div>
-				<DarkMode />
+		<div class="flex flex-row items-center gap-4">
+			<div class="relative hidden max-w-xs sm:block md:w-48 lg:w-64">
+				<SearchIcon
+					class="absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-muted-foreground/60"
+				/>
+				<Input
+					type="text"
+					placeholder="Search catalog... (Press Enter)"
+					bind:value={searchQuery}
+					onkeydown={executionDesktopSearch}
+					class="h-8.5 rounded-lg border-border bg-muted/40 pl-9 text-xs shadow-inner focus-visible:border-primary focus-visible:ring-primary/20"
+				/>
 			</div>
 
-			<!-- Mobile Menu -->
-			<div class="md:hidden">
+			<div class="hidden flex-row items-center justify-end gap-2 lg:flex">
+				{#if data === '' || !data}
+					<div class="flex items-center gap-1.5">
+						<Button href="/login" variant="ghost" size="sm" class="h-9 text-xs font-medium">
+							<LogInIcon class="mr-1.5 size-3.5" /> Sign In
+						</Button>
+						<Button href="/signup" size="sm" class="h-9 rounded-lg text-xs font-semibold shadow-xs">
+							<UserPlusIcon class="mr-1.5 size-3.5" /> Sign Up
+						</Button>
+					</div>
+				{:else}
+					<div class="flex items-center p-1">
+						<AvatarSettings {data} />
+					</div>
+				{/if}
+				<div class="ml-1 border-l border-border/60 pl-2">
+					<DarkMode />
+				</div>
+				<Cart header={true} />
+			</div>
+
+			<div class="flex items-center gap-2 md:hidden">
+				<DarkMode />
+
 				<Sheet bind:open={isOpen}>
 					<SheetTrigger>
 						{#snippet child({ props: triggerProps })}
-							<Button variant="default" size="icon" {...triggerProps}>
+							<Button
+								variant="outline"
+								size="icon"
+								class="size-9 rounded-xl border-border bg-card/50"
+								{...triggerProps}
+							>
 								{#if isOpen}
-									<XIcon class="size-5" />
+									<XIcon class="size-4 text-foreground transition-transform duration-200" />
 								{:else}
-									<MenuIcon class="size-5" />
+									<MenuIcon class="size-4 text-foreground transition-transform duration-200" />
 								{/if}
 							</Button>
 						{/snippet}
 					</SheetTrigger>
-					<SheetContent side="right" class="flex w-80 flex-col p-0">
-						<div class="border-b bg-muted/20 p-6">
-							{#if data === ''}
-								<div class="space-y-1">
-									<h2 class="text-lg font-bold tracking-tight">Welcome</h2>
-									<p class="text-xs text-muted-foreground">Sign in to sync your progress</p>
+
+					<SheetContent
+						side="right"
+						class="flex w-80 flex-col border-l border-border bg-background/95 p-0 backdrop-blur-md"
+					>
+						<div class="border-b border-border/60 bg-muted/30 p-6">
+							{#if data === '' || !data}
+								<div class="space-y-1.5">
+									<h2 class="text-base font-bold tracking-tight text-foreground">
+										Welcome to Tmax Tech
+									</h2>
+									<p class="text-xs text-muted-foreground">
+										Sign in to initialize hardware configurations & track secure delivery channels.
+									</p>
 								</div>
 							{:else}
-								<div class="flex items-center gap-4">
-									<div class="rounded-full bg-background p-1 shadow-sm ring-2 ring-primary/10">
+								<div class="flex items-center gap-3.5">
+									<div
+										class="rounded-full border bg-background p-1 shadow-xs ring-2 ring-primary/5"
+									>
 										<AvatarSettings {data} />
 									</div>
 									<div class="flex flex-col overflow-hidden">
-										<span class="truncate text-sm font-semibold">
-											{data.user?.name ?? 'Account'}
+										<span class="truncate text-sm font-bold text-foreground">
+											{data.user?.name ?? 'Tech Operator'}
 										</span>
-										<span class="truncate text-xs text-muted-foreground">
-											{data.user?.email ?? 'Member'}
+										<span class="truncate font-mono text-xs text-muted-foreground">
+											{data.user?.email ?? 'active_session'}
 										</span>
 									</div>
 								</div>
 							{/if}
 						</div>
 
-						<nav class="flex flex-1 flex-col gap-1 p-4">
+						<nav class="flex flex-1 flex-col gap-1.5 p-4">
 							{#each menuItems as item (item.href)}
+								{@const isMobileActive = page.url.pathname === item.href}
 								<Button
-									variant="ghost"
+									variant={isMobileActive ? 'secondary' : 'ghost'}
 									href={item.href}
-									class="w-full justify-start gap-3 px-3 py-6 text-base font-medium transition-all active:scale-[0.98]"
+									class="w-full justify-start gap-3.5 rounded-xl px-3.5 py-5.5 text-sm font-semibold tracking-wide transition-all active:scale-[0.98]"
 									onclick={handleMenuClick}
 								>
-									{#if item.icon}
-										<item.icon class="h-5 w-5 opacity-60" />
-									{/if}
+									<item.icon class="h-4 w-4 text-primary opacity-70" />
 									{item.label}
 								</Button>
 							{/each}
 						</nav>
 
-						<div class="space-y-4 border-t bg-muted/10 p-4">
-							<div class="flex items-center justify-between px-2">
-								<span class="text-sm font-medium text-muted-foreground">Interface</span>
-								<DarkMode />
-							</div>
-
-							{#if data === ''}
-								<div class="grid grid-cols-2 gap-2">
-									<Button onclick={handleMenuClick} variant="outline" class="h-11" href="/login"
-										>Log In</Button
+						<div class="space-y-4 border-t border-border bg-muted/10 p-5">
+							{#if data === '' || !data}
+								<div class="grid grid-cols-2 gap-2.5">
+									<Button
+										onclick={handleMenuClick}
+										variant="outline"
+										class="h-10 rounded-xl border-border text-xs font-medium"
+										href="/login"
 									>
-									<Button onclick={handleMenuClick} class="h-11 shadow-sm" href="/signup"
-										>Join</Button
+										Log In
+									</Button>
+									<Button
+										onclick={handleMenuClick}
+										class="h-10 rounded-xl text-xs font-semibold shadow-xs"
+										href="/signup"
 									>
+										Join Store
+									</Button>
 								</div>
 							{/if}
 						</div>

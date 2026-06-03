@@ -3,9 +3,11 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
 	import { ScrollArea } from '$lib/components/ui/scroll-area';
-	import { ShoppingCartIcon, Cookie, TrashIcon } from '@lucide/svelte';
+	import { ShoppingCartIcon, TrashIcon } from '@lucide/svelte';
 	import CartItem from './cart-item.svelte';
 	import * as Popover from '$lib/components/ui/sheet/index.js';
+
+	let { header = false }: { header?: boolean } = $props();
 
 	const cart = $derived(useCart());
 
@@ -24,22 +26,24 @@
 
 <Popover.Root bind:open>
 	<Popover.Trigger
-		class="fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 active:scale-95"
+		class={header
+			? 'relative flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-foreground transition-all hover:bg-accent hover:text-accent-foreground'
+			: 'fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 active:scale-95'}
 	>
-		<div class="relative">
-			<ShoppingCartIcon class="size-6" />
+		<div class="relative flex items-center justify-center">
+			<ShoppingCartIcon class="size-5" />
 			{#if cart.totalItems > 0}
 				<Badge
 					variant="destructive"
-					class="absolute -top-5 -right-5 flex h-5 w-5 items-center justify-center rounded-full p-0 text-[12px]"
+					class="absolute -top-3 -right-3 flex h-5 min-w-5 items-center justify-center rounded-full p-1 text-[10px] font-bold"
 				>
 					{cart.totalItems}
 				</Badge>
 			{/if}
 		</div>
 	</Popover.Trigger>
+
 	<Popover.Content>
-		<!-- Header -->
 		<div class="flex items-center justify-between border-b border-border bg-muted/30 p-4">
 			<div class="flex items-center gap-2">
 				<ShoppingCartIcon class="size-5 text-primary" />
@@ -47,7 +51,6 @@
 			</div>
 		</div>
 
-		<!-- Cart Items -->
 		{#if cart.items.length > 0}
 			<ScrollArea class="overscroll-behavior-contain min-h-0 flex-1">
 				<div class="flex flex-col gap-2 p-3">
@@ -57,7 +60,6 @@
 				</div>
 			</ScrollArea>
 
-			<!-- Footer -->
 			<div class="z-100 space-y-3 border-t border-border bg-muted p-4">
 				<div class="flex items-center justify-between">
 					<span class="text-sm text-muted-foreground">Total ({cart.totalItems} items)</span>
@@ -74,7 +76,7 @@
 				</div>
 			</div>
 		{:else}
-			<div class=" p-8 text-center">
+			<div class="p-8 text-center">
 				<ShoppingCartIcon class="mx-auto mb-3 size-12 text-muted-foreground/50" />
 				<p class="text-sm text-muted-foreground">Your cart is empty</p>
 				<p class="mt-1 text-xs text-muted-foreground/70">Add some products to get started</p>

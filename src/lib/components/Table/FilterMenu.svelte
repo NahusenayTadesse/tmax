@@ -6,13 +6,11 @@
 		X,
 		Check,
 		ChevronsUpDown,
-		BarChart2,
-		PieChart,
-		TrendingUp,
 		Activity,
 		ChartArea,
 		ChartPie,
-		ChartColumnBig
+		ChartColumnBig,
+		TrendingUp
 	} from '@lucide/svelte';
 	import * as Popover from '$lib/components/ui/popover/index.js';
 	import * as Command from '$lib/components/ui/command/index.js';
@@ -29,7 +27,7 @@
 	} from '$lib/components/ui/card';
 	import { pluralize } from '$lib/hooks/pluralize';
 	import { toast } from 'svelte-sonner';
-	import { fly, fade } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import { buttonVariants } from '$lib/components/ui/button/index.js';
 	import * as Tooltip from '$lib/components/ui/tooltip/index.js';
 
@@ -37,7 +35,7 @@
 
 	interface Props {
 		data: any[];
-		filterKeys: any[];
+		filterKeys: string[];
 		filteredList?: any[];
 		class?: string;
 	}
@@ -54,44 +52,52 @@
 		{ value: 'radar', label: 'Radar' }
 	];
 
-	let type = $state<ChartType>();
+	let type = $state<ChartType>('bar');
 	let chartTypeOpen = $state(false);
 
-	// ── State ───────────────────────────────────────────────────────────────
+	// ── State ────────────────────────────────────────────────────────────────
 	let selectedFilters = $state<Record<string, string[]>>({});
 	let filtersOpen = $state(false);
 	let chartOpen = $state(false);
-	let activeChartKey = $derived<string>(filterKeys[0] ?? '');
+	let activeChartKey = $state<string>(filterKeys[0] ?? '');
 	let chartCanvases = $state<Record<string, HTMLCanvasElement | null>>({});
 	let chartInstances: Record<string, any> = {};
 
-	// ── Init filters ────────────────────────────────────────────────────────
+	// ── Init filters ─────────────────────────────────────────────────────────
 	$effect(() => {
 		filterKeys.forEach((key) => {
 			if (!(key in selectedFilters)) selectedFilters[key] = [];
 		});
 	});
 
-	// ── Helpers ─────────────────────────────────────────────────────────────
+	// ── Helpers ──────────────────────────────────────────────────────────────
 	const humanLabel = (key: string) =>
 		pluralize(key)
 			.replace(/([a-z])([A-Z])/g, '$1 $2')
 			.replace(/^\w/, (c) => c.toUpperCase());
 
-	const getDistinctValues = (key: string): string[] =>
-		Array.from(
-			new Set(data.map((item: any) => item[key]).filter((v) => v !== undefined && v !== null))
-		)
-			.map(String)
-			.sort();
+	/** Normalize a field value to a flat string array, supporting scalars and arrays. */
+	const toStringArray = (val: any): string[] => {
+		if (val === undefined || val === null) return [];
+		if (Array.isArray(val)) return val.filter((v) => v !== undefined && v !== null).map(String);
+		return [String(val)];
+	};
 
-	// Count matching items for a specific (key, value) respecting all OTHER active filters
+	/** All distinct values for a key, flattening array fields. */
+	const getDistinctValues = (key: string): string[] =>
+		Array.from(new Set(data.flatMap((item: any) => toStringArray(item[key])))).sort();
+
+	/**
+	 * Count items matching a specific (key, value) pair while respecting all
+	 * OTHER active filters. Works for both scalar and array fields.
+	 */
 	const getCountForValue = (filterKey: string, value: string) =>
 		data.filter((item: any) =>
 			filterKeys.every((key) => {
-				if (key === filterKey) return String(item[key]) === value;
 				const sel = selectedFilters[key];
-				return sel.length === 0 || sel.includes(String(item[key]));
+				const values = toStringArray(item[key]);
+				if (key === filterKey) return values.includes(value);
+				return sel.length === 0 || sel.some((s) => values.includes(s));
 			})
 		).length;
 
@@ -103,17 +109,19 @@
 	const isValueSelected = (key: string, value: string) =>
 		selectedFilters[key]?.includes(value) ?? false;
 
-	// ── Filtered list ────────────────────────────────────────────────────────
+	// ── Filtered list ─────────────────────────────────────────────────────────
 	$effect(() => {
 		filteredList = data.filter((item: any) =>
 			filterKeys.every((key) => {
 				const sel = selectedFilters[key];
-				return sel.length === 0 || sel.includes(String(item[key]));
+				if (sel.length === 0) return true;
+				const values = toStringArray(item[key]);
+				return sel.some((s) => values.includes(s));
 			})
 		);
 	});
 
-	// ── Reset ────────────────────────────────────────────────────────────────
+	// ── Reset ─────────────────────────────────────────────────────────────────
 	let isResetting = $state(false);
 	const resetFilters = () => {
 		isResetting = true;
@@ -172,8 +180,13 @@
 			},
 			tooltip: {
 				callbacks: {
-					label: (ctx: any) =>
-						` ${ctx.label}: ${filteredList.filter((c) => c[key] === ctx.label)?.length} items`
+					label: (ctx: any) => {
+						const label = ctx.label;
+						const count = data.filter((item: any) =>
+							toStringArray(item[key]).includes(label)
+						).length;
+						return ` ${label}: ${count} items`;
+					}
 				}
 			}
 		},
@@ -200,7 +213,7 @@
 		}
 	});
 
-	// ── Render / update charts ───────────────────────────────────────────────
+	// ── Render / update charts ────────────────────────────────────────────────
 	let Chart: any;
 
 	onMount(async () => {
@@ -226,7 +239,7 @@
 		});
 	};
 
-	// Re-render whenever filters or active chart key changes
+	// Re-render whenever filters change
 	$effect(() => {
 		void activeFilterCount;
 		void activeChartKey;
@@ -245,7 +258,7 @@
 		if (Chart) renderAllCharts();
 	});
 
-	// ── Icon helper ──────────────────────────────────────────────────────────
+	// ── Icon helper ───────────────────────────────────────────────────────────
 	const chartTypeIcon = (t: ChartType) => {
 		if (t === 'pie' || t === 'doughnut') return ChartPie;
 		if (t === 'line') return TrendingUp;
@@ -257,8 +270,6 @@
 
 <!-- ── Toolbar ────────────────────────────────────────────────────────────── -->
 <div class="flex {className} flex-wrap items-center gap-2">
-	<!-- Filter toggle -->
-
 	<div class="items-between flex w-full flex-row flex-wrap justify-between">
 		<Tooltip.Provider>
 			<Tooltip.Root>
@@ -277,6 +288,7 @@
 				<Tooltip.Content><p>Filter Charts</p></Tooltip.Content>
 			</Tooltip.Root>
 		</Tooltip.Provider>
+
 		<div>
 			<Tooltip.Provider>
 				<Tooltip.Root>
@@ -299,12 +311,11 @@
 							</Button>
 						{/snippet}
 					</Tooltip.Trigger>
-					<Tooltip.Content><p>Filter Charts</p></Tooltip.Content>
+					<Tooltip.Content><p>Toggle Charts</p></Tooltip.Content>
 				</Tooltip.Root>
 			</Tooltip.Provider>
 		</div>
 	</div>
-	<!-- Chart type picker -->
 </div>
 
 <!-- ── Filter panel ───────────────────────────────────────────────────────── -->
@@ -527,7 +538,6 @@
 						</div>
 					</CardHeader>
 					<CardContent>
-						<!-- tip: click a bar/slice to toggle that filter -->
 						{#if type === 'bar' || type === 'line'}
 							<p class="mb-3 text-xs text-muted-foreground">
 								💡 Click a bar to toggle that value as a filter
