@@ -1,6 +1,18 @@
 import { db } from '$lib/server/db';
-import { user, roles, gallery } from '$lib/server/db/schema';
-import { eq } from 'drizzle-orm';
+import {
+	user,
+	roles,
+	gallery,
+	products,
+	productCategories,
+	productTags,
+	tags,
+	categoriesProducts,
+	orderItems,
+	prices,
+	testimonials
+} from '$lib/server/db/schema';
+import { eq, sql, desc, sum, inArray } from 'drizzle-orm';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
@@ -22,9 +34,57 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 
 	const imagesList = images.map((img) => img.imageUrl);
 
+	const bestSelling = await db
+		.select({
+			productId: products.id,
+			brand: products.brand,
+			productName: products.name,
+			price: sql<number>`min(${prices.price})`,
+			amount: sql<number>`min(${prices.amount})`,
+			image: products.featuredImage,
+			category: productCategories.name
+		})
+		.from(products)
+		.leftJoin(categoriesProducts, eq(categoriesProducts.productId, products.id))
+		.leftJoin(productCategories, eq(productCategories.id, categoriesProducts.categoryId))
+		.leftJoin(productTags, eq(productTags.productId, products.id))
+		.leftJoin(tags, eq(tags.id, productTags.tagId))
+		.leftJoin(prices, eq(prices.productId, products.id))
+		.innerJoin(orderItems, eq(orderItems.productId, products.id))
+		.groupBy(products.id)
+		.orderBy(desc(sum(orderItems.quantity)))
+		.limit(10);
+
+	const productIds = bestSelling.map((p) => p.productId);
+	let allPrices = [];
+	if (productIds.length > 0) {
+		allPrices = await db.select().from(prices).where(inArray(prices.productId, productIds)); // ✅ cleaner than raw sql`IN`
+	}
+
+	const productList = bestSelling.map((p) => ({
+		...p,
+		priceList: allPrices
+			.filter((price) => price.productId === p.productId)
+			.map((price) => ({
+				amount: price.amount,
+				price: price.price
+			}))
+	}));
+
+	const testimonialList = await db
+		.select({
+			name: testimonials.name,
+			position: testimonials.position,
+			testimonial: testimonials.message,
+			avatar: testimonials.avatar
+		})
+		.from(testimonials);
+
 	return {
 		roleName,
 		user: currentUser,
-		imagesList
+		testimonialList,
+		imagesList,
+		bestSelling: productList
 	};
 };

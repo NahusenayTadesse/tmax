@@ -6,150 +6,216 @@
 		CardHeader,
 		CardTitle
 	} from '$lib/components/ui/card';
-	import { CheckIcon, SparklesIcon, TrendingUpIcon, AwardIcon } from '@lucide/svelte';
+	import {
+		CheckIcon,
+		ShieldCheckIcon,
+		TruckIcon,
+		CoinsIcon,
+		LaptopIcon,
+		SmartphoneIcon,
+		CpuIcon
+	} from '@lucide/svelte';
 	import { fly } from 'svelte/transition';
 
 	const highlights = [
-		{ icon: AwardIcon, label: 'Halal Certified', description: 'All products meet Halal standards' },
 		{
-			icon: SparklesIcon,
-			label: 'Specialty Options',
-			description: 'Gluten-free, sugar-free & vegan'
+			icon: ShieldCheckIcon,
+			label: '12-Month Warranty',
+			description: 'Every device fully covered by TMAX'
 		},
-		{ icon: TrendingUpIcon, label: 'Since 2011', description: 'Over a decade of excellence' },
-		{ icon: CheckIcon, label: 'Quality Assured', description: 'Consistent standards guaranteed' }
+		{
+			icon: TruckIcon,
+			label: 'Same-Day Delivery',
+			description: 'Fast, reliable delivery within Addis Ababa'
+		},
+		{ icon: CoinsIcon, label: 'Priced in Birr', description: 'Local pricing with no hidden costs' },
+		{
+			icon: LaptopIcon,
+			label: 'Directly Sourced',
+			description: 'Authentic tech straight from manufacturers'
+		}
 	];
 
-	const products = ['Yeasts', 'Improvers', 'Mixes', 'Specialty Products', 'Equipment'];
-
-	const partners = [
-		{ name: 'Fixtec', description: 'Mechanical tools & construction materials' },
-		{
-			name: 'Fahem General Trading',
-			description: 'Coffee export, agrochemicals & veterinary imports'
-		}
+	const products = [
+		{ name: 'Phones', icon: SmartphoneIcon },
+		{ name: 'Laptops', icon: LaptopIcon },
+		{ name: 'Audio', icon: CpuIcon },
+		{ name: 'Smart Home', icon: ShieldCheckIcon }
 	];
 </script>
 
 <section
-	class="relative bg-linear-to-b from-background via-primary/5 to-background px-4 py-20 sm:px-6 lg:px-8"
+	class="relative overflow-hidden bg-background px-4 py-24 text-foreground transition-colors duration-300 sm:px-6 lg:px-8"
 >
+	<!-- Ambient Background Glows - works beautifully in both dark/light modes -->
+	<div
+		class="absolute top-0 left-1/4 -z-10 h-96 w-96 animate-pulse rounded-full bg-primary/10 opacity-70 blur-3xl duration-4000 dark:bg-primary/5"
+	></div>
+	<div
+		class="absolute right-1/4 bottom-0 -z-10 h-96 w-96 animate-pulse rounded-full bg-primary/5 opacity-70 blur-3xl duration-6000 dark:bg-primary/10"
+	></div>
+
 	<div class="mx-auto max-w-6xl">
 		<!-- Section Header -->
-		<div transition:fly={{ y: 20, duration: 600 }} class="mb-16 flex flex-col gap-4 text-center">
-			<h2 class="text-4xl font-bold text-foreground sm:text-5xl">About Lalo Bakery Solutions</h2>
-			<p class="mx-auto max-w-3xl text-lg text-foreground/70">
-				Established in 2011, we've grown from MasterChef into a comprehensive bakery ingredient and
-				equipment supplier serving both small bakeries and large-scale producers.
+		<div transition:fly={{ y: 30, duration: 800 }} class="mb-20 flex flex-col gap-4 text-center">
+			<span
+				class="mx-auto max-w-fit rounded-full border border-primary/20 bg-primary/5 px-4 py-1 text-xs font-semibold tracking-wider text-primary uppercase backdrop-blur-md"
+			>
+				TMAX Ecosystem
+			</span>
+			<h2
+				class="bg-gradient-to-r from-foreground via-foreground to-foreground/60 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-6xl"
+			>
+				About TMAX
+			</h2>
+			<p class="mx-auto max-w-2xl text-lg text-muted-foreground">
+				Your premium destination for authentic tech in Addis Ababa. Sourced directly, priced
+				transparently in Birr, delivered today.
 			</p>
 		</div>
 
 		<!-- Main Content Grid -->
 		<div class="mb-16 grid gap-8 lg:grid-cols-3">
-			<!-- Company Story -->
-			<div transition:fly={{ y: 20, duration: 600, delay: 100 }} class="lg:col-span-2">
+			<!-- NEW SECTION: Dynamic Pure CSS Technical Grid (Replaces old Image Card) -->
+			<div transition:fly={{ y: 30, duration: 800, delay: 150 }} class="lg:col-span-2">
 				<Card
-					style="background-image: url('/bakery (9).webp')"
-					class="shadow-lg-lg shadow-lg-primary/10 relative z-0 h-full border-primary/20  bg-cover bg-center text-white"
+					class="group relative h-full overflow-hidden border-primary/10 bg-gradient-to-br from-card/60 via-card/40 to-primary/5 shadow-xl backdrop-blur-md transition-all duration-500 hover:border-primary/30"
 				>
-					<div class="absolute inset-0 -z-1 bg-black/60"></div>
-					<CardHeader>
-						<CardTitle class="text-2xl">Our Journey</CardTitle>
-						<CardDescription class="text-white">From MasterChef to Industry Leader</CardDescription>
-					</CardHeader>
-					<CardContent class="flex flex-col gap-4 text-white">
-						<p class="leading-relaxed">
-							Formerly known as MasterChef, we rebranded as Lalo Bakery Solutions to better reflect
-							our mission of delivering excellence in baking across every stage of production. Our
-							comprehensive portfolio includes flours, yeasts, improvers, mixes, specialty products,
-							and equipment—all backed by industry knowledge and technical support.
-						</p>
-						<p class="leading-relaxed">
-							Guided by a commitment to reliability and customer satisfaction, we work with bakeries
-							to support the creation of products that meet market demands and stand out for their
-							excellence.
-						</p>
-					</CardContent>
+					<!-- Abstract structural design lines for a high-tech vibe -->
+					<div
+						class="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(var(--primary),0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--primary),0.03)_1px,transparent_1px)] bg-[size:24px_24px]"
+					></div>
+
+					<div class="grid h-full items-center gap-6 p-8 md:grid-cols-5">
+						<!-- Content Area -->
+						<div class="flex flex-col justify-center gap-4 md:col-span-3">
+							<div class="flex items-center gap-2 text-primary">
+								<CpuIcon class="size-5 animate-spin duration-8000" />
+								<span class="text-xs font-bold tracking-widest uppercase">Core Promise</span>
+							</div>
+							<h3 class="text-3xl font-bold tracking-tight text-foreground">The TMAX Standard</h3>
+							<p class="text-sm leading-relaxed font-light text-muted-foreground">
+								At TMAX, we bridge the gap between global technology innovation and local
+								convenience. By sourcing our ecosystem directly from trusted manufacturing
+								pipelines, we eliminate middleman markups to give you premium products at fair
+								market rates.
+							</p>
+							<p class="text-sm leading-relaxed font-light text-muted-foreground">
+								We believe buying high-end tech should be stress-free. Every smartphone, workspace
+								laptop, and automated appliance is cataloged natively in Birr, hand-delivered
+								same-day across Addis, and secured by our ironclad warranty infrastructure.
+							</p>
+						</div>
+
+						<!-- Tech Micro-Dashboard Widget UI Element -->
+						<div
+							class="hidden flex-col gap-3 rounded-xl border border-primary/10 bg-background/60 p-4 shadow-inner backdrop-blur-sm transition-all duration-500 group-hover:border-primary/20 md:col-span-2 md:flex"
+						>
+							<div class="flex items-center justify-between border-b border-primary/5 pb-2">
+								<span class="font-mono text-xs text-muted-foreground">DEVICE_SECURE_OS</span>
+								<div class="h-2 w-2 animate-ping rounded-full bg-emerald-500"></div>
+							</div>
+
+							<div class="space-y-2 py-2">
+								<div class="flex items-center justify-between text-xs">
+									<span class="text-muted-foreground">TMAX Warranty</span>
+									<span class="font-mono font-bold text-primary">Active (12 Months)</span>
+								</div>
+								<div class="h-1.5 w-full overflow-hidden rounded-full bg-primary/10">
+									<div
+										class="h-full w-full origin-left rounded-full bg-primary transition-transform duration-1000 group-hover:scale-x-95"
+									></div>
+								</div>
+							</div>
+
+							<div class="rounded-lg border border-primary/10 bg-primary/5 p-2.5">
+								<div class="flex items-center gap-2">
+									<ShieldCheckIcon class="size-4 text-primary" />
+									<span class="text-xs font-semibold">100% Authenticity Verified</span>
+								</div>
+							</div>
+
+							<div class="font-mono text-[10px] leading-tight text-muted-foreground/60">
+								Loc: Addis Ababa, ET<br />
+								Currency: ETB (Birr)
+							</div>
+						</div>
+					</div>
 				</Card>
 			</div>
 
-			<!-- Key Highlights -->
-			<div transition:fly={{ y: 20, duration: 600, delay: 200 }} class="flex flex-col gap-4">
-				{#each highlights as highlight (highlight.label)}
-					<Card
-						class="shadow-lg-md shadow-lg-primary/5 hover:shadow-lg-lg hover:shadow-lg-primary/10 border-primary/20 transition-all duration-300"
-					>
-						<CardContent class="flex gap-2">
-							<div class="shrink-0">
-								<div class="flex size-10 items-center justify-center rounded-lg bg-primary/10">
-									<svelte:component this={highlight.icon} class="size-6 text-primary" />
+			<!-- Sleek Tech Highlight Feature Cards -->
+			<div class="flex flex-col gap-4">
+				{#each highlights as highlight, i (highlight.label)}
+					<div transition:fly={{ y: 20, duration: 600, delay: 200 + i * 100 }}>
+						<Card
+							class="group border-primary/10 bg-card/40 shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:bg-card/60 hover:shadow-md"
+						>
+							<CardContent class="flex gap-4 pt-6">
+								<div class="shrink-0">
+									<div
+										class="flex size-12 items-center justify-center rounded-xl border border-primary/10 bg-primary/5 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground"
+									>
+										<svelte:component
+											this={highlight.icon}
+											class="size-6 text-primary transition-colors duration-300 group-hover:text-primary-foreground"
+										/>
+									</div>
 								</div>
-							</div>
-							<div class="min-w-0 flex-1">
-								<p class="text-sm font-semibold text-foreground">{highlight.label}</p>
-								<p class="mt-1 text-xs text-foreground/60">{highlight.description}</p>
-							</div>
-						</CardContent>
-					</Card>
+								<div class="min-w-0 flex-1">
+									<p class="text-sm font-semibold tracking-wide text-foreground">
+										{highlight.label}
+									</p>
+									<p class="mt-1 text-xs leading-relaxed text-muted-foreground">
+										{highlight.description}
+									</p>
+								</div>
+							</CardContent>
+						</Card>
+					</div>
 				{/each}
 			</div>
 		</div>
 
-		<!-- Products & Services -->
-		<div transition:fly={{ y: 20, duration: 600, delay: 300 }} class="mb-16">
-			<Card class="shadow-lg-lg shadow-lg-primary/10 border-primary/20">
-				<CardHeader>
-					<CardTitle>Our Product Portfolio</CardTitle>
-					<CardDescription>Comprehensive solutions for every baking need</CardDescription>
+		<!-- Products Matrix Section -->
+		<div transition:fly={{ y: 30, duration: 800, delay: 600 }}>
+			<Card class="border-primary/10 bg-card/20 shadow-xl backdrop-blur-lg">
+				<CardHeader
+					class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center"
+				>
+					<div>
+						<CardTitle class="text-xl font-bold tracking-tight"
+							>Product Deployment Portfolio</CardTitle
+						>
+						<CardDescription
+							>Explore tailored hardware setups optimized for performance</CardDescription
+						>
+					</div>
 				</CardHeader>
 				<CardContent>
-					<div class="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
-						{#each products as product (product)}
+					<div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
+						{#each products as product (product.name)}
 							<div
-								class="flex items-center gap-3 rounded-lg border border-primary/10 bg-primary/5 p-2 transition-colors duration-300 hover:bg-primary/10"
+								class="group relative flex flex-col gap-3 rounded-xl border border-primary/5 bg-primary/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/10 hover:shadow-lg"
 							>
-								<CheckIcon class="size-5 shrink-0 text-primary" />
-								<span class="text-sm font-medium text-foreground">{product}</span>
+								<div
+									class="w-fit rounded-lg bg-primary/10 p-2 text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground"
+								>
+									<svelte:component this={product.icon} class="size-5" />
+								</div>
+								<div>
+									<h4 class="text-sm font-bold tracking-wide text-foreground">{product.name}</h4>
+									<p
+										class="mt-1 flex items-center gap-1 font-mono text-[11px] text-muted-foreground"
+									>
+										<CheckIcon class="size-3 text-primary" /> Same-Day Available
+									</p>
+								</div>
 							</div>
 						{/each}
 					</div>
 				</CardContent>
 			</Card>
 		</div>
-
-		<!-- Lalo Business Group -->
-		<!-- <div
-			transition:fly={{ y: 20, duration: 600, delay: 400 }}
-			class="shadow-lg-lg relative overflow-hidden rounded-lg border border-primary/20"
-			style="background-image: url('/bakery (4).webp'); background-size: contain; background-position: center;"
-		>
-			<div class="absolute inset-0 z-0 bg-black/70"></div>
-
-			<Card
-				class="shadow-lg-lg shadow-lg-primary/10 relative z-10 border-primary/20 bg-transparent text-white"
-			>
-				<CardHeader>
-					<CardTitle>Part of Lalo Business Group</CardTitle>
-					<CardDescription class="text-gray-200">
-						Integrated solutions across industries
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<p class="mb-6 leading-relaxed text-white">
-						As part of the Lalo Business Group, we work alongside complementary businesses to give
-						our clients access to integrated, cross-industry solutions that drive growth from the
-						ground up.
-					</p>
-					<div class="grid gap-6 md:grid-cols-2">
-						{#each partners as partner (partner.name)}
-							<div class="rounded-lg bg-black/25 p-4 text-white shadow-lg">
-								<h4 class="mb-2 font-semibold text-white">{partner.name}</h4>
-								<p class="text-sm text-white/70">{partner.description}</p>
-							</div>
-						{/each}
-					</div>
-				</CardContent>
-			</Card>
-		</div> -->
 	</div>
 </section>
