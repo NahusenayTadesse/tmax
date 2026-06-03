@@ -5,11 +5,12 @@ import {
 	prices,
 	tags,
 	categoriesProducts,
-	productTags
+	productTags,
+	discounts
 } from '$lib/server/db/schema';
 import { eq, inArray } from 'drizzle-orm';
-import type { PageServerLoad } from '../$types';
-import { superValidate } from 'sveltekit-superforms';
+import type { PageServerLoad, Actions } from '../$types';
+import { message, superValidate } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { schema } from './schema';
 export const load: PageServerLoad = async () => {
@@ -92,4 +93,45 @@ export const load: PageServerLoad = async () => {
 		productList,
 		form
 	};
+};
+
+export const actions: Actions = {
+	addDiscount: async ({ request, locals }) => {
+		const form = await superValidate(request, zod4(schema));
+		console.log(form);
+
+		if (!form.valid) {
+			return message(form, { type: 'error', text: 'Please check your form data.' });
+		}
+
+		const { ids, name, description, amount } = form.data;
+
+		try {
+			await db.transaction(async (tx) => {
+				await tx.delete(discounts).where(inArray(discounts.productId, ids));
+				if (amount > 0) {
+					const priceRecords = ids.map((p) => ({
+						productId: p,
+						name: name,
+						description: description,
+						amount: amount,
+						createdBy: locals?.user?.id
+					}));
+					await tx.insert(discounts).values(priceRecords);
+				}
+			});
+
+			return message(form, { type: 'success', text: 'New Discount Successfully Added' });
+		} catch (err) {
+			console.error(err);
+			return message(
+				form,
+				{
+					type: 'error',
+					text: 'An error occurred while adding the Discount.' + err?.message
+				},
+				{ status: 500 }
+			);
+		}
+	}
 };

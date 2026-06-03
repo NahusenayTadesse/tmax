@@ -125,7 +125,7 @@
 		@apply border-border outline-ring/50;
 	}
 	body {
-		@apply bg-background text-foreground;
+		@apply min-h-screen bg-background bg-[radial-gradient(ellipse_at_top_right,var(--tw-gradient-stops))] from-primary/40 via-background to-background text-foreground;
 	}
 	html {
 		@apply font-sans;

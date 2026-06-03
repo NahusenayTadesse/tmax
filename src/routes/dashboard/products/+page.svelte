@@ -71,7 +71,7 @@
 		<Button href="/dashboard/products/add-products"><Plus />Add New Products</Button>
 	</div>
 {:else}
-	{#if selected.length > 0}
+	{#if selected.length}
 		<p class="my-4 text-sm">Selected Products: {selected.length}</p>
 
 		<DialogComp title="Add Discount for Selected Products" variant="default" IconComp={Plus}>
@@ -107,8 +107,9 @@
 				<Button type="submit" form="main" class="mt-4">
 					{#if $delayed}
 						<LoadingBtn name="Saving Discount" />
+					{:else}
+						<Save /> Save Discount
 					{/if}
-					<Save /> Save Discount
 				</Button>
 			</form>
 		</DialogComp>
