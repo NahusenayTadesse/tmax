@@ -14,7 +14,7 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { ArrowBigRight } from '@lucide/svelte';
 	import Faq from '$lib/components/faq.svelte';
-	import Slider from '$lib/components/ui/slider/slider.svelte';
+	import Slider from '$lib/components/slider.svelte';
 	import Testimonial from '$lib/components/testimonial.svelte';
 </script>
 

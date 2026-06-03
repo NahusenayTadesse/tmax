@@ -68,6 +68,7 @@
 		"bits-ui": "^2.18.1",
 		"browser-image-compression": "^2.0.2",
 		"chart.js": "^4.5.1",
+		"embla-carousel-autoplay": "^8.6.0",
 		"jspdf": "^4.2.1",
 		"jspdf-autotable": "^5.0.8",
 		"mode-watcher": "^1.1.0",
