@@ -27,6 +27,7 @@
 	import Footer from '$lib/components/footer.svelte';
 	import Cart from '$lib/components/floating-cart/cart.svelte';
 	import { setCart } from '$lib/hooks/cart.svelte'; // Adjust path
+	import BottomMenu from '$lib/components/bottomMenu.svelte';
 
 	// This initializes the class and puts it into Svelte's context
 
@@ -63,6 +64,7 @@
 	{@render children()}
 	<Footer />
 	<Cart />
+	<BottomMenu />
 {:else}
 	{@render children()}
 {/if}

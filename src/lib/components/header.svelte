@@ -18,7 +18,7 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Input } from '$lib/components/ui/input';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
+	import { page, navigating } from '$app/state';
 	import Cart from '$lib/components/floating-cart/cart.svelte';
 	import { setCart } from '$lib/hooks/cart.svelte'; // Adjust path
 
@@ -36,7 +36,6 @@
 	const menuItems = [
 		{ label: 'Home', href: '/', icon: HomeIcon },
 		{ label: 'Shop', href: '/shop', icon: ShoppingBagIcon },
-		{ label: 'Orders', href: '/orders', icon: PackageCheckIcon },
 		{ label: 'About Us', href: '/about', icon: InfoIcon },
 		{ label: 'Contact Us', href: '/contact-us', icon: ContactIcon }
 	];
@@ -51,6 +50,12 @@
 			goto(shopUrl.toString());
 		}
 	}
+
+	$effect(() => {
+		if (navigating.to) {
+			isOpen = false;
+		}
+	});
 </script>
 
 <header
@@ -146,7 +151,7 @@
 							{#if data === '' || !data}
 								<div class="space-y-1.5">
 									<h2 class="text-base font-bold tracking-tight text-foreground">
-										Welcome to Tmax Tech
+										Welcome to Tmax Electronics
 									</h2>
 									<p class="text-xs text-muted-foreground">
 										Sign in to initialize hardware configurations & track secure delivery channels.
@@ -161,7 +166,7 @@
 									</div>
 									<div class="flex flex-col overflow-hidden">
 										<span class="truncate text-sm font-bold text-foreground">
-											{data.user?.name ?? 'Tech Operator'}
+											{data?.name ?? 'Tech Operator'}
 										</span>
 										<span class="truncate font-mono text-xs text-muted-foreground">
 											{data.user?.email ?? 'active_session'}
@@ -204,6 +209,11 @@
 									>
 										Join Store
 									</Button>
+								</div>
+							{:else}
+								<div class="flex flex-row items-center justify-between p-1">
+									<AvatarSettings {data} />
+									<DarkMode />
 								</div>
 							{/if}
 						</div>

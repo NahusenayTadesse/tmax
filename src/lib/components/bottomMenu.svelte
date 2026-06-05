@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import { Container, LayoutDashboard, SquareChartGantt, UsersRound } from '@lucide/svelte';
+	import { Container, LayoutGrid, House, ShoppingCart, User, Search } from '@lucide/svelte';
 
 	const mobNav = [
-		{ title: 'Dashboard', url: '/dashboard/', icon: LayoutDashboard },
-		{ title: 'Customers', url: '/dashboard/appointments', icon: UsersRound },
-		{ title: 'Service', url: '/dashboard/services', icon: SquareChartGantt },
-		{ title: 'Supplies', url: '/dashboard/supplies', icon: Container }
+		{ title: 'Home', url: '/', icon: House },
+		{ title: 'Shop', url: '/shop', icon: LayoutGrid },
+		{ title: 'Orders', url: '/account/orders', icon: ShoppingCart },
+		{ title: 'Account', url: '/account', icon: User }
 	];
 
 	const on = 'text-primary shadow-lg shadow-primary/20 bg-primary/10';
@@ -16,18 +16,32 @@
 
 		// Special case for root dashboard
 		if (url === '/dashboard/') {
-			return currentPath === '/dashboard' ? on : off;
+			return currentPath === '/' ? on : off;
 		}
 
 		// For other items, check if current path starts with their URL but is not just /dashboard
-		return currentPath.startsWith(url) && currentPath !== '/dashboard' ? on : off;
+		return currentPath === url ? on : off;
+	}
+
+	import * as Dialog from '$lib/components/ui/dialog/index.js';
+	import Input from './ui/input/input.svelte';
+
+	let searchQuery = $state(page.url.searchParams.get('search') ?? '');
+	function executionDesktopSearch(e: KeyboardEvent) {
+		if (e.key === 'Enter') {
+			const shopUrl = new URL('/shop', window.location.origin);
+			if (searchQuery.trim()) {
+				shopUrl.searchParams.set('search', searchQuery.trim());
+			}
+			goto(shopUrl.toString());
+		}
 	}
 </script>
 
 <nav
 	class="fixed right-0 bottom-0 left-0 z-40 flex w-screen border-t border-border/50 bg-gradient-to-t from-background via-background/95 to-background/80 backdrop-blur-xl lg:hidden"
 >
-	<div class="grid grid-cols-5 items-center justify-around px-2 py-3">
+	<div class="grid grid-cols-5 items-center justify-between px-2 py-3">
 		{#each mobNav as item (item.url)}
 			<a
 				href={item.url}
@@ -41,13 +55,7 @@
 						? 'drop-shadow-lg'
 						: ''}"
 				>
-					<item.icon class="!h-4 !w-4" />
-					<!-- {#if on}
-						<div
-							class="absolute -bottom-1 left-1/2 size-1 -translate-x-1/2 animate-pulse rounded-full bg-primary"
-							transition:scale={{ duration: 200 }}
-						></div>
-					{/if} -->
+					<item.icon class="h-4 w-4" />
 				</div>
 
 				<!-- Label -->
@@ -61,10 +69,45 @@
 				{#if off}
 					<div
 						class="absolute inset-0 -z-10
-					rounded-xl bg-gradient-to-t from-primary/0 to-primary/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+					rounded-xl bg-linear-to-t from-primary/0 to-primary/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
 					></div>
 				{/if}
 			</a>
 		{/each}
+
+		<Dialog.Root>
+			<Dialog.Trigger
+				class="group relative flex flex-col items-center gap-1 rounded-xl px-3 py-2 transition-all duration-300 ease-out hover:scale-110 active:scale-95"
+			>
+				<div
+					class="relative flex h-6 w-6 items-center justify-center transition-all duration-300 {on
+						? 'drop-shadow-lg'
+						: ''}"
+				>
+					<Search class="h-4 w-4" />
+				</div>
+
+				<!-- Label -->
+				<span
+					class="text-xs leading-none font-medium whitespace-nowrap transition-all duration-300"
+				>
+					Search
+				</span></Dialog.Trigger
+			>
+			<Dialog.Content class="pt-8">
+				<div class="relative mt-4 max-w-xs">
+					<Search
+						class="absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-muted-foreground/60"
+					/>
+					<Input
+						type="search"
+						placeholder="Search catalog... (Press Enter)"
+						bind:value={searchQuery}
+						onkeydown={executionDesktopSearch}
+						class="h-8.5 rounded-lg border-border bg-muted/40 pl-9 text-xs shadow-inner focus-visible:border-primary focus-visible:ring-primary/20"
+					/>
+				</div>
+			</Dialog.Content>
+		</Dialog.Root>
 	</div>
 </nav>

@@ -21,7 +21,7 @@
 			</Avatar.Fallback>
 		</Avatar.Root>
 	</DropdownMenu.Trigger>
-	<DropdownMenu.Content class="p-2">
+	<DropdownMenu.Content class="w-48 p-2">
 		<DropdownMenu.Group>
 			<DropdownMenu.Label>My Account</DropdownMenu.Label>
 			<DropdownMenu.Separator />

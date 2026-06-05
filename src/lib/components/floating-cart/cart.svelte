@@ -28,7 +28,7 @@
 	<Popover.Trigger
 		class={header
 			? 'relative flex h-10 w-10 items-center justify-center rounded-md border border-input bg-background text-foreground transition-all hover:bg-accent hover:text-accent-foreground'
-			: 'fixed right-6 bottom-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 active:scale-95'}
+			: 'fixed right-6 bottom-24 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg transition-transform hover:scale-105 active:scale-95 lg:bottom-6'}
 	>
 		<div class="relative flex items-center justify-center">
 			<ShoppingCartIcon class="size-5" />

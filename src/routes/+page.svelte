@@ -18,6 +18,10 @@
 	import Testimonial from '$lib/components/testimonial.svelte';
 </script>
 
+<svelte:head>
+	<title>Home - TMAX</title>
+</svelte:head>
+
 <Hero />
 <About />
 
