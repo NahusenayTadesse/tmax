@@ -1,7 +1,7 @@
 <script>
 	import { enhance } from '$app/forms';
 	import { Button, buttonVariants } from '$lib/components/ui/button/index.js';
-	import { LogOut } from '@lucide/svelte';
+	import { LogOut, X } from '@lucide/svelte';
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import { ScrollArea } from '$lib/components/ui/scroll-area/index.js';
 	import LoadingBtn from '$lib/formComponents/LoadingBtn.svelte';
@@ -13,26 +13,24 @@
 </script>
 
 <Dialog.Root bind:open>
-	<Dialog.Trigger class={buttonVariants({ variant: 'destructive' })}
-		><LogOut /> LogOut
-	</Dialog.Trigger>
+	<Dialog.Trigger class={buttonVariants({ variant: 'destructive' })}><X /> Sign out</Dialog.Trigger>
 	<Dialog.Content class="w-full">
 		<Dialog.Header>
-			<Dialog.Title>Logout</Dialog.Title>
+			<Dialog.Title>Sign Out</Dialog.Title>
 		</Dialog.Header>
 		<ScrollArea class="h-auto rounded-md border p-2">
 			<h5 class="text-center">Are you sure you want to Logout?</h5>
 			<div class="flex flex-row items-center justify-center gap-4 pt-4">
 				<form
 					method="post"
-					action="/dashboard/?/logout"
+					action="/account/?/logout"
 					use:enhance={() => {
 						deleting = true; // 1. start spinner
 
 						return async ({ result, update }) => {
 							await update(); // 2. apply action result to page
 							deleting = false;
-							if (result.type === 'success') {
+							if (result) {
 								toast.success('Logged out successfully');
 							} else {
 								toast.error('Failed to log out');
@@ -43,9 +41,9 @@
 				>
 					<Button type="submit" disabled={deleting} variant="destructive" size="lg">
 						{#if deleting}
-							<LoadingBtn name="Logging Out" />
+							<LoadingBtn name="Signing Out" />
 						{:else}
-							<LogOut /> Logout
+							<LogOut /> Sign Out
 						{/if}
 					</Button>
 				</form>
