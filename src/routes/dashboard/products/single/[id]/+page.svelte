@@ -219,7 +219,7 @@
 						<p class="text-sm text-muted-foreground italic">No categories assigned.</p>
 					{:else}
 						<div class="grid gap-4 sm:grid-cols-2">
-							{#each data?.categorized as category (category.value)}
+							{#each data?.categorized as category}
 								<div
 									class="rounded-lg border border-border bg-card p-4 text-card-foreground shadow-sm transition-colors hover:bg-accent/50"
 								>
@@ -247,7 +247,7 @@
 						<p class="text-sm text-muted-foreground italic">No tags assigned.</p>
 					{:else}
 						<div class="flex flex-wrap gap-2">
-							{#each data?.tagged as tag (tag.value)}
+							{#each data?.tagged as tag}
 								<span
 									class="inline-flex cursor-default items-center rounded-full border border-border bg-secondary px-2.5 py-0.5 text-xs font-medium text-secondary-foreground transition-colors hover:bg-secondary/80"
 								>

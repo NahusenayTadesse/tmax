@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { page } from '$app/state';
+	import { navigating, page } from '$app/state';
 	import { Container, LayoutGrid, House, ShoppingCart, User, Search } from '@lucide/svelte';
 
 	const mobNav = [
@@ -25,7 +25,8 @@
 
 	import * as Dialog from '$lib/components/ui/dialog/index.js';
 	import Input from './ui/input/input.svelte';
-
+	import { afterNavigate, goto } from '$app/navigation';
+	let open = $state(false);
 	let searchQuery = $state(page.url.searchParams.get('search') ?? '');
 	function executionDesktopSearch(e: KeyboardEvent) {
 		if (e.key === 'Enter') {
@@ -33,9 +34,14 @@
 			if (searchQuery.trim()) {
 				shopUrl.searchParams.set('search', searchQuery.trim());
 			}
+
 			goto(shopUrl.toString());
 		}
 	}
+
+	afterNavigate(() => {
+		open = false;
+	});
 </script>
 
 <nav
@@ -75,7 +81,7 @@
 			</a>
 		{/each}
 
-		<Dialog.Root>
+		<Dialog.Root bind:open>
 			<Dialog.Trigger
 				class="group relative flex flex-col items-center gap-1 rounded-xl px-3 py-2 transition-all duration-300 ease-out hover:scale-110 active:scale-95"
 			>

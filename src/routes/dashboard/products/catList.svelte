@@ -27,9 +27,9 @@
 			<div class="max-h-64 overflow-y-auto">
 				{#if names.length > 0}
 					<ul class="list-disc pl-5">
-						{#each names as price (price.name)}
+						{#each names as price}
 							<li class="py-1.5 transition-colors hover:bg-muted/50">
-								<span class="text-sm text-foreground">{price.name}</span>
+								<span class="text-sm">{price}</span>
 							</li>
 						{/each}
 					</ul>

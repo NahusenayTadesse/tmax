@@ -100,21 +100,19 @@ export const actions: Actions = {
 			const newProductId = product.id;
 
 			if (category) {
-				for (const cat of category) {
-					await tx.insert(categoriesProducts).values({
-						categoryId: cat,
-						productId: newProductId
-					});
-				}
+				const categoryBulk = category.map((cat) => ({
+					categoryId: cat,
+					productId: newProductId
+				}));
+				await tx.insert(categoriesProducts).values(categoryBulk);
 			}
 
 			if (tag) {
-				for (const tagId of tag) {
-					await tx.insert(productTags).values({
-						tagId: tagId,
-						productId: newProductId
-					});
-				}
+				const tagBulk = tag.map((tagId) => ({
+					tagId,
+					productId: newProductId
+				}));
+				await tx.insert(productTags).values(tagBulk);
 			}
 
 			// 3. Prepare and insert the gallery images
@@ -141,7 +139,7 @@ export const actions: Actions = {
 				{ status: 500 }
 			);
 		} else {
-			message(form, { type: 'success', text: 'New Product Successfully Added' });
+			// message(form, { type: 'success', text: 'New Product Successfully Added' });
 			redirect(
 				`/dashboard/products/single/${result}`,
 				{ type: 'success', message: 'New Product Successfully Added' },

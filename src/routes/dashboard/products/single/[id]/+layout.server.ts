@@ -113,14 +113,14 @@ export const load: LayoutServerLoad = async ({ params }) => {
 		.from(productCategories);
 
 	const tagged = await db
-		.select({
+		.selectDistinct({
 			value: tags.id,
 			name: tags.name
 		})
 		.from(tags)
 		.innerJoin(productTags, eq(productTags.productId, Number(id)));
 	const categorized = await db
-		.select({
+		.selectDistinct({
 			value: productCategories.id,
 			name: productCategories.name,
 			description: productCategories.description

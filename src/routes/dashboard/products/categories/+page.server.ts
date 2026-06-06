@@ -70,24 +70,15 @@ export const actions: Actions = {
 		const { id, name, description, status } = form.data;
 
 		try {
-			if (manual) {
-				const manualAddress = await saveUploadedFile(manual);
-
-				await db
-					.update(department)
-					.set({
-						name,
-						description,
-						isActive: status,
-						updatedBy: locals?.user?.id
-					})
-					.where(eq(department.id, Number(id)));
-			} else {
-				await db
-					.update(department)
-					.set({ name, description, isActive: status, updatedBy: locals?.user?.id })
-					.where(eq(department.id, Number(id)));
-			}
+			await db
+				.update(department)
+				.set({
+					name,
+					description,
+					isActive: status,
+					updatedBy: locals?.user?.id
+				})
+				.where(eq(department.id, Number(id)));
 			return message(form, { type: 'success', text: 'Category Successfully Updated' });
 		} catch (err: any) {
 			if (err.code === 'ER_DUP_ENTRY') return;

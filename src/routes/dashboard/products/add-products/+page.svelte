@@ -48,6 +48,7 @@
 <svelte:head>
 	<title>Add New Product Item</title>
 </svelte:head>
+
 <FormCard
 	title="Add A Product Item"
 	description="Add New Inventory Items to track the how many have"
@@ -164,7 +165,7 @@
 			bind:images
 		/>
 
-		<Button type="submit" class="mt-4" form="main">
+		<Button type="submit" disabled={$delayed} class="mt-4" form="main">
 			{#if $delayed}
 				<LoadingBtn name="Adding Product" />
 			{:else}
