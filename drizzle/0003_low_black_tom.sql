@@ -1,0 +1,1 @@
+ALTER TABLE `transactions` ADD `txn_ref` varchar(255);

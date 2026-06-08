@@ -220,8 +220,9 @@
 										>
 									</td>
 									<td class="p-4 text-center font-mono">{item.quantity}</td>
-									<td class="p-4 text-right font-mono">${item.price.toFixed(2)}</td>
-									<td class="p-4 text-right font-mono font-semibold">${item.total.toFixed(2)}</td>
+									<td class="p-4 text-right font-mono">ETB {item.price.toFixed(2)}</td>
+									<td class="p-4 text-right font-mono font-semibold">ETB {item.total.toFixed(2)}</td
+									>
 								</tr>
 							{/if}
 						{/each}

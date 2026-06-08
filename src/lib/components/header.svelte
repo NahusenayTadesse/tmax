@@ -113,7 +113,7 @@
 					</div>
 				{:else}
 					<div class="flex items-center p-1">
-						<AvatarSettings {data} />
+						<AvatarSettings data={data.name} />
 					</div>
 				{/if}
 				<div class="ml-1 border-l border-border/60 pl-2">
@@ -162,14 +162,14 @@
 									<div
 										class="rounded-full border bg-background p-1 shadow-xs ring-2 ring-primary/5"
 									>
-										<AvatarSettings {data} />
+										<AvatarSettings data={data.name} />
 									</div>
 									<div class="flex flex-col overflow-hidden">
 										<span class="truncate text-sm font-bold text-foreground">
-											{data?.name ?? 'Tech Operator'}
+											{data.name ?? 'Tech Operator'}
 										</span>
 										<span class="truncate font-mono text-xs text-muted-foreground">
-											{data.user?.email ?? 'active_session'}
+											{data.email ?? 'active_session'}
 										</span>
 									</div>
 								</div>
@@ -212,7 +212,7 @@
 								</div>
 							{:else}
 								<div class="flex flex-row items-center justify-between p-1">
-									<AvatarSettings {data} />
+									<AvatarSettings data={data.name} />
 									<DarkMode />
 								</div>
 							{/if}

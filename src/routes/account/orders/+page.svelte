@@ -73,7 +73,7 @@
 						<div class="text-sm sm:text-right">
 							<p class="text-xs font-medium text-muted-foreground">Estimated Expenditure</p>
 							<p class="font-mono text-xl font-bold text-foreground">
-								${order.orderTotal.toFixed(2)}
+								ETB {order.orderTotal.toFixed(2)}
 							</p>
 						</div>
 					</div>
@@ -102,11 +102,10 @@
 									<div class="space-y-0.5">
 										<p class="font-medium text-foreground">{item.productName}</p>
 										<p class="font-mono text-xs text-muted-foreground">
-											Qty: {item.quantity} × ${item.price.toFixed(2)}
+											Qty: {item.quantity} × ETB {item?.price}
 										</p>
 									</div>
-									<span class="font-mono font-medium text-foreground">${item.total.toFixed(2)}</span
-									>
+									<span class="font-mono font-medium text-foreground">ETB {item?.total} </span>
 								</li>
 							{/each}
 						</ul>

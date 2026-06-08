@@ -1,6 +1,20 @@
 <script lang="ts">
 	import { MessageSquareCode, ArrowRight, Star } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
+	import { onMount } from 'svelte';
+	import { fade, fly } from 'svelte/transition';
+
+	let heroImage = ['hero.webp', 'hero (1).webp', 'hero (2).webp', 'hero (3).webp', 'hero (4).webp'];
+
+	let currentImage = $state(0);
+
+	onMount(() => {
+		currentImage = heroImage.length - 1;
+
+		setInterval(() => {
+			currentImage = (currentImage + 1) % heroImage.length;
+		}, 5000);
+	});
 </script>
 
 <section
@@ -43,82 +57,19 @@
 					Ask the assistant
 				</Button>
 			</div>
-
-			<div class="mt-12 grid grid-cols-3 gap-4 border-t border-border pt-8 md:mt-16">
-				<div>
-					<div class="text-xl font-black tracking-tight md:text-2xl">12,400+</div>
-					<div class="mt-1 text-[10px] font-medium text-muted-foreground md:text-xs">
-						customers in 2025
-					</div>
-				</div>
-				<div>
-					<div class="text-xl font-black tracking-tight md:text-2xl">Same day</div>
-					<div class="mt-1 text-[10px] font-medium text-muted-foreground md:text-xs">
-						delivery in Addis
-					</div>
-				</div>
-				<div>
-					<div class="flex items-center gap-1 text-xl font-black tracking-tight md:text-2xl">
-						4.9 <Star class="h-4 w-4 fill-primary text-primary" />
-					</div>
-					<div class="mt-1 text-[10px] font-medium text-muted-foreground md:text-xs">
-						service rating
-					</div>
-				</div>
-			</div>
 		</div>
-
 		<div
-			class="group relative flex flex-col justify-between overflow-hidden rounded-[2rem] bg-linear-to-br from-background via-primary to-secondary p-6 text-white shadow-md md:p-8 lg:col-span-5"
+			class="relative h-full w-full overflow-hidden rounded-[2rem] bg-linear-to-br from-background via-primary to-secondary shadow-md lg:col-span-5"
 		>
-			<div
-				class="absolute inset-0 bg-[linear-gradient(45deg,#ffffff_25%,transparent_25%,transparent_50%,#ffffff_50%,#ffffff_75%,transparent_75%,transparent)] bg-[size:40px_40px] opacity-10"
-			></div>
-
-			<div class="relative z-10 flex items-center justify-between">
-				<span
-					class="rounded-md border border-white/10 bg-black/20 px-3 py-1.5 text-[10px] font-black tracking-widest uppercase backdrop-blur-md"
-				>
-					Deal of the week
-				</span>
-
-				<div class="flex items-center gap-1 font-mono text-xs font-bold">
-					<span class="rounded bg-black/80 px-2 py-1">08</span>:
-					<span class="rounded bg-black/80 px-2 py-1">12</span>:
-					<span class="rounded bg-black/80 px-2 py-1">37</span>
-				</div>
-			</div>
-
-			<div
-				class="relative z-10 my-6 flex aspect-[4/3] w-full flex-col items-center justify-between rounded-2xl border border-white/20 bg-white/20 p-4 shadow-inner backdrop-blur-md transition-transform duration-500 group-hover:scale-[1.01]"
-			>
-				<div class="self-start rounded-md bg-black/80 px-2 py-1 text-xs font-bold text-white">
-					-18%
-				</div>
-
-				<div class="flex h-full max-h-[160px] w-full items-center justify-center text-white/40">
-					<div
-						class="h-32 w-32 animate-pulse rounded-xl bg-gradient-to-tr from-white/10 to-white/30 shadow-md"
-					></div>
-				</div>
-
-				<div
-					class="self-start rounded-md bg-white/90 px-3 py-1 font-mono text-[10px] font-bold tracking-wider text-slate-800 uppercase shadow-sm"
-				>
-					Halo X9 Pro · Titanium
-				</div>
-			</div>
-
-			<div class="relative z-10 flex items-end justify-between">
-				<div class="space-y-1">
-					<div class="text-[10px] font-bold tracking-wider text-white/80 uppercase">Halo</div>
-					<h3 class="text-xl font-bold tracking-tight">X9 Pro · 256GB</h3>
-					<div class="mt-1 flex items-baseline gap-2">
-						<span class="text-2xl font-black tracking-tight">ETB 86,500</span>
-						<span class="text-sm font-medium text-white/60 line-through">96,000</span>
-					</div>
-				</div>
-			</div>
+			{#key currentImage}
+				<img
+					src={heroImage[currentImage]}
+					alt="hero"
+					in:fly={{ x: -100, duration: 300 }}
+					out:fly={{ x: 100, duration: 300 }}
+					class="absolute inset-0 h-full w-full rounded-xl object-contain"
+				/>
+			{/key}
 		</div>
 	</div>
 </section>

@@ -2,12 +2,19 @@ import { superValidate, message } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { eq, and, sql } from 'drizzle-orm';
 // import { sendEmail, customerCheckoutTemplate, adminCheckoutTemplate } from '$lib/server/email';
-// import { USER } from '$env/static/private';
+import { SECRET_KEY } from '$env/static/private';
+import { Chapa } from 'chapa-nodejs';
+
+import { redirect } from '@sveltejs/kit';
+
+const chapa = new Chapa({
+	secretKey: SECRET_KEY
+});
 
 import { addUser, loginSchema } from '$lib/ZodSchema';
 import { add } from './schema';
 import { db } from '$lib/server/db';
-import { orders, orderItems, products, customers } from '$lib/server/db/schema';
+import { orders, orderItems, customers, transactions } from '$lib/server/db/schema';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async () => {
@@ -23,7 +30,7 @@ export const load: PageServerLoad = async () => {
 };
 
 export const actions: Actions = {
-	add: async ({ request, locals }) => {
+	add: async ({ request, locals, url }) => {
 		const form = await superValidate(request, zod4(add));
 		console.log(form.data);
 		if (!form.valid) {
@@ -34,22 +41,42 @@ export const actions: Actions = {
 			);
 		}
 
-		const { selectedProducts } = form.data;
-		let customerInfo;
-		let newOrderId;
+		const { selectedProducts, payWithChapa } = form.data;
+		let checkoutUrl: string | null = null;
+
+		let transactionId;
+		let txnRef;
 
 		try {
+			let customerInfo;
+
+			let newOrderId;
+
 			await db.transaction(async (tx) => {
 				const customer = await tx
-					.select({ value: customers.id, email: customers.email })
+					.select({
+						value: customers.id,
+						email: customers.email,
+						name: customers.name,
+						phone: customers.phone
+					})
 					.from(customers)
 					.where(eq(customers.userId, locals?.user?.id))
+					.limit(1)
 					.then((rows) => rows[0]);
 				customerInfo = customer;
 
+				console.log('CUSTOMER INFO', customerInfo);
+
+				const [transaction] = await tx
+					.insert(transactions)
+					.values({ amount: total, paymentStatus: 'pending' })
+					.$returningId();
+				transactionId = transaction.id;
+
 				const [orderId] = await tx
 					.insert(orders)
-					.values({ customerId: customer.value, status: 'pending' })
+					.values({ customerId: customer.value, status: 'pending', transactionId })
 					.$returningId();
 				newOrderId = orderId.id;
 
@@ -68,22 +95,53 @@ export const actions: Actions = {
 
 			const total = selectedProducts.reduce((acc, p) => acc + p.price * p.quantity, 0);
 
-			// Send to Customer
-			// sendEmail(
-			// 	customerInfo?.email,
-			// 	customerCheckoutTemplate(newOrderId, selectedProducts, total).subject,
-			// 	customerCheckoutTemplate(newOrderId, selectedProducts, total).html
-			// ).catch((err) => console.error('Email Error (Customer):', err));
+			if (payWithChapa) {
+				// Generate transaction reference using our utility method or provide your own
+				const tx_ref = await chapa.genTxRef();
 
-			// Send to Admin
-			// sendEmail(
-			// 	USER,
-			// 	adminCheckoutTemplate(newOrderId, selectedProducts, total).subject,
-			// 	adminCheckoutTemplate(newOrderId, selectedProducts, total).html
-			// ).catch((err) => console.error('Email Error (Admin):', err));
+				txnRef = tx_ref;
 
-			return message(form, { type: 'success', text: 'Order Successfully Added' });
+				const siteOrigin = url.origin;
+
+				const res = await fetch('https://api.chapa.co/v1/transaction/initialize', {
+					method: 'POST',
+					headers: {
+						Authorization: `Bearer ${SECRET_KEY}`,
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						amount: String(total),
+						currency: 'ETB',
+						email: customerInfo?.email,
+						first_name: customerInfo?.name.split(' ')[0],
+						last_name: customerInfo?.name.split(' ')[1] ?? 'Doe',
+						tx_ref,
+						callback_url: `${siteOrigin}/checkout`,
+						return_url: `${siteOrigin}/checkout`,
+						customization: {
+							title: 'Tmax Electronics',
+							description: `Payment for ${total} ETB for ${selectedProducts.length} Products`
+						}
+					})
+				});
+
+				const data = await res.json();
+
+				if (!res.ok || !data?.data?.checkout_url) {
+					console.error('Chapa API Error:', data);
+					return message(
+						form,
+						{ type: 'error', text: data?.message || 'Payment initialization failed.' },
+						{ status: 400 }
+					);
+				}
+
+				// 2. If we reach here, data.checkout_url definitely exists
+				checkoutUrl = data.data.checkout_url;
+			}
 		} catch (err) {
+			console.error('FULL ERROR', err);
+
 			return message(
 				form,
 				{
@@ -93,10 +151,33 @@ export const actions: Actions = {
 				{ status: 500 }
 			);
 		}
+		if (checkoutUrl) {
+			redirect(303, checkoutUrl);
+		}
+
+		return message(form, { type: 'success', text: 'Order Successfully Added' });
 	}
 };
 
 function getPrice(list: Array<{ value: number; price: string }>, value: number): number {
 	const item = list.find((i) => i.value === value);
 	return item ? Number(item.price) : 0;
+}
+
+function normalizeEthiopianPhone(phone) {
+	if (!phone) return phone;
+
+	const cleaned = String(phone).trim();
+
+	// Leave numbers that already start with 09 or 07 unchanged
+	if (cleaned.startsWith('09') || cleaned.startsWith('07')) {
+		return cleaned;
+	}
+
+	// Convert +251xxxxxxxxx to 0xxxxxxxxx
+	if (cleaned.startsWith('+251')) {
+		return '0' + cleaned.slice(4);
+	}
+
+	return cleaned;
 }

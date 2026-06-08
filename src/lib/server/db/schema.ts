@@ -120,6 +120,7 @@ export const categoriesProducts = mysqlTable('categories_products', {
 export const transactions = mysqlTable('transactions', {
 	id: int('id').primaryKey().autoincrement(),
 	amount: decimal('amount', { precision: 10, scale: 2 }).notNull(),
+	txnRef: varchar('txn_ref', { length: 255 }),
 	paymentStatus: mysqlEnum('payment_status', [
 		'pending',
 		'pending',

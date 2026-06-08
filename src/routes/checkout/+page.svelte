@@ -37,8 +37,13 @@
 		dataType: 'json',
 		resetForm: true,
 		onResult: ({ result }) => {
-			if (result.type === 'success') {
+			// Clear the cart for BOTH regular success and Chapa redirects
+			if (result.type === 'success' || result.type === 'redirect') {
 				cart.clearCart();
+			}
+
+			// Only show the instant success toast if they aren't being redirected
+			if (result.type === 'success') {
 				toast.success('Secure digital transaction processed successfully!');
 			}
 		}
@@ -75,13 +80,13 @@
 </svelte:head>
 
 <div
-	class="relative min-h-screen bg-gradient-to-b from-background via-background/98 to-muted/20 pb-16 text-foreground antialiased selection:bg-primary/20"
+	class="relative min-h-screen bg-linear-to-b from-background via-background/98 to-muted/20 pb-16 text-foreground antialiased selection:bg-primary/20"
 >
 	<div
-		class="pointer-events-none absolute top-0 right-1/4 -z-10 h-[400px] w-[400px] rounded-full bg-primary/5 blur-[100px]"
+		class="pointer-events-none absolute top-0 right-1/4 -z-10 h-200 w-200 rounded-full bg-primary/5 blur-[100px]"
 	></div>
 	<div
-		class="pointer-events-none absolute bottom-1/3 left-1/4 -z-10 h-[350px] w-[350px] rounded-full bg-blue-500/5 blur-[100px]"
+		class="w-[87.5 pointer-events-none absolute bottom-1/3 left-1/4 -z-10 h-87.5 rounded-full bg-blue-500/5 blur-[100px]"
 	></div>
 
 	<div class="mx-auto max-w-6xl px-4 py-8 md:py-12">
@@ -170,7 +175,7 @@
 										{#if $delayed}
 											<LoadingBtn name="Processing secure terminal context..." />
 										{:else}
-											Authorize Order Dispatching &mdash; {formatPrice(cart.totalPrice)}
+											Pay On Delivery &mdash; {formatPrice(cart.totalPrice)}
 										{/if}
 									</Button>
 								</div>
@@ -217,7 +222,7 @@
 								</div>
 							</div>
 
-							<div class="pt-4">
+							<div class="space-y-2 pt-4">
 								<Button
 									type="submit"
 									form="main"
@@ -228,6 +233,19 @@
 										<LoadingBtn name="Routing to server cluster..." />
 									{:else}
 										Authorize Order Dispatching &mdash; {formatPrice(cart.totalPrice)}
+									{/if}
+								</Button>
+								<Button
+									type="submit"
+									form="main"
+									class="h-12 w-full rounded-xl text-sm font-semibold tracking-wide shadow-md transition-all duration-300 active:scale-98"
+									disabled={cart.items.length === 0 || $delayed}
+									onclick={() => ($form.payWithChapa = true)}
+								>
+									{#if $delayed}
+										<LoadingBtn name="Redirecting to Chapa..." />
+									{:else}
+										Pay On With Chapa &mdash; {formatPrice(cart.totalPrice)}
 									{/if}
 								</Button>
 							</div>

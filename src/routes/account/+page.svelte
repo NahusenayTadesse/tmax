@@ -115,7 +115,8 @@
 								</div>
 
 								<div class="flex items-center gap-4">
-									<span class="font-mono text-base font-bold">${activity.amount.toFixed(2)}</span>
+									<span class="font-mono text-base font-bold">ETB {activity.amount.toFixed(2)}</span
+									>
 									{#if activity.receiptLink}
 										<a
 											href={activity.receiptLink}
@@ -148,7 +149,7 @@
 											<span class="font-medium text-muted-foreground"
 												>{item.name} <span class="text-foreground/70">× {item.qty}</span></span
 											>
-											<span class="font-mono">${(item.price * item.qty).toFixed(2)}</span>
+											<span class="font-mono">ETB {(item.price * item.qty).toFixed(2)}</span>
 										</li>
 									{/each}
 								</ul>
@@ -188,7 +189,7 @@
 										<span
 											class="inline-flex items-center rounded bg-primary px-1.5 py-0.5 font-mono text-xs font-bold text-primary-foreground"
 										>
-											-${Number(discount.amount).toFixed(0)}
+											-ETB{Number(discount.amount).toFixed(0)}
 										</span>
 									</div>
 									<p class="text-xs leading-relaxed text-muted-foreground">
