@@ -9,7 +9,9 @@
 		ChevronLeft,
 		ChevronRight,
 		FilterIcon,
-		SlidersHorizontalIcon
+		SlidersHorizontalIcon,
+		X,
+		SlidersHorizontal
 	} from '@lucide/svelte';
 	import Label from '$lib/components/ui/label/label.svelte';
 	import { goto } from '$app/navigation';
@@ -165,6 +167,15 @@
 	}
 
 	const goToPage = (p: number) => updateFilters({ page: p });
+
+	import { isMobile } from '$lib/global.svelte.js';
+	import { fly } from 'svelte/transition';
+
+	const mobile = isMobile();
+
+	let showFilter = $derived(mobile ? false : true);
+
+	const Icon = $derived(showFilter ? X : SlidersHorizontal);
 </script>
 
 <svelte:head>
@@ -176,7 +187,7 @@
 </svelte:head>
 
 <div
-	class="min-h-screen bg-gradient-to-b from-background via-background/98 to-muted/20 pb-16 text-foreground antialiased transition-colors duration-300"
+	class="min-h-screen bg-linear-to-b from-background via-background/98 to-muted/20 pb-16 text-foreground antialiased transition-colors duration-300"
 >
 	<!-- Top Sticky Dynamic Filter Hub Bar -->
 	<header
@@ -186,7 +197,7 @@
 			<div class="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 				<div>
 					<h1
-						class="bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent sm:text-3xl"
+						class="bg-linear-to-r from-foreground to-foreground/80 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent sm:text-3xl"
 					>
 						Hardware Catalog
 					</h1>
@@ -228,146 +239,157 @@
 	<main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 		<div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
 			<!-- SECTION 1: Advanced Filtering Control Sidebar -->
-			<aside class="lg:col-span-1">
-				<div
-					class="sticky top-32 space-y-5 rounded-2xl border border-border/80 bg-card/40 p-5 shadow-sm backdrop-blur-md"
-				>
-					<div class="flex items-center gap-2 border-b border-border/60 pb-3">
-						<SlidersHorizontalIcon class="size-4 text-primary" />
-						<h3 class="text-sm font-bold tracking-wider text-foreground uppercase">
-							Filter Engine
-						</h3>
-					</div>
 
-					<!-- Price Sliders Control Block -->
-					<div class="space-y-4 border-b border-border/60 pb-5">
-						<div class="flex items-center justify-between text-xs">
-							<span class="font-medium text-muted-foreground">Price Bracket</span>
-							<span
-								class="rounded border bg-muted px-1.5 py-0.5 font-mono text-[11px] font-semibold text-primary"
-							>
-								{sliderPrices[0]} - {sliderPrices[1]} ETB
-							</span>
-						</div>
-						<Slider
-							type="multiple"
-							bind:value={sliderPrices}
-							step={50}
-							min={minPrice}
-							max={maxPrice}
-							onValueChange={handleSliderChange}
-							class="py-2"
-						/>
-						<div class="flex justify-between font-mono text-[10px] text-muted-foreground/80">
-							<span>{minPrice} ETB</span>
-							<span>{maxPrice} ETB</span>
-						</div>
-					</div>
+			{#if mobile}
+				<Button onclick={() => (showFilter = !showFilter)} class="w-40">
+					<Icon class="size-4" />
+					<span class="text-sm font-bold tracking-wider uppercase">Filter</span>
+				</Button>
+			{/if}
 
-					<!-- Brands Selection Module -->
+			{#if showFilter}
+				<aside class="lg:col-span-1" transition:fly={{ x: -500, duration: 300 }}>
 					<div
-						class="max-h-[220px] scrollbar-none space-y-2.5 overflow-y-auto border-b border-border/60 pb-5"
+						class="sticky top-32 space-y-5 rounded-2xl border border-border/80 bg-card/40 p-5 shadow-sm backdrop-blur-md"
 					>
-						<h4 class="text-xs font-bold tracking-wider text-muted-foreground uppercase">Brands</h4>
-						<div class="flex items-center gap-2.5 py-0.5">
-							<Checkbox
-								id="brand-all"
-								checked={isAllBrandsSelected}
-								onCheckedChange={clearBrands}
-								class="rounded-md"
-							/>
-							<Label for="brand-all" class="flex-1 cursor-pointer text-sm font-medium"
-								>All Brands</Label
-							>
+						<div class="flex items-center gap-2 border-b border-border/60 pb-3">
+							<SlidersHorizontal class="size-4 text-primary" />
+							<h3 class="text-sm font-bold tracking-wider text-foreground uppercase">Filters</h3>
 						</div>
-						{#each brands as brand (brand)}
-							<div class="flex items-center gap-2.5 py-0.5">
-								<Checkbox
-									id={`brand-${brand}`}
-									checked={selectedBrands?.includes(brand)}
-									onCheckedChange={() => applyBrandFilter(brand)}
-									class="rounded-md"
-								/>
-								<Label
-									for={`brand-${brand}`}
-									class="flex-1 cursor-pointer text-sm font-medium text-foreground/80 group-hover:text-foreground"
-								>
-									{brand}
-								</Label>
-							</div>
-						{/each}
-					</div>
 
-					<!-- Categories Selection Module -->
-					<div
-						class="max-h-[220px] scrollbar-none space-y-2.5 overflow-y-auto border-b border-border/60 pb-5"
-					>
-						<h4 class="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-							Categories
-						</h4>
-						<div class="flex items-center gap-2.5 py-0.5">
-							<Checkbox
-								id="category-all"
-								checked={isAllSelected}
-								onCheckedChange={clearCategories}
-								class="rounded-md"
-							/>
-							<Label for="category-all" class="flex-1 cursor-pointer text-sm font-medium"
-								>All Categories</Label
-							>
-						</div>
-						{#each categories as category (category.name)}
-							<div class="flex items-center gap-2.5 py-0.5">
-								<Checkbox
-									id={`category-${category.name}`}
-									checked={selectedCategories.includes(category.name)}
-									onCheckedChange={() => applyCategoryFilter(category.name)}
-									class="rounded-md"
-								/>
-								<Label
-									for={`category-${category.name}`}
-									class="flex-1 cursor-pointer text-sm font-medium text-foreground/80"
+						<!-- Price Sliders Control Block -->
+						<div class="space-y-4 border-b border-border/60 pb-5">
+							<div class="flex items-center justify-between text-xs">
+								<span class="font-medium text-muted-foreground">Price Bracket</span>
+								<span
+									class="rounded border bg-muted px-1.5 py-0.5 font-mono text-[11px] font-semibold text-primary"
 								>
-									{category.name}
-								</Label>
+									{sliderPrices[0]} - {sliderPrices[1]} ETB
+								</span>
 							</div>
-						{/each}
-					</div>
+							<Slider
+								type="multiple"
+								bind:value={sliderPrices}
+								step={50}
+								min={minPrice}
+								max={maxPrice}
+								onValueChange={handleSliderChange}
+								class="py-2"
+							/>
+							<div class="flex justify-between font-mono text-[10px] text-muted-foreground/80">
+								<span>{minPrice} ETB</span>
+								<span>{maxPrice} ETB</span>
+							</div>
+						</div>
 
-					<!-- System Tags Module -->
-					<div class="max-h-[200px] scrollbar-none space-y-2.5 overflow-y-auto">
-						<h4 class="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-							Hardware Labels
-						</h4>
-						<div class="flex items-center gap-2.5 py-0.5">
-							<Checkbox
-								id="tag-all"
-								checked={isAllTagsSelected}
-								onCheckedChange={clearTags}
-								class="rounded-md"
-							/>
-							<Label for="tag-all" class="flex-1 cursor-pointer text-sm font-medium">All Tags</Label
-							>
-						</div>
-						{#each tags as tag (tag.name)}
+						<!-- Brands Selection Module -->
+						<div
+							class="max-h-55 scrollbar-none space-y-2.5 overflow-y-auto border-b border-border/60 pb-5"
+						>
+							<h4 class="text-xs font-bold tracking-wider text-muted-foreground uppercase">
+								Brands
+							</h4>
 							<div class="flex items-center gap-2.5 py-0.5">
 								<Checkbox
-									id={`tag-${tag.name}`}
-									checked={selectedTags.includes(tag.name)}
-									onCheckedChange={() => applyTagFilter(tag.name)}
+									id="brand-all"
+									checked={isAllBrandsSelected}
+									onCheckedChange={clearBrands}
 									class="rounded-md"
 								/>
-								<Label
-									for={`tag-${tag.name}`}
-									class="flex-1 cursor-pointer text-sm font-medium text-foreground/80"
+								<Label for="brand-all" class="flex-1 cursor-pointer text-sm font-medium"
+									>All Brands</Label
 								>
-									#{tag.name}
-								</Label>
 							</div>
-						{/each}
+							{#each brands as brand}
+								<div class="flex items-center gap-2.5 py-0.5">
+									<Checkbox
+										id={`brand-${brand}`}
+										checked={selectedBrands?.includes(brand)}
+										onCheckedChange={() => applyBrandFilter(brand)}
+										class="rounded-md"
+									/>
+									<Label
+										for={`brand-${brand}`}
+										class="flex-1 cursor-pointer text-sm font-medium text-foreground/80 group-hover:text-foreground"
+									>
+										{brand}
+									</Label>
+								</div>
+							{/each}
+						</div>
+
+						<!-- Categories Selection Module -->
+						<div
+							class="max-h-55 scrollbar-none space-y-2.5 overflow-y-auto border-b border-border/60 pb-5"
+						>
+							<h4 class="text-xs font-bold tracking-wider text-muted-foreground uppercase">
+								Categories
+							</h4>
+							<div class="flex items-center gap-2.5 py-0.5">
+								<Checkbox
+									id="category-all"
+									checked={isAllSelected}
+									onCheckedChange={clearCategories}
+									class="rounded-md"
+								/>
+								<Label for="category-all" class="flex-1 cursor-pointer text-sm font-medium"
+									>All Categories</Label
+								>
+							</div>
+							{#each categories as category (category.name)}
+								<div class="flex items-center gap-2.5 py-0.5">
+									<Checkbox
+										id={`category-${category.name}`}
+										checked={selectedCategories.includes(category.name)}
+										onCheckedChange={() => applyCategoryFilter(category.name)}
+										class="rounded-md"
+									/>
+									<Label
+										for={`category-${category.name}`}
+										class="flex-1 cursor-pointer text-sm font-medium text-foreground/80"
+									>
+										{category.name}
+									</Label>
+								</div>
+							{/each}
+						</div>
+
+						<!-- System Tags Module -->
+						<div class="max-h-55 scrollbar-none space-y-2.5 overflow-y-auto">
+							<h4 class="text-xs font-bold tracking-wider text-muted-foreground uppercase">
+								Hardware Labels
+							</h4>
+							<div class="flex items-center gap-2.5 py-0.5">
+								<Checkbox
+									id="tag-all"
+									checked={isAllTagsSelected}
+									onCheckedChange={clearTags}
+									class="rounded-md"
+								/>
+								<Label for="tag-all" class="flex-1 cursor-pointer text-sm font-medium"
+									>All Tags</Label
+								>
+							</div>
+							{#each tags as tag (tag.name)}
+								<div class="flex items-center gap-2.5 py-0.5">
+									<Checkbox
+										id={`tag-${tag.name}`}
+										checked={selectedTags.includes(tag.name)}
+										onCheckedChange={() => applyTagFilter(tag.name)}
+										class="rounded-md"
+									/>
+									<Label
+										for={`tag-${tag.name}`}
+										class="flex-1 cursor-pointer text-sm font-medium text-foreground/80"
+									>
+										#{tag.name}
+									</Label>
+								</div>
+							{/each}
+						</div>
 					</div>
-				</div>
-			</aside>
+				</aside>
+			{/if}
 
 			<!-- SECTION 2: Dynamic Products Grid Canvas -->
 			<div class="space-y-8 lg:col-span-3">
@@ -390,7 +412,7 @@
 					</div>
 				{:else}
 					<div class="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
-						{#each data.productList as product (product.productId)}
+						{#each data.productList as product}
 							<div class="transition-all duration-300 hover:-translate-y-1">
 								<ProductCard {...product} />
 							</div>
