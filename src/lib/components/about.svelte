@@ -7,167 +7,185 @@
 		CardTitle
 	} from '$lib/components/ui/card';
 	import {
-		CheckIcon,
+		BatteryChargingIcon,
+		ZapIcon,
 		ShieldCheckIcon,
-		TruckIcon,
-		CoinsIcon,
-		LaptopIcon,
-		SmartphoneIcon,
-		CpuIcon
+		UsbIcon,
+		MonitorIcon,
+		CableIcon
 	} from '@lucide/svelte';
 	import { fly } from 'svelte/transition';
 
-	const highlights = [
+	const features = [
+		{
+			icon: ZapIcon,
+			label: '22.5W Fast Charging',
+			description: 'High-speed current output for phones, tablets, and daily devices.'
+		},
 		{
 			icon: ShieldCheckIcon,
-			label: '12-Month Warranty',
-			description: 'Every device fully covered by TMAX'
+			label: 'Smart Chip Protection',
+			description: 'Built-in protection for safer and more reliable charging.'
 		},
 		{
-			icon: TruckIcon,
-			label: 'Same-Day Delivery',
-			description: 'Fast, reliable delivery within Addis Ababa'
+			icon: MonitorIcon,
+			label: 'LED Digital Display',
+			description: 'Clear battery percentage display on selected models.'
 		},
-		{ icon: CoinsIcon, label: 'Priced in Birr', description: 'Local pricing with no hidden costs' },
 		{
-			icon: LaptopIcon,
-			label: 'Directly Sourced',
-			description: 'Authentic tech straight from manufacturers'
+			icon: UsbIcon,
+			label: 'Multi-Port Output',
+			description: 'Charge multiple devices with USB and Type-C support.'
 		}
 	];
 
-	const products = [
-		{ name: 'Phones', icon: SmartphoneIcon },
-		{ name: 'Laptops', icon: LaptopIcon },
-		{ name: 'Audio', icon: CpuIcon },
-		{ name: 'Smart Home', icon: ShieldCheckIcon }
+	const powerBanks = [
+		{
+			model: 'TMP-06',
+			capacity: '40000mAh',
+			title: 'Compact Fast Charging Power Bank',
+			description:
+				'Portable high-capacity power bank with 22.5W fast charging and smart protection.'
+		},
+		{
+			model: 'TMP-10',
+			capacity: '80000mAh',
+			title: 'Powerful Reserve Power Bank',
+			description: 'Large-capacity backup power designed for extended use and multiple devices.'
+		},
+		{
+			model: 'TP-201',
+			capacity: '20000mAh',
+			title: 'IOS & Type-C Line Power Bank',
+			description: 'Built-in IOS and Type-C cable support with fast charging convenience.'
+		},
+		{
+			model: 'TMP-09',
+			capacity: '70000mAh',
+			title: 'LED Light Fast Charging Power Bank',
+			description:
+				'High-capacity model with LED display, multiple USB interfaces, and Type-C output.'
+		}
 	];
 </script>
 
-<section
-	class="relative overflow-hidden bg-background px-4 py-24 text-foreground transition-colors duration-300 sm:px-6 lg:px-8"
->
-	<!-- Ambient Background Glows - works beautifully in both dark/light modes -->
-	<div
-		class="absolute top-0 left-1/4 -z-10 h-96 w-96 animate-pulse rounded-full bg-primary/10 opacity-70 blur-3xl duration-4000 dark:bg-primary/5"
-	></div>
-	<div
-		class="absolute right-1/4 bottom-0 -z-10 h-96 w-96 animate-pulse rounded-full bg-primary/5 opacity-70 blur-3xl duration-6000 dark:bg-primary/10"
-	></div>
+<section class="relative overflow-hidden bg-background px-4 py-24 text-foreground sm:px-6 lg:px-8">
+	<div class="absolute top-0 left-1/4 -z-10 h-96 w-96 rounded-full bg-primary/10 blur-3xl"></div>
+	<div class="absolute right-1/4 bottom-0 -z-10 h-96 w-96 rounded-full bg-primary/5 blur-3xl"></div>
 
 	<div class="mx-auto max-w-6xl">
-		<!-- Section Header -->
-		<div transition:fly={{ y: 30, duration: 800 }} class="mb-20 flex flex-col gap-4 text-center">
+		<div transition:fly={{ y: 30, duration: 700 }} class="mb-16 text-center">
 			<span
-				class="mx-auto max-w-fit rounded-full border border-primary/20 bg-primary/5 px-4 py-1 text-xs font-semibold tracking-wider text-primary uppercase backdrop-blur-md"
+				class="mx-auto mb-4 inline-flex rounded-full border border-primary/20 bg-primary/5 px-4 py-1 text-xs font-semibold tracking-wider text-primary uppercase"
 			>
-				TMAX Ecosystem
+				T-max Power Series
 			</span>
-			<h2
-				class="bg-gradient-to-r from-foreground via-foreground to-foreground/60 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-6xl"
-			>
-				About TMAX
+
+			<h2 class="text-4xl font-extrabold tracking-tight sm:text-6xl">
+				Exquisite Packaging. Powerful Charging.
 			</h2>
-			<p class="mx-auto max-w-2xl text-lg text-muted-foreground">
-				Your premium destination for authentic tech in Addis Ababa. Sourced directly, priced
-				transparently in Birr, delivered today.
+
+			<p class="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground">
+				T-max power banks combine large battery capacity, 22.5W fast charging, LED display options,
+				and smart chip protection for dependable everyday power.
 			</p>
 		</div>
 
-		<!-- Main Content Grid -->
 		<div class="mb-16 grid gap-8 lg:grid-cols-3">
-			<!-- NEW SECTION: Dynamic Pure CSS Technical Grid (Replaces old Image Card) -->
-			<div transition:fly={{ y: 30, duration: 800, delay: 150 }} class="lg:col-span-2">
+			<div transition:fly={{ y: 30, duration: 700, delay: 120 }} class="lg:col-span-2">
 				<Card
-					class="group relative h-full overflow-hidden border-primary/10 bg-gradient-to-br from-card/60 via-card/40 to-primary/5 shadow-xl backdrop-blur-md transition-all duration-500 hover:border-primary/30"
+					class="relative h-full overflow-hidden border-primary/10 bg-card/50 shadow-xl backdrop-blur-md"
 				>
-					<!-- Abstract structural design lines for a high-tech vibe -->
 					<div
-						class="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(var(--primary),0.03)_1px,transparent_1px),linear-gradient(to_bottom,rgba(var(--primary),0.03)_1px,transparent_1px)] bg-[size:24px_24px]"
+						class="absolute inset-0 -z-10 bg-[linear-gradient(to_right,hsl(var(--primary)/0.05)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary)/0.05)_1px,transparent_1px)] bg-[size:24px_24px]"
 					></div>
 
-					<div class="grid h-full items-center gap-6 p-8 md:grid-cols-5">
-						<!-- Content Area -->
-						<div class="flex flex-col justify-center gap-4 md:col-span-3">
-							<div class="flex items-center gap-2 text-primary">
-								<CpuIcon class="size-5 animate-spin duration-8000" />
-								<span class="text-xs font-bold tracking-widest uppercase">Core Promise</span>
+					<CardContent class="grid h-full gap-8 p-8 md:grid-cols-5 md:items-center">
+						<div class="md:col-span-3">
+							<div class="mb-4 flex items-center gap-2 text-primary">
+								<BatteryChargingIcon class="size-5" />
+								<span class="text-xs font-bold tracking-widest uppercase">Core Product Line</span>
 							</div>
-							<h3 class="text-3xl font-bold tracking-tight text-foreground">The TMAX Standard</h3>
-							<p class="text-sm leading-relaxed font-light text-muted-foreground">
-								At TMAX, we bridge the gap between global technology innovation and local
-								convenience. By sourcing our ecosystem directly from trusted manufacturing
-								pipelines, we eliminate middleman markups to give you premium products at fair
-								market rates.
+
+							<h3 class="text-3xl font-bold tracking-tight">Reliable Power for Every Device</h3>
+
+							<p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+								From compact daily backup models to large-capacity reserve power banks, T-max offers
+								fast charging solutions built for phones, laptops, headphones, and other USB-powered
+								devices.
 							</p>
-							<p class="text-sm leading-relaxed font-light text-muted-foreground">
-								We believe buying high-end tech should be stress-free. Every smartphone, workspace
-								laptop, and automated appliance is cataloged natively in Birr, hand-delivered
-								same-day across Addis, and secured by our ironclad warranty infrastructure.
-							</p>
+
+							<div class="mt-6 grid grid-cols-2 gap-3">
+								<div class="rounded-xl border border-primary/10 bg-primary/5 p-4">
+									<p class="text-xs text-muted-foreground">Up to</p>
+									<p class="text-2xl font-bold text-primary">80000mAh</p>
+								</div>
+
+								<div class="rounded-xl border border-primary/10 bg-primary/5 p-4">
+									<p class="text-xs text-muted-foreground">Fast Charging</p>
+									<p class="text-2xl font-bold text-primary">22.5W</p>
+								</div>
+							</div>
 						</div>
 
-						<!-- Tech Micro-Dashboard Widget UI Element -->
-						<div
-							class="hidden flex-col gap-3 rounded-xl border border-primary/10 bg-background/60 p-4 shadow-inner backdrop-blur-sm transition-all duration-500 group-hover:border-primary/20 md:col-span-2 md:flex"
-						>
-							<div class="flex items-center justify-between border-b border-primary/5 pb-2">
-								<span class="font-mono text-xs text-muted-foreground">DEVICE_SECURE_OS</span>
-								<div class="h-2 w-2 animate-ping rounded-full bg-emerald-500"></div>
-							</div>
-
-							<div class="space-y-2 py-2">
-								<div class="flex items-center justify-between text-xs">
-									<span class="text-muted-foreground">TMAX Warranty</span>
-									<span class="font-mono font-bold text-primary">Active (12 Months)</span>
+						<div class="md:col-span-2">
+							<div class="rounded-2xl border border-primary/10 bg-background/70 p-5 shadow-inner">
+								<div class="mb-4 flex items-center justify-between">
+									<span class="font-mono text-xs text-muted-foreground">TMAX_POWER_STATUS</span>
+									<span
+										class="rounded-full bg-primary/10 px-2 py-1 text-xs font-semibold text-primary"
+									>
+										Active
+									</span>
 								</div>
-								<div class="h-1.5 w-full overflow-hidden rounded-full bg-primary/10">
-									<div
-										class="h-full w-full origin-left rounded-full bg-primary transition-transform duration-1000 group-hover:scale-x-95"
-									></div>
-								</div>
-							</div>
 
-							<div class="rounded-lg border border-primary/10 bg-primary/5 p-2.5">
-								<div class="flex items-center gap-2">
-									<ShieldCheckIcon class="size-4 text-primary" />
-									<span class="text-xs font-semibold">100% Authenticity Verified</span>
-								</div>
-							</div>
+								<div class="space-y-4">
+									<div>
+										<div class="mb-1 flex justify-between text-xs">
+											<span class="text-muted-foreground">Charging Speed</span>
+											<span class="font-mono text-primary">22.5W</span>
+										</div>
+										<div class="h-2 rounded-full bg-primary/10">
+											<div class="h-2 w-4/5 rounded-full bg-primary"></div>
+										</div>
+									</div>
 
-							<div class="font-mono text-[10px] leading-tight text-muted-foreground/60">
-								Loc: Addis Ababa, ET<br />
-								Currency: ETB (Birr)
+									<div class="rounded-xl border border-primary/10 bg-primary/5 p-3">
+										<div class="flex items-center gap-2">
+											<CableIcon class="size-4 text-primary" />
+											<span class="text-xs font-semibold">USB / Type-C / IOS Line Support</span>
+										</div>
+									</div>
+
+									<p class="font-mono text-[11px] leading-relaxed text-muted-foreground">
+										Models: TMP-06, TMP-10, TP-201, TMP-09<br />
+										Protection: Smart Chip<br />
+										Display: LED Digital Display
+									</p>
+								</div>
 							</div>
 						</div>
-					</div>
+					</CardContent>
 				</Card>
 			</div>
 
-			<!-- Sleek Tech Highlight Feature Cards -->
 			<div class="flex flex-col gap-4">
-				{#each highlights as highlight, i (highlight.label)}
-					<div transition:fly={{ y: 20, duration: 600, delay: 200 + i * 100 }}>
+				{#each features as feature, i}
+					<div transition:fly={{ y: 20, duration: 600, delay: 180 + i * 90 }}>
 						<Card
-							class="group border-primary/10 bg-card/40 shadow-sm backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:bg-card/60 hover:shadow-md"
+							class="border-primary/10 bg-card/40 backdrop-blur-md transition hover:-translate-y-1"
 						>
 							<CardContent class="flex gap-4 pt-6">
-								<div class="shrink-0">
-									<div
-										class="flex size-12 items-center justify-center rounded-xl border border-primary/10 bg-primary/5 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground"
-									>
-										<svelte:component
-											this={highlight.icon}
-											class="size-6 text-primary transition-colors duration-300 group-hover:text-primary-foreground"
-										/>
-									</div>
+								<div
+									class="flex size-12 shrink-0 items-center justify-center rounded-xl border border-primary/10 bg-primary/5 text-primary"
+								>
+									<svelte:component this={feature.icon} class="size-6" />
 								</div>
-								<div class="min-w-0 flex-1">
-									<p class="text-sm font-semibold tracking-wide text-foreground">
-										{highlight.label}
-									</p>
+
+								<div>
+									<p class="text-sm font-semibold">{feature.label}</p>
 									<p class="mt-1 text-xs leading-relaxed text-muted-foreground">
-										{highlight.description}
+										{feature.description}
 									</p>
 								</div>
 							</CardContent>
@@ -177,45 +195,44 @@
 			</div>
 		</div>
 
-		<!-- Products Matrix Section -->
-		<div transition:fly={{ y: 30, duration: 800, delay: 600 }}>
-			<Card class="border-primary/10 bg-card/20 shadow-xl backdrop-blur-lg">
-				<CardHeader
-					class="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center"
-				>
-					<div>
-						<CardTitle class="text-xl font-bold tracking-tight"
-							>Product Deployment Portfolio</CardTitle
-						>
-						<CardDescription
-							>Explore tailored hardware setups optimized for performance</CardDescription
-						>
+		<Card class="border-primary/10 bg-card/30 shadow-xl backdrop-blur-lg">
+			<CardHeader>
+				<CardTitle>Why Choose T-max Power Banks?</CardTitle>
+				<CardDescription>
+					A fast, safe, and dependable charging experience designed for everyday use.
+				</CardDescription>
+			</CardHeader>
+
+			<CardContent>
+				<div class="grid gap-4 md:grid-cols-3">
+					<div class="rounded-2xl border border-primary/10 bg-background/60 p-6">
+						<ZapIcon class="mb-4 size-7 text-primary" />
+						<h4 class="text-sm font-bold">Built for Speed</h4>
+						<p class="mt-2 text-xs leading-relaxed text-muted-foreground">
+							22.5W fast charging support helps reduce waiting time when powering phones, tablets,
+							and other USB devices.
+						</p>
 					</div>
-				</CardHeader>
-				<CardContent>
-					<div class="grid grid-cols-2 gap-4 sm:grid-cols-4">
-						{#each products as product (product.name)}
-							<div
-								class="group relative flex flex-col gap-3 rounded-xl border border-primary/5 bg-primary/5 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/10 hover:shadow-lg"
-							>
-								<div
-									class="w-fit rounded-lg bg-primary/10 p-2 text-primary transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground"
-								>
-									<svelte:component this={product.icon} class="size-5" />
-								</div>
-								<div>
-									<h4 class="text-sm font-bold tracking-wide text-foreground">{product.name}</h4>
-									<p
-										class="mt-1 flex items-center gap-1 font-mono text-[11px] text-muted-foreground"
-									>
-										<CheckIcon class="size-3 text-primary" /> Same-Day Available
-									</p>
-								</div>
-							</div>
-						{/each}
+
+					<div class="rounded-2xl border border-primary/10 bg-background/60 p-6">
+						<ShieldCheckIcon class="mb-4 size-7 text-primary" />
+						<h4 class="text-sm font-bold">Protected Charging</h4>
+						<p class="mt-2 text-xs leading-relaxed text-muted-foreground">
+							Smart chip protection helps deliver safer charging by supporting stable and reliable
+							power output.
+						</p>
 					</div>
-				</CardContent>
-			</Card>
-		</div>
+
+					<div class="rounded-2xl border border-primary/10 bg-background/60 p-6">
+						<BatteryChargingIcon class="mb-4 size-7 text-primary" />
+						<h4 class="text-sm font-bold">Made for Daily Backup</h4>
+						<p class="mt-2 text-xs leading-relaxed text-muted-foreground">
+							High-capacity options are designed to keep essential devices powered at home, at work,
+							or on the move.
+						</p>
+					</div>
+				</div>
+			</CardContent>
+		</Card>
 	</div>
 </section>

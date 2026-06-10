@@ -37,6 +37,7 @@
 		{ label: 'Home', href: '/', icon: HomeIcon },
 		{ label: 'Shop', href: '/shop', icon: ShoppingBagIcon },
 		{ label: 'About Us', href: '/about', icon: InfoIcon },
+		{ label: 'Blog', href: '/blogs', icon: InfoIcon },
 		{ label: 'Contact Us', href: '/contact-us', icon: ContactIcon }
 	];
 

@@ -1,6 +1,6 @@
 import { superValidate, message } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
-import { eq, and, sql } from 'drizzle-orm';
+import { eq, and, sql, inArray } from 'drizzle-orm';
 // import { sendEmail, customerCheckoutTemplate, adminCheckoutTemplate } from '$lib/server/email';
 import { SECRET_KEY } from '$env/static/private';
 import { Chapa } from 'chapa-nodejs';
@@ -14,7 +14,7 @@ const chapa = new Chapa({
 import { addUser, loginSchema } from '$lib/ZodSchema';
 import { add } from './schema';
 import { db } from '$lib/server/db';
-import { orders, orderItems, customers, transactions } from '$lib/server/db/schema';
+import { orders, orderItems, products, customers, transactions } from '$lib/server/db/schema';
 import type { PageServerLoad, Actions } from './$types';
 
 export const load: PageServerLoad = async () => {
@@ -46,14 +46,14 @@ export const actions: Actions = {
 
 		let transactionId;
 		let txnRef;
+		let productNames;
+		let customerInfo;
+
+		let newOrderId;
 
 		const total = selectedProducts.reduce((acc, p) => acc + p.price * p.quantity, 0);
 
 		try {
-			let customerInfo;
-
-			let newOrderId;
-
 			await db.transaction(async (tx) => {
 				const customer = await tx
 					.select({
@@ -66,7 +66,24 @@ export const actions: Actions = {
 					.where(eq(customers.userId, locals?.user?.id))
 					.limit(1)
 					.then((rows) => rows[0]);
-				customerInfo = customer;
+
+				const getProducts = await tx
+					.select({
+						productId: products.id,
+						name: products.name
+					})
+					.from(products)
+					.where(
+						eq(
+							products.id,
+							inArray(
+								products.id,
+								selectedProducts.map((product) => product.product)
+							)
+						)
+					);
+
+				productNames = getProducts;
 
 				console.log('CUSTOMER INFO', customerInfo);
 
@@ -103,6 +120,14 @@ export const actions: Actions = {
 
 				const siteOrigin = url.origin;
 
+				const rawPayload = `${txnRef}||${newOrderId}`;
+
+				// 2. Convert to Base64 and make it URL-safe (replace +, /, and =)
+				const obfuscatedToken = btoa(rawPayload)
+					.replace(/\+/g, '-')
+					.replace(/\//g, '_')
+					.replace(/=+$/, '');
+
 				const res = await fetch('https://api.chapa.co/v1/transaction/initialize', {
 					method: 'POST',
 					headers: {
@@ -114,13 +139,13 @@ export const actions: Actions = {
 						currency: 'ETB',
 						email: customerInfo?.email,
 						first_name: customerInfo?.name.split(' ')[0],
-						last_name: customerInfo?.name.split(' ')[1] ?? 'Doe',
+						last_name: customerInfo?.name.split(' ')[1],
 						tx_ref,
-						callback_url: `${siteOrigin}/checkout`,
-						return_url: `${siteOrigin}/checkout`,
+						callback_url: `${siteOrigin}/checkout/${obfuscatedToken}`,
+						return_url: `${siteOrigin}/checkout/${obfuscatedToken}`,
 						customization: {
 							title: 'Tmax Electronics',
-							description: `Payment for ${total} ETB for ${selectedProducts.length} Products`
+							description: `Payment for ${total} ETB for ${selectedProducts.length} ${productNames?.map((p) => p.name).join(', ')}`
 						}
 					})
 				});

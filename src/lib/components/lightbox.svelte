@@ -1,158 +1,160 @@
 <script lang="ts">
-	import { fade, scale } from 'svelte/transition';
+	import { fade, scale, fly } from 'svelte/transition';
 	import { Button } from '$lib/components/ui/button';
 	import { XIcon, ChevronLeftIcon, ChevronRightIcon } from '@lucide/svelte';
 
-	// Props
 	let {
 		images,
 		currentIndex = $bindable(0),
 		isOpen = $bindable(false),
 		title = 'Gallery'
-	}: {
-		images: string[];
-		currentIndex?: number;
-		isOpen?: boolean;
-		title?: string;
 	} = $props();
 
-	// Derived values
 	let currentImage = $derived(images[currentIndex]);
 	let hasNext = $derived(currentIndex < images.length - 1);
 	let hasPrev = $derived(currentIndex > 0);
 
-	/** Close the lightbox */
-	const close = () => {
-		isOpen = false;
-	};
+	function portal(node: HTMLElement) {
+		document.body.appendChild(node);
 
-	/** Go to next image */
-	const next = () => {
-		if (hasNext) {
-			currentIndex++;
+		return {
+			destroy() {
+				node.remove();
+			}
+		};
+	}
+
+	$effect(() => {
+		if (isOpen) {
+			document.body.style.overflow = 'hidden';
+		} else {
+			document.body.style.overflow = '';
 		}
-	};
 
-	/** Go to previous image */
-	const prev = () => {
-		if (hasPrev) {
-			currentIndex--;
-		}
-	};
+		return () => {
+			document.body.style.overflow = '';
+		};
+	});
 
-	/** Handle keyboard navigation */
+	const close = () => (isOpen = false);
+	const next = () => hasNext && currentIndex++;
+	const prev = () => hasPrev && currentIndex--;
+
 	const handleKeydown = (e: KeyboardEvent) => {
 		if (!isOpen) return;
 
-		switch (e.key) {
-			case 'Escape':
-				close();
-				break;
-			case 'ArrowRight':
-				next();
-				break;
-			case 'ArrowLeft':
-				prev();
-				break;
-		}
-	};
-
-	/** Handle backdrop click */
-	const handleBackdropClick = (e: MouseEvent) => {
-		if (e.target === e.currentTarget) {
-			close();
-		}
+		if (e.key === 'Escape') close();
+		if (e.key === 'ArrowRight') next();
+		if (e.key === 'ArrowLeft') prev();
 	};
 </script>
 
 <svelte:window onkeydown={handleKeydown} />
 
-{#if isOpen}
-	<!-- Backdrop -->
+{#if isOpen && currentImage}
 	<div
-		class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-sm"
+		use:portal
+		class="fixed inset-0 z-[9999] flex h-[100dvh] w-[100dvw] flex-col overflow-hidden overscroll-none bg-black text-white"
 		role="dialog"
 		aria-modal="true"
 		aria-label="Image lightbox"
-		transition:fade={{ duration: 200 }}
-		onclick={handleBackdropClick}
-		tabindex="-1"
+		transition:fade={{ duration: 180 }}
 	>
-		<!-- Close button -->
-		<Button
-			variant="ghost"
-			size="icon"
-			class="absolute top-4 right-4 z-10 text-white hover:bg-white/20 hover:text-white"
+		<header
+			class="absolute inset-x-0 top-0 z-20 flex items-center justify-between bg-gradient-to-b from-black/70 to-transparent px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-4 sm:px-6"
+		>
+			<div class="min-w-0">
+				<p class="truncate text-sm font-medium text-white/90 sm:text-base">
+					{title}
+				</p>
+				<p class="text-xs text-white/60 sm:text-sm">
+					{currentIndex + 1} of {images.length}
+				</p>
+			</div>
+
+			<Button
+				variant="ghost"
+				size="icon"
+				class="rounded-full bg-white/10 text-white backdrop-blur-md hover:bg-white/20 hover:text-white"
+				onclick={close}
+				aria-label="Close lightbox"
+			>
+				<XIcon class="size-5 sm:size-6" />
+			</Button>
+		</header>
+
+		<main
+			class="flex min-h-0 flex-1 items-center justify-center px-3 py-20 sm:px-6 sm:py-24"
 			onclick={close}
 		>
-			<XIcon class="size-6" />
-			<span class="sr-only">Close lightbox</span>
-		</Button>
+			{#if hasPrev}
+				<Button
+					variant="ghost"
+					size="icon"
+					class="absolute top-1/2 left-3 z-20 size-11 -translate-y-1/2 rounded-full bg-white/10 text-white backdrop-blur-md hover:bg-white/20 hover:text-white sm:left-6 sm:size-12"
+					onclick={(e) => {
+						e.stopPropagation();
+						prev();
+					}}
+					aria-label="Previous image"
+				>
+					<ChevronLeftIcon class="size-7" />
+				</Button>
+			{/if}
 
-		<!-- Image counter -->
-		<div
-			class="absolute top-4 left-4 z-10 rounded-full bg-black/50 px-3 py-1.5 text-sm font-medium text-white"
-		>
-			{currentIndex + 1} of {images.length}
-		</div>
-
-		<!-- Previous button -->
-		{#if hasPrev}
-			<Button
-				variant="ghost"
-				size="icon"
-				class="absolute top-1/2 left-4 z-10 size-12 -translate-y-1/2 rounded-full text-white hover:bg-white/20 hover:text-white"
-				onclick={prev}
-			>
-				<ChevronLeftIcon class="size-8" />
-				<span class="sr-only">Previous image</span>
-			</Button>
-		{/if}
-
-		<!-- Next button -->
-		{#if hasNext}
-			<Button
-				variant="ghost"
-				size="icon"
-				class="absolute top-1/2 right-4 z-10 size-12 -translate-y-1/2 rounded-full text-white hover:bg-white/20 hover:text-white"
-				onclick={next}
-			>
-				<ChevronRightIcon class="size-8" />
-				<span class="sr-only">Next image</span>
-			</Button>
-		{/if}
-
-		<!-- Image container -->
-		<div class="flex max-h-[85vh] max-w-[90vw] items-center justify-center">
 			{#key currentIndex}
 				<img
 					src="/files/{currentImage}"
 					alt="{title} - Image {currentIndex + 1}"
-					class="shadow-lg-2xl max-h-[85vh] max-w-[90vw] rounded-lg object-contain"
-					transition:scale={{ duration: 200, start: 0.95 }}
+					class="max-h-full max-w-full rounded-xl object-contain shadow-2xl select-none"
+					transition:scale={{ duration: 180, start: 0.96 }}
+					onclick={(e) => e.stopPropagation()}
 				/>
 			{/key}
-		</div>
 
-		<!-- Thumbnail strip -->
+			{#if hasNext}
+				<Button
+					variant="ghost"
+					size="icon"
+					class="absolute top-1/2 right-3 z-20 size-11 -translate-y-1/2 rounded-full bg-white/10 text-white backdrop-blur-md hover:bg-white/20 hover:text-white sm:right-6 sm:size-12"
+					onclick={(e) => {
+						e.stopPropagation();
+						next();
+					}}
+					aria-label="Next image"
+				>
+					<ChevronRightIcon class="size-7" />
+				</Button>
+			{/if}
+		</main>
+
 		{#if images.length > 1}
-			<div
-				class="absolute bottom-4 left-1/2 z-10 flex -translate-x-1/2 gap-2 rounded-lg bg-black/50 p-2"
+			<footer
+				class="absolute inset-x-0 bottom-0 z-20 bg-gradient-to-t from-black/80 to-transparent px-3 pt-10 pb-[max(1rem,env(safe-area-inset-bottom))] sm:px-6"
+				transition:fly={{ y: 20, duration: 180 }}
 			>
-				{#each images as image, index (index)}
-					<button
-						class={[
-							'size-12 overflow-hidden rounded-md border-2 transition-all duration-200',
-							index === currentIndex
-								? 'border-white opacity-100'
-								: 'border-transparent opacity-50 hover:opacity-80'
-						]}
-						onclick={() => (currentIndex = index)}
-					>
-						<img src="/files/{image}" alt="Thumbnail {index + 1}" class="size-full object-cover" />
-					</button>
-				{/each}
-			</div>
+				<div
+					class="mx-auto flex max-w-full gap-2 overflow-x-auto rounded-2xl bg-white/10 p-2 backdrop-blur-md sm:max-w-3xl"
+				>
+					{#each images as image, index (image)}
+						<button
+							class={[
+								'h-14 w-14 shrink-0 overflow-hidden rounded-xl border transition-all sm:h-16 sm:w-16',
+								index === currentIndex ? 'border-white opacity-100' : 'border-white/10 opacity-55'
+							]}
+							onclick={() => (currentIndex = index)}
+							aria-label="View image {index + 1}"
+							aria-current={index === currentIndex ? 'true' : undefined}
+						>
+							<img
+								src="/files/{image}"
+								alt="Thumbnail {index + 1}"
+								class="size-full object-cover"
+							/>
+						</button>
+					{/each}
+				</div>
+			</footer>
 		{/if}
 	</div>
 {/if}

@@ -77,7 +77,8 @@ export const actions: Actions = {
 			gallery
 		} = form.data;
 		const featuredImage = await saveUploadedFile(image);
-		const galleryImages = await uploadGallery(gallery);
+		let galleryImages: string[] = [];
+		if (gallery) galleryImages = await uploadGallery(gallery);
 		const result = await db.transaction(async (tx) => {
 			// 1. Upload images first (usually done before the DB transaction starts
 			// to avoid keeping a DB connection open during slow network I/O)

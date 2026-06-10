@@ -16,6 +16,7 @@
 	import { IconBrandFacebook, IconBrandInstagram, IconBrandTiktok } from '@tabler/icons-svelte';
 	import BrandLinkedin from '@tabler/icons-svelte/icons/brand-linkedin';
 	import { fly } from 'svelte/transition';
+	import ImgSeparator from '$lib/components/imgSeparator.svelte';
 
 	let { data } = $props();
 	const { form, errors, enhance, delayed, message } = superForm(data.form, {
@@ -283,7 +284,7 @@
 				</div>
 			</div>
 		</div>
-
+		<ImgSeparator />
 		<section transition:fly={{ y: 30, duration: 800, delay: 500 }} class="relative mt-16 w-full">
 			<div class="absolute inset-0 -z-10 rounded-3xl bg-primary/5 blur-xl"></div>
 			<iframe

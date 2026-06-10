@@ -1,154 +1,229 @@
 <script lang="ts">
-	import { fade, fly } from 'svelte/transition';
+	import { fade, fly, scale } from 'svelte/transition';
 	import { Button } from '$lib/components/ui/button';
 	import { Badge } from '$lib/components/ui/badge';
 	import { Separator } from '$lib/components/ui/separator';
-	import { ArrowLeftIcon, CalendarIcon } from '@lucide/svelte';
-	import type { BlogItem } from '$lib/data/portfolio';
+	import {
+		ArrowLeftIcon,
+		CalendarIcon,
+		BatteryChargingIcon,
+		ZapIcon,
+		ShieldCheckIcon,
+		BookOpenIcon,
+		ArrowRightIcon
+	} from '@lucide/svelte';
 	import Gallery from '$lib/components/gallery.svelte';
 	import { formatEthiopianDate } from '$lib/global.svelte.js';
+
 	const { data } = $props();
 
-	const item: BlogItem = $derived(data?.portfolioItems);
+	const item = $derived(data?.portfolioItems);
+	const post = $derived(data?.portfolioItems);
 
 	const formattedDate = $derived(
-		item?.createdAt ? formatEthiopianDate(new Date(item?.createdAt)) : null
+		item?.createdAt ? formatEthiopianDate(new Date(item.createdAt)) : null
 	);
 
-	const post: BlogItem = $derived(data?.portfolioItems);
+	const pageTitle = $derived(`${post?.title ?? 'TMAX Power Guide'} | TMAX Blog`);
+	const pageDescription = $derived(
+		post?.excerpt ||
+			'Read TMAX guides about power banks, fast charging, battery capacity, safe charging, and everyday backup power.'
+	);
 </script>
 
 <svelte:head>
-	<!-- Primary Meta Tags -->
-	<title>{post.title} | Yebehir Ventures Blog</title>
-	<meta name="title" content="{post.title} | Yebehir Ventures" />
+	<title>{pageTitle}</title>
+	<meta name="title" content={pageTitle} />
+	<meta name="description" content={pageDescription} />
 	<meta
-		name="description"
-		content={post.excerpt ||
-			'Read the latest from Yebehir Ventures about events, venues, and brand experiences in Addis Ababa.'}
+		name="keywords"
+		content="TMAX blog, TMAX power bank, power bank Ethiopia, Addis Ababa power bank, fast charging, battery safety, 22.5W charging"
 	/>
 
-	<!-- Open Graph / Facebook -->
 	<meta property="og:type" content="article" />
-	<meta property="og:url" content="/blogs/{post.slug}" />
-	<meta property="og:title" content={post.title} />
-	<meta property="og:description" content={post.excerpt} />
-	<meta property="og:image" content="/files/{post.featuredImage}" />
-	<meta property="article:section" content={post.category || 'Events'} />
+	<meta property="og:url" content={`https://tmax.et/blogs/${post?.slug ?? ''}`} />
+	<meta property="og:title" content={pageTitle} />
+	<meta property="og:description" content={pageDescription} />
+	<meta
+		property="og:image"
+		content={`https://tmax.et/files/${post?.featuredImage ?? 'logo.png'}`}
+	/>
+	<meta property="article:section" content={post?.category || 'Power Bank Guide'} />
+	<meta property="article:author" content="TMAX" />
 
-	<!-- Twitter -->
-	<meta property="twitter:card" content="summary_large_image" />
-	<meta property="twitter:url" content="/blogs/{post.slug}" />
-	<meta property="twitter:title" content={post.title} />
-	<meta property="twitter:description" content={post.excerpt} />
-	<meta property="twitter:image" content="/files/{post.featuredImage}" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta name="twitter:url" content={`https://tmax.et/blogs/${post?.slug ?? ''}`} />
+	<meta name="twitter:title" content={pageTitle} />
+	<meta name="twitter:description" content={pageDescription} />
+	<meta
+		name="twitter:image"
+		content={`https://tmax.et/files/${post?.featuredImage ?? 'logo.png'}`}
+	/>
 
-	<!-- Canonical URL -->
-	<link rel="canonical" href="/blogs/{post.slug}" />
-
-	<!-- Article Specific Tags -->
-	<meta name="author" content="Yebehir Ventures" />
+	<link rel="canonical" href={`https://tmax.et/blogs/${post?.slug ?? ''}`} />
+	<meta name="author" content="TMAX" />
 </svelte:head>
 
-<div class="min-h-dvh" in:fade={{ duration: 300 }}>
-	<!-- Hero Image Section -->
-	<div class="relative h-[50vh] overflow-hidden lg:h-[60vh]">
-		<img src={`/files/${item.featuredImage}`} alt={item.title} class="h-full w-full object-cover" />
+<div
+	class="relative min-h-dvh overflow-hidden bg-background text-foreground"
+	in:fade={{ duration: 300 }}
+>
+	<div
+		class="absolute top-0 left-1/2 -z-10 h-96 w-96 -translate-x-1/2 rounded-full bg-primary/10 blur-3xl"
+	></div>
+	<div class="absolute right-0 bottom-40 -z-10 h-96 w-96 rounded-full bg-primary/5 blur-3xl"></div>
+
+	<section class="relative overflow-hidden px-4 pt-8 pb-28 sm:px-6 lg:px-8">
 		<div
-			class="absolute inset-0 bg-linear-to-t from-background via-background/40 to-transparent"
+			class="absolute inset-0 -z-10 bg-[linear-gradient(to_right,hsl(var(--primary)/0.05)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary)/0.05)_1px,transparent_1px)] bg-[size:28px_28px]"
 		></div>
 
-		<!-- Back Button -->
-		<div class="absolute top-6 left-6 z-10" in:fly={{ x: -20, duration: 400, delay: 200 }}>
-			<Button
-				variant="secondary"
-				size="sm"
-				class="shadow-lg-lg rounded-full bg-background/80 backdrop-blur-sm hover:bg-background"
-				href="/blogs"
-			>
-				<ArrowLeftIcon class="mr-2 size-4" />
-				Back to Blogs
-			</Button>
-		</div>
-
-		<!-- Event Type Badge -->
-		{#if item.category}
-			<div class="absolute top-6 right-6 z-10" in:fly={{ x: 20, duration: 400, delay: 200 }}>
-				<Badge
-					class="shadow-lg-lg bg-primary/90 px-4 py-1.5 text-sm text-primary-foreground backdrop-blur-sm"
+		<div class="mx-auto max-w-6xl">
+			<div class="mb-8 flex items-center justify-between gap-4">
+				<Button
+					variant="outline"
+					size="sm"
+					class="rounded-full border-primary/20 bg-background/40 backdrop-blur-xl"
+					href="/blogs"
+					in:fly={{ x: -16, duration: 400 }}
 				>
-					{item.category}
-				</Badge>
+					<ArrowLeftIcon class="mr-2 size-4" />
+					Back to Guides
+				</Button>
+
+				{#if item?.category}
+					<Badge
+						class="border border-primary/20 bg-primary/10 px-4 py-1.5 text-primary backdrop-blur-xl hover:bg-primary/10"
+						in:fly={{ x: 16, duration: 400 }}
+					>
+						{item.category}
+					</Badge>
+				{/if}
 			</div>
-		{/if}
-	</div>
 
-	<!-- Content Section -->
-	<div class="relative -mt-20 lg:-mt-32">
-		<div class="mx-auto max-w-4xl px-4 lg:px-8">
-			<div
-				class="shadow-lg-xl rounded-2xl border bg-card p-6 lg:p-10"
-				in:fly={{ y: 40, duration: 500, delay: 100 }}
-			>
-				<!-- Title -->
-				<h1 class="mb-4 text-3xl font-bold tracking-tight text-foreground lg:text-4xl">
-					{item.title}
-				</h1>
+			<div class="grid gap-10 lg:grid-cols-12 lg:items-center">
+				<div class="lg:col-span-6" in:fly={{ y: 24, duration: 600 }}>
+					<div
+						class="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-xs font-bold tracking-widest text-primary uppercase backdrop-blur-xl"
+					>
+						<BookOpenIcon class="size-4" />
+						TMAX Power Guide
+					</div>
 
-				<!-- Meta Information -->
-				<div class="mb-6 flex flex-wrap gap-4 lg:gap-6">
+					<h1 class="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
+						{item?.title}
+					</h1>
+
+					{#if item?.excerpt}
+						<p class="mt-6 max-w-xl text-base leading-relaxed text-muted-foreground">
+							{item.excerpt}
+						</p>
+					{/if}
+
 					{#if formattedDate}
-						<div class="flex items-center gap-2 text-muted-foreground">
-							<div class="flex size-9 items-center justify-center rounded-full">
-								<CalendarIcon class="size-4 " />
+						<div
+							class="mt-8 inline-flex items-center gap-3 rounded-2xl border border-primary/10 bg-card/40 px-4 py-3 backdrop-blur-2xl"
+						>
+							<div
+								class="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary"
+							>
+								<CalendarIcon class="size-5" />
 							</div>
 							<div>
-								<p class="text-xs text-muted-foreground/70">Date</p>
-								<p class="text-sm font-medium text-foreground">{formattedDate}</p>
+								<p class="text-xs text-muted-foreground">Published</p>
+								<p class="text-sm font-bold">{formattedDate}</p>
 							</div>
 						</div>
 					{/if}
 				</div>
 
-				<Separator class="my-6" />
+				<div class="lg:col-span-6" in:fly={{ y: 24, duration: 600, delay: 120 }}>
+					<div
+						class="relative overflow-hidden rounded-3xl border border-primary/20 bg-card/40 p-2 shadow-2xl backdrop-blur-2xl"
+					>
+						<div
+							class="absolute top-6 right-6 z-10 rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary backdrop-blur-xl"
+						>
+							TMAX
+						</div>
 
-				<!-- Description -->
-				{#if item.excerpt}
-					<div class="flex flex-col gap-4">
-						<p class="text-base leading-relaxed text-muted-foreground lg:text-lg">
-							{item.excerpt}
-						</p>
+						<img
+							src={`/files/${item?.featuredImage}`}
+							alt={item?.title}
+							class="h-[360px] w-full rounded-2xl object-cover sm:h-[460px]"
+						/>
 					</div>
-				{/if}
-
-				<!-- Additional Details Section -->
-				<article class="mt-8 rounded-xl border border-border/50 bg-muted/50 p-6">
-					{@html item.content}
-
-					<br />
-
-					{#if data?.images}
-						<Gallery bento images={data.images} title={item.title} />
-					{/if}
-				</article>
-
-				<!-- CTA Section -->
-				<div class="mt-8 flex flex-col gap-3 sm:flex-row">
-					<Button class="flex-1 rounded-full" href="/contact-us" size="lg"
-						>Contact Us About This Blog</Button
-					>
-					<Button variant="outline" class="flex-1 rounded-full" size="lg" href="/blogs"
-						>View More Blogs</Button
-					>
 				</div>
 			</div>
 		</div>
-	</div>
+	</section>
 
-	<!-- Spacer -->
-	<div class="h-20"></div>
+	<section class="relative -mt-14 px-4 pb-20 sm:px-6 lg:px-8">
+		<div
+			class="mx-auto max-w-4xl rounded-3xl border border-primary/10 bg-card/50 p-6 shadow-2xl backdrop-blur-2xl lg:p-10"
+			in:fly={{ y: 36, duration: 600, delay: 150 }}
+		>
+			<div class="mb-8 grid gap-4 sm:grid-cols-3">
+				<div class="rounded-2xl border border-primary/10 bg-background/40 p-4 backdrop-blur-xl">
+					<BatteryChargingIcon class="mb-3 size-6 text-primary" />
+					<p class="text-sm font-bold">Capacity</p>
+					<p class="mt-1 text-xs text-muted-foreground">Choose the right backup power.</p>
+				</div>
+
+				<div class="rounded-2xl border border-primary/10 bg-background/40 p-4 backdrop-blur-xl">
+					<ZapIcon class="mb-3 size-6 text-primary" />
+					<p class="text-sm font-bold">Fast Charging</p>
+					<p class="mt-1 text-xs text-muted-foreground">Understand output and speed.</p>
+				</div>
+
+				<div class="rounded-2xl border border-primary/10 bg-background/40 p-4 backdrop-blur-xl">
+					<ShieldCheckIcon class="mb-3 size-6 text-primary" />
+					<p class="text-sm font-bold">Safety</p>
+					<p class="mt-1 text-xs text-muted-foreground">Charge smarter every day.</p>
+				</div>
+			</div>
+
+			<Separator class="mb-8 bg-primary/10" />
+
+			<article
+				class="prose prose-sm prose-headings:text-foreground prose-strong:text-foreground prose-a:text-primary max-w-none text-muted-foreground"
+			>
+				{@html item?.content}
+			</article>
+
+			{#if data?.images}
+				<div class="mt-10">
+					<Gallery bento images={data.images} title={item?.title} />
+				</div>
+			{/if}
+
+			<Separator class="my-8 bg-primary/10" />
+
+			<div
+				class="rounded-3xl border border-primary/10 bg-primary/5 p-6 text-center backdrop-blur-xl"
+			>
+				<h2 class="text-2xl font-black tracking-tight">Need help choosing a TMAX power bank?</h2>
+				<p class="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
+					Explore our models or contact TMAX support for help choosing the right capacity and
+					charging speed.
+				</p>
+
+				<div class="mt-6 flex flex-col gap-3 sm:flex-row">
+					<Button class="group flex-1 rounded-full" href="/products" size="lg">
+						View Power Banks
+						<ArrowRightIcon class="ml-2 size-4 transition-transform group-hover:translate-x-1" />
+					</Button>
+
+					<Button
+						variant="outline"
+						class="flex-1 rounded-full border-primary/20 bg-background/40 backdrop-blur-xl"
+						size="lg"
+						href="/blogs"
+					>
+						Read More Guides
+					</Button>
+				</div>
+			</div>
+		</div>
+	</section>
 </div>
-
-<!-- ... existing code ... -->
-
-<!-- Gallery Section -->

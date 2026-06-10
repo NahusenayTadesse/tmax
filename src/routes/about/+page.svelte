@@ -1,125 +1,164 @@
 <script lang="ts">
-	import {
-		Card,
-		CardContent,
-		CardDescription,
-		CardHeader,
-		CardTitle
-	} from '$lib/components/ui/card';
+	import { Card, CardContent } from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
 	import { Separator } from '$lib/components/ui/separator';
 	import {
-		CheckIcon,
 		ShieldCheckIcon,
 		TruckIcon,
 		CoinsIcon,
-		CpuIcon,
-		LayersIcon,
 		ActivityIcon,
-		GlobeIcon,
 		ArrowRightIcon,
 		SparklesIcon,
-		QrCodeIcon,
 		ZapIcon,
 		BatteryChargingIcon,
-		PlugZapIcon
+		CheckIcon,
+		CpuIcon,
+		ScanQrCodeIcon,
+		PackageCheckIcon,
+		MapPinIcon,
+		BadgeCheckIcon,
+		CableIcon,
+		SmartphoneIcon,
+		GaugeIcon,
+		BoxIcon,
+		HeadphonesIcon,
+		LayersIcon
 	} from '@lucide/svelte';
 	import { fly, fade } from 'svelte/transition';
+
 	import Faq from '$lib/components/faq.svelte';
 	import Testimonial from '$lib/components/testimonial.svelte';
 	import Slider from '$lib/components/slider.svelte';
+	import ImgSeparator from '$lib/components/imgSeparator.svelte';
 
 	const meta = {
-		title: 'Our Architecture | TMAX High-Density Power Systems Addis Ababa',
+		title: 'About TMAX | High-Capacity Power Banks in Addis Ababa',
 		description:
-			'An inside look into the smart battery technology, sourcing pipelines, and safety engineering behind TMAX—bringing authentic, high-capacity power banks to Ethiopia.',
+			'TMAX delivers authentic, high-capacity power banks with fast charging, smart protection, Birr pricing, and same-day delivery in Addis Ababa.',
 		url: 'https://tmax.et/about',
 		image: 'https://tmax.et/og-about.jpg',
-		keywords:
-			'TMAX powerbanks, premium power bank Addis Ababa, backup battery Ethiopia, laptop power bank Birr, authentic electronics'
+		keywords: 'TMAX power bank, Addis Ababa power bank, fast charging Ethiopia, backup battery Birr'
 	};
 
-	// --- SVELTE 5 RUNES ---
-	let activeTab = $state('cells');
+	type TabKey = 'power' | 'safety' | 'trust';
+	let activeTab = $state<TabKey>('power');
 
-	// Derived state example mapping for the structural data matrix
-	const pillars = $derived({
-		cells: {
-			title: 'Grade-A Lithium Polymer Cells',
-			subtitle: 'Zero Overheating. True Capacity Foundations.',
-			description:
-				'The local market is saturated with degraded, recycled batteries that lose efficiency or swell up under load. TMAX utilizes premium, high-density Lithium Polymer and EV-grade cells engineered to retain 85%+ health after 1,000 charging cycles.',
-			metrics: [
-				'EV-Grade Silicon-Carbon Cells',
-				'Accurate, Non-Inflated mAh Ratings',
-				'Smart Thermal Dissipation'
+	const tabs = {
+		power: {
+			label: 'Power',
+			title: 'High-Capacity Backup Power',
+			text: 'TMAX power banks are built for dependable daily backup, from compact carry models to larger reserve power units.',
+			points: [
+				'Up to 80000mAh options',
+				'22.5W fast charging',
+				'USB, Type-C, and cable-ready models'
 			]
 		},
-		protection: {
-			title: 'Multi-Layer Circuit Protection',
-			subtitle: 'In-House Hardware Safety Infrastructure',
-			description:
-				'Fluctuating grid power in Addis Ababa can damage low-tier accessories. Our powerbanks integrate intelligent proprietary chips guarding against over-voltage, short-circuits, and smart power allocation for delicate electronics.',
-			metrics: [
-				'Dual-Stage Surge Isolation',
-				'Intelligent Output Allocation',
-				'12-Month Mechanical Warranty'
-			]
+		safety: {
+			label: 'Safety',
+			title: 'Smart Chip Protection',
+			text: 'Integrated protection systems help support stable charging and protect connected devices from unstable output.',
+			points: ['Short-circuit protection', 'Power-current control', 'Safer multi-device charging']
 		},
-		currency: {
-			title: 'Natively Calculated Economy',
-			subtitle: 'No FX Premium. Structured entirely in Birr.',
-			description:
-				'We believe keeping your workspace or mobile node energized shouldn’t depend on parallel foreign exchange rates. Every single transaction, wholesale contract, and invoice is fixed stably in Ethiopian Birr.',
-			metrics: [
-				'Transparent Local Pricing',
-				'Corporate Fleet Procurement',
-				'Zero Hidden Import Adjustments'
-			]
+		trust: {
+			label: 'Trust',
+			title: 'Authentic TMAX Packaging',
+			text: 'Each unit is presented in branded packaging with model details, QR codes, and quality-focused product information.',
+			points: ['Clear model labeling', 'Verified brand identity', 'Warranty-backed experience']
 		}
-	} as Record<string, { title: string; subtitle: string; description: string; metrics: string[] }>);
+	} as const;
 
-	const logisticsSteps = [
+	const benefits = [
 		{
-			phase: '01',
-			title: 'Cell-Level Safety Audits',
-			details:
-				'Batteries undergo rigorous multi-stage safety stress testing directly at manufacturing pipelines.'
+			icon: ShieldCheckIcon,
+			title: '12-Month Warranty',
+			text: 'Confidence after purchase with warranty-backed support.'
 		},
 		{
-			phase: '02',
-			title: 'Addis Storage Ready',
-			details:
-				'Devices are imported and stocked securely in local climate-controlled hubs to optimize battery life.'
+			icon: TruckIcon,
+			title: 'Same-Day Delivery',
+			text: 'Fast local delivery across Addis Ababa.'
 		},
 		{
-			phase: '03',
-			title: 'Same-Day Last Mile Dispatch',
-			details:
-				'Dispatched through dedicated TMAX distribution loops immediately across Addis locations.'
+			icon: CoinsIcon,
+			title: 'Priced in Birr',
+			text: 'Transparent local pricing without hidden costs.'
+		},
+		{
+			icon: ScanQrCodeIcon,
+			title: 'Brand Verification',
+			text: 'Packaging includes QR and model details for better trust.'
 		}
 	];
 
-	const matrixProducts = [
+	const stats = [
+		{ value: '80K', label: 'mAh capacity options', detail: 'Reserve power for longer days' },
+		{ value: '22.5W', label: 'fast charging', detail: 'Built for quick top-ups' },
+		{ value: '12', label: 'month warranty', detail: 'Local after-sales support' },
+		{ value: '1 Day', label: 'Addis delivery', detail: 'Same-day dispatch available' }
+	];
+
+	const productLayers = [
 		{
-			name: 'Ultra-High Capacity Power',
-			desc: 'Laptop-grade 100W/140W PD backup nodes',
-			icon: BatteryChargingIcon
+			icon: BatteryChargingIcon,
+			title: 'Capacity Core',
+			text: 'Large battery reserves designed for phones, accessories, travel, work, and emergency backup.'
 		},
 		{
-			name: 'Compact Fast Charging',
-			desc: 'Sleek, pocket-sized high-output daily arrays',
-			icon: ZapIcon
+			icon: GaugeIcon,
+			title: 'Fast Output System',
+			text: '22.5W-ready models help reduce downtime when your phone needs a fast power boost.'
 		},
 		{
-			name: 'GaN Charging Ecosystems',
-			desc: 'Multi-port high-efficiency wall stations',
-			icon: PlugZapIcon
+			icon: CpuIcon,
+			title: 'Smart Control Chip',
+			text: 'Internal protection logic supports safer current control and more stable charging behavior.'
 		},
 		{
-			name: 'Smart Electronic Nodes',
-			desc: 'Intelligent peripheral devices & power accessories',
-			icon: CpuIcon
+			icon: CableIcon,
+			title: 'Multi-Port Flexibility',
+			text: 'USB, Type-C, and cable-ready choices make it easier to power different daily devices.'
+		}
+	];
+
+	const journey = [
+		{
+			icon: SmartphoneIcon,
+			title: 'Pick your capacity',
+			text: 'Choose a compact daily model or a larger reserve unit based on how much backup you need.'
+		},
+		{
+			icon: ScanQrCodeIcon,
+			title: 'Check product details',
+			text: 'Review model labels, QR information, cable options, charging speed, and warranty support.'
+		},
+		{
+			icon: TruckIcon,
+			title: 'Get local delivery',
+			text: 'Order in Birr and receive same-day delivery service across Addis Ababa when available.'
+		}
+	];
+
+	const trustSignals = [
+		{
+			icon: PackageCheckIcon,
+			title: 'Branded packaging',
+			text: 'Clear TMAX model presentation and retail-ready product information.'
+		},
+		{
+			icon: BadgeCheckIcon,
+			title: 'Warranty-backed',
+			text: 'Support after purchase gives customers more confidence.'
+		},
+		{
+			icon: MapPinIcon,
+			title: 'Local availability',
+			text: 'Built around Addis Ababa customers, delivery, and Birr pricing.'
+		},
+		{
+			icon: HeadphonesIcon,
+			title: 'Human support',
+			text: 'Contact the team before or after purchase for guidance.'
 		}
 	];
 
@@ -132,385 +171,398 @@
 	<meta name="keywords" content={meta.keywords} />
 	<meta property="og:title" content={meta.title} />
 	<meta property="og:description" content={meta.description} />
-	<meta property="twitter:title" content={meta.title} />
-	<meta property="twitter:description" content={meta.description} />
+	<meta property="og:image" content={meta.image} />
 </svelte:head>
 
-<div class="relative min-h-screen bg-background text-foreground transition-colors duration-300">
-	<!-- Abstract Matrix Energy Background Effects -->
+<div class="relative min-h-screen overflow-hidden bg-background text-foreground">
 	<div
-		class="absolute inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,rgba(var(--primary),0.06),transparent_50%)]"
+		class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.12),transparent_35%)]"
 	></div>
 	<div
-		class="absolute top-[30%] left-[-10%] -z-10 h-160 w-160 animate-pulse rounded-full bg-primary/5 blur-[120px] duration-8000"
+		class="absolute top-32 left-[-12%] -z-10 h-96 w-96 animate-pulse rounded-full bg-primary/10 blur-3xl"
 	></div>
 	<div
-		class="absolute right-[-10%] bottom-[20%] -z-10 h-160 w-160 animate-pulse rounded-full bg-primary/5 blur-[120px] duration-6000"
+		class="absolute right-[-12%] bottom-20 -z-10 h-96 w-96 animate-pulse rounded-full bg-primary/10 blur-3xl"
 	></div>
 
-	<!-- ================= SECT 1: ASYMMETRICAL EDITORIAL HERO ================= -->
-	<section class="relative mx-auto max-w-7xl px-4 pt-32 pb-20 sm:px-6 lg:px-8">
-		<div class="grid gap-16 lg:grid-cols-12 lg:items-center">
-			<!-- Left Column: Heavy Typographic Brand Profile -->
-			<div transition:fly={{ x: -30, duration: 800 }} class="space-y-6 lg:col-span-5">
-				<div
-					class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-[11px] tracking-widest text-primary uppercase backdrop-blur-md"
-				>
-					<ActivityIcon class="size-3 animate-pulse" /> Energy Grid Architecture v2.6
-				</div>
-				<h1 class="z-100 text-5xl leading-none font-black tracking-tight sm:text-7xl">
-					Portable <br />
-					<span
-						class="bg-linear-to-r from-primary via-primary/80 to-foreground bg-clip-text text-transparent"
-						>Power</span
-					> <br />
-				</h1>
-				<p class="max-w-md text-base leading-relaxed font-light text-muted-foreground">
-					TMAX redefines backup infrastructure in Ethiopia. We engineer and distribute verified,
-					high-performance powerbanks and electronic peripherals designed to keep your workflow
-					uninterrupted.
-				</p>
-				<div class="flex items-center gap-4 pt-4">
-					<div class="h-px w-12 bg-primary/40"></div>
-					<span class="font-mono text-xs tracking-widest text-muted-foreground uppercase"
-						>Addis Ababa Energy Hub</span
-					>
-				</div>
+	<section
+		class="mx-auto grid max-w-7xl gap-12 px-4 pt-32 pb-20 sm:px-6 lg:grid-cols-12 lg:items-center lg:px-8"
+	>
+		<div transition:fly={{ x: -24, duration: 700 }} class="lg:col-span-5">
+			<div
+				class="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-primary uppercase backdrop-blur-xl"
+			>
+				<ActivityIcon class="size-3 animate-pulse" />
+				TMAX Power System
 			</div>
 
-			<!-- Right Column: Micro-Dashboard Structural Grid -->
-			<div transition:fly={{ x: 30, duration: 800, delay: 200 }} class="lg:col-span-7">
-				<div
-					class="relative rounded-2xl border border-primary/10 bg-gradient-to-br from-card via-card/50 to-primary/5 p-2 shadow-2xl backdrop-blur-xl"
+			<h1 class="text-5xl leading-none font-black tracking-tight sm:text-7xl">
+				Power that keeps you moving.
+			</h1>
+
+			<p class="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
+				Authentic TMAX power banks with large capacity, 22.5W fast charging, smart chip protection,
+				and same-day delivery in Addis Ababa.
+			</p>
+
+			<div class="mt-8 flex flex-col gap-3 sm:flex-row">
+				<Button size="lg" href="/shop" class="group gap-2">
+					Order Now
+					<ArrowRightIcon class="size-4 transition-transform group-hover:translate-x-1" />
+				</Button>
+
+				<Button
+					size="lg"
+					href="/contact-us"
+					variant="outline"
+					class="border-primary/20 bg-background/40 backdrop-blur-xl"
 				>
-					<div
-						class="pointer-events-none absolute top-4 right-4 font-mono text-8xl font-black text-primary/10 select-none"
-					>
-						MAX
-					</div>
-
-					<div class="space-y-8 rounded-xl border border-primary/5 bg-background/50 p-6 sm:p-8">
-						<!-- Custom Mini Hub Header -->
-						<div class="flex items-center justify-between border-b border-primary/5 pb-4">
-							<div class="flex items-center gap-3">
-								<div class="flex h-3 w-3 items-center justify-center rounded-full bg-primary/20">
-									<div class="h-1.5 w-1.5 rounded-full bg-primary"></div>
-								</div>
-								<span class="font-mono text-xs tracking-wider text-muted-foreground"
-									>POWERBANK_STATE_ANALYSIS</span
-								>
-							</div>
-							<span
-								class="rounded-md bg-emerald-500/10 px-2 py-0.5 font-mono text-[10px] font-medium text-emerald-500"
-								>ENERGY_STABLE</span
-							>
-						</div>
-
-						<!-- Asymmetric Feature Quad -->
-						<div class="grid gap-4 sm:grid-cols-2">
-							<div
-								class="group rounded-xl border border-primary/5 bg-primary/5 p-5 transition-all duration-300 hover:border-primary/20"
-							>
-								<ShieldCheckIcon class="mb-3 size-6 text-primary" />
-								<h3 class="text-sm font-bold tracking-tight">Authentic Capacity Promise</h3>
-								<p class="mt-1.5 text-xs leading-relaxed font-light text-muted-foreground">
-									No fake metrics. The capacity stated on our electronics is exactly what matches
-									the internal cells.
-								</p>
-							</div>
-
-							<div
-								class="group rounded-xl border border-primary/5 bg-primary/5 p-5 transition-all duration-300 hover:border-primary/20"
-							>
-								<TruckIcon class="mb-3 size-6 text-primary" />
-								<h3 class="text-sm font-bold tracking-tight">Rapid Regional Dispatch</h3>
-								<p class="mt-1.5 text-xs leading-relaxed font-light text-muted-foreground">
-									Same-day delivery infrastructure routing portable power directly to your
-									coordinates.
-								</p>
-							</div>
-
-							<div
-								class="group rounded-xl border border-primary/5 bg-primary/5 p-5 transition-all duration-300 hover:border-primary/20"
-							>
-								<CoinsIcon class="mb-3 size-6 text-primary" />
-								<h3 class="text-sm font-bold tracking-tight">Birr Denominated Value</h3>
-								<p class="mt-1.5 text-xs leading-relaxed font-light text-muted-foreground">
-									Insulated completely from localized macro foreign currency fluctuations or
-									gray-market markups.
-								</p>
-							</div>
-
-							<div
-								class="group rounded-xl border border-primary/5 bg-primary/5 p-5 transition-all duration-300 hover:border-primary/20"
-							>
-								<QrCodeIcon class="mb-3 size-6 text-primary" />
-								<h3 class="text-sm font-bold tracking-tight">Anti-Counterfeit Protection</h3>
-								<p class="mt-1.5 text-xs leading-relaxed font-light text-muted-foreground">
-									Every batch item tracked via unique digital cryptographic parameters to prove TMAX
-									authenticity.
-								</p>
-							</div>
-						</div>
-					</div>
-				</div>
+					Contact Us
+				</Button>
 			</div>
 		</div>
-	</section>
 
-	<!-- ================= SECT 2: INTERACTIVE DEEP DIVE TABS ================= -->
+		<div transition:fly={{ x: 24, duration: 700, delay: 150 }} class="lg:col-span-7">
+			<Card
+				class="relative overflow-hidden border-primary/20 bg-card/40 shadow-2xl backdrop-blur-2xl"
+			>
+				<div
+					class="grid-drift absolute inset-0 bg-[linear-gradient(to_right,hsl(var(--primary)/0.06)_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--primary)/0.06)_1px,transparent_1px)] bg-[size:28px_28px]"
+				></div>
+				<div class="float-slow absolute top-6 right-6 text-8xl font-black text-primary/10">
+					TMAX
+				</div>
+
+				<CardContent class="relative p-6 sm:p-8">
+					<div class="mb-6 flex items-center justify-between border-b border-primary/10 pb-4">
+						<span class="font-mono text-xs text-muted-foreground">POWER_STATUS</span>
+						<span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
+							READY
+						</span>
+					</div>
+
+					<div class="grid gap-4 sm:grid-cols-2">
+						{#each benefits as item, i}
+							<div
+								transition:fly={{ y: 16, duration: 500, delay: 200 + i * 80 }}
+								class="group rounded-2xl border border-primary/10 bg-background/40 p-5 backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-primary/30 hover:bg-primary/5"
+							>
+								<div
+									class="mb-4 flex size-11 items-center justify-center rounded-xl border border-primary/10 bg-primary/10 text-primary transition group-hover:scale-110"
+								>
+									<svelte:component this={item.icon} class="size-5" />
+								</div>
+								<h3 class="text-sm font-bold">{item.title}</h3>
+								<p class="mt-2 text-xs leading-relaxed text-muted-foreground">{item.text}</p>
+							</div>
+						{/each}
+					</div>
+				</CardContent>
+			</Card>
+		</div>
+	</section>
+	<ImgSeparator />
 	<section
-		class="border-t border-primary/5 bg-gradient-to-b from-transparent via-card/20 to-transparent px-4 py-24 sm:px-6 lg:px-8"
+		class="border-y border-primary/10 bg-card/20 px-4 py-20 backdrop-blur-xl sm:px-6 lg:px-8"
 	>
 		<div class="mx-auto max-w-6xl">
-			<div class="mb-16 gap-6 text-center lg:flex lg:items-end lg:justify-between lg:text-left">
-				<div class="max-w-xl">
-					<span class="font-mono text-xs font-semibold tracking-widest text-primary uppercase"
-						>Core Engineering</span
-					>
-					<h2 class="mt-2 text-3xl font-extrabold tracking-tight sm:text-4xl">
-						How TMAX Batteries are Engineered
-					</h2>
-				</div>
-				<p class="mt-4 max-w-sm text-sm font-light text-muted-foreground lg:mt-0">
-					Click through our design modules to understand how we maintain elite power storage and
-					safety controls.
-				</p>
+			<div class="mb-10 text-center">
+				<span class="text-xs font-bold tracking-widest text-primary uppercase">Why TMAX</span>
+				<h2 class="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
+					Fast. Safe. Built for daily power.
+				</h2>
 			</div>
 
-			<!-- Custom Glass Tab Selectors -->
 			<div
-				class="mb-8 grid grid-cols-3 gap-2 rounded-xl border border-primary/10 bg-card/40 p-1.5 backdrop-blur-md"
+				class="mb-8 grid rounded-2xl border border-primary/10 bg-background/40 p-1.5 backdrop-blur-2xl sm:grid-cols-3"
 			>
-				<button
-					on:click={() => (activeTab = 'cells')}
-					class="relative rounded-lg py-3 font-mono text-xs tracking-wider uppercase transition-all duration-300 {activeTab ===
-					'cells'
-						? 'bg-primary font-bold text-primary-foreground shadow-md'
-						: 'text-muted-foreground hover:bg-primary/5 hover:text-foreground'}"
-				>
-					01. Battery Cells
-				</button>
-				<button
-					on:click={() => (activeTab = 'protection')}
-					class="relative rounded-lg py-3 font-mono text-xs tracking-wider uppercase transition-all duration-300 {activeTab ===
-					'protection'
-						? 'bg-primary font-bold text-primary-foreground shadow-md'
-						: 'text-muted-foreground hover:bg-primary/5 hover:text-foreground'}"
-				>
-					02. Safety Chips
-				</button>
-				<button
-					on:click={() => (activeTab = 'currency')}
-					class="relative rounded-lg py-3 font-mono text-xs tracking-wider uppercase transition-all duration-300 {activeTab ===
-					'currency'
-						? 'bg-primary font-bold text-primary-foreground shadow-md'
-						: 'text-muted-foreground hover:bg-primary/5 hover:text-foreground'}"
-				>
-					03. Birr Logic
-				</button>
+				{#each Object.entries(tabs) as [key, tab]}
+					<button
+						on:click={() => (activeTab = key as TabKey)}
+						class="rounded-xl px-4 py-3 text-xs font-bold tracking-wider uppercase transition duration-300 {activeTab ===
+						key
+							? 'bg-primary text-primary-foreground shadow-lg'
+							: 'text-muted-foreground hover:bg-primary/10 hover:text-foreground'}"
+					>
+						{tab.label}
+					</button>
+				{/each}
 			</div>
 
-			<!-- Dynamic Content Pane -->
-			<div class="min-h-[280px]">
-				{#key activeTab}
-					<div
-						in:fade={{ duration: 300 }}
-						class="grid items-center gap-8 rounded-2xl border border-primary/10 bg-card/20 p-8 shadow-xl backdrop-blur-lg lg:grid-cols-12"
-					>
-						<div class="space-y-4 lg:col-span-7">
-							<span class="font-mono text-xs font-bold tracking-widest text-primary uppercase"
-								>{pillars[activeTab].subtitle}</span
-							>
-							<h3 class="text-2xl font-bold tracking-tight">{pillars[activeTab].title}</h3>
-							<p class="text-sm leading-relaxed font-light text-muted-foreground">
-								{pillars[activeTab].description}
-							</p>
+			{#key activeTab}
+				<div
+					in:fade={{ duration: 250 }}
+					class="grid gap-8 rounded-3xl border border-primary/10 bg-card/40 p-6 shadow-2xl backdrop-blur-2xl md:grid-cols-12 md:p-8"
+				>
+					<div class="md:col-span-7">
+						<div
+							class="mb-4 flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary"
+						>
+							{#if activeTab === 'power'}
+								<BatteryChargingIcon class="size-6" />
+							{:else if activeTab === 'safety'}
+								<CpuIcon class="size-6" />
+							{:else}
+								<ShieldCheckIcon class="size-6" />
+							{/if}
 						</div>
-						<div class="space-y-3 lg:col-span-5 lg:border-l lg:border-primary/10 lg:pl-8">
-							<p class="mb-4 font-mono text-xs tracking-widest text-muted-foreground uppercase">
-								Architecture Thresholds:
-							</p>
-							{#each pillars[activeTab].metrics as metric}
-								<div class="flex items-center gap-3 text-xs">
-									<div class="rounded-full bg-primary/10 p-1 text-primary">
-										<CheckIcon class="size-3" />
-									</div>
-									<span class="font-medium text-foreground">{metric}</span>
-								</div>
-							{/each}
-						</div>
+
+						<h3 class="text-2xl font-black tracking-tight">{tabs[activeTab].title}</h3>
+						<p class="mt-3 text-sm leading-relaxed text-muted-foreground">
+							{tabs[activeTab].text}
+						</p>
 					</div>
-				{/key}
-			</div>
+
+					<div class="space-y-3 md:col-span-5 md:border-l md:border-primary/10 md:pl-8">
+						{#each tabs[activeTab].points as point}
+							<div
+								class="flex items-center gap-3 rounded-xl border border-primary/10 bg-background/40 p-3"
+							>
+								<span class="rounded-full bg-primary/10 p-1 text-primary">
+									<CheckIcon class="size-3" />
+								</span>
+								<span class="text-sm font-medium">{point}</span>
+							</div>
+						{/each}
+					</div>
+				</div>
+			{/key}
 		</div>
 	</section>
+	<ImgSeparator />
+	<section class="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+		<div class="absolute inset-x-8 top-24 -z-10 h-48 rounded-full bg-primary/10 blur-3xl"></div>
 
-	<!-- ================= SECT 3: REGIONAL LOGISTICS BLUEPRINT ================= -->
-	<section class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
-		<div class="grid gap-12 lg:grid-cols-3">
-			<div class="space-y-4 lg:pr-6">
-				<div class="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-					<GlobeIcon class="size-5" />
+		<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+			{#each stats as stat, i}
+				<div
+					transition:fly={{ y: 18, duration: 500, delay: i * 80 }}
+					class="float-card group relative overflow-hidden rounded-3xl border border-primary/10 bg-card/35 p-6 shadow-xl backdrop-blur-2xl transition duration-500 hover:-translate-y-2 hover:border-primary/30 hover:bg-primary/5"
+				>
+					<div
+						class="absolute -top-12 -right-12 size-28 rounded-full bg-primary/10 blur-2xl transition duration-500 group-hover:scale-150"
+					></div>
+					<div class="relative">
+						<p class="font-mono text-4xl font-black tracking-tighter text-primary">{stat.value}</p>
+						<h3 class="mt-3 text-sm font-bold tracking-wider uppercase">{stat.label}</h3>
+						<p class="mt-2 text-xs leading-relaxed text-muted-foreground">{stat.detail}</p>
+					</div>
 				</div>
-				<h2 class="text-2xl font-bold tracking-tight">The Supply & Transit Blueprint</h2>
-				<p class="text-xs leading-relaxed font-light text-muted-foreground">
-					A direct visualization of how your backup battery systems move from specialized
-					manufacturing quality checks directly into your devices.
+			{/each}
+		</div>
+	</section>
+	<ImgSeparator />
+	<section
+		class="relative overflow-hidden border-y border-primary/10 bg-card/20 px-4 py-24 backdrop-blur-xl sm:px-6 lg:px-8"
+	>
+		<div
+			class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_center,hsl(var(--primary)/0.12),transparent_45%)]"
+		></div>
+		<div class="mx-auto grid max-w-7xl gap-10 lg:grid-cols-12 lg:items-center">
+			<div class="lg:col-span-5">
+				<div
+					class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold tracking-wider text-primary uppercase backdrop-blur-xl"
+				>
+					<LayersIcon class="size-3" />
+					Inside the Build
+				</div>
+				<h2 class="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
+					More than a battery. A complete power layer.
+				</h2>
+				<p class="mt-5 max-w-lg text-sm leading-relaxed text-muted-foreground">
+					TMAX combines capacity, output speed, smart protection, and flexible ports into a daily
+					backup system for Addis Ababa customers.
 				</p>
 			</div>
 
-			<div class="relative grid gap-6 sm:grid-cols-3 lg:col-span-2">
-				<!-- Continuous Structural Connection Line (Desktop) -->
-				<div
-					class="absolute top-1/2 right-0 left-0 -z-10 hidden h-[1px] bg-gradient-to-r from-primary/20 via-primary/10 to-transparent sm:block"
-				></div>
-
-				{#each logisticsSteps as step, i}
-					<div
-						transition:fly={{ y: 20, duration: 600, delay: i * 150 }}
-						class="group flex flex-col gap-4 rounded-xl border border-primary/5 bg-card/40 p-5 backdrop-blur-sm transition-all duration-300 hover:border-primary/20"
+			<div class="grid gap-4 sm:grid-cols-2 lg:col-span-7">
+				{#each productLayers as layer, i}
+					<Card
+						class="group relative overflow-hidden border-primary/10 bg-background/35 backdrop-blur-2xl transition duration-500 hover:-translate-y-2 hover:border-primary/30 hover:bg-primary/5"
 					>
-						<span
-							class="font-mono text-2xl font-black text-primary/30 transition-colors duration-300 group-hover:text-primary"
-							>{step.phase}</span
-						>
-						<h4 class="text-sm font-bold tracking-tight">{step.title}</h4>
-						<p class="text-xs leading-relaxed font-light text-muted-foreground">{step.details}</p>
-					</div>
+						<div
+							class="absolute inset-0 bg-[linear-gradient(135deg,hsl(var(--primary)/0.12),transparent_45%)] opacity-0 transition duration-500 group-hover:opacity-100"
+						></div>
+						<CardContent class="relative p-6">
+							<div
+								class="mb-5 flex size-12 items-center justify-center rounded-2xl border border-primary/10 bg-primary/10 text-primary transition duration-500 group-hover:scale-110 group-hover:rotate-6"
+							>
+								<svelte:component this={layer.icon} class="size-6" />
+							</div>
+							<span class="font-mono text-xs text-muted-foreground">0{i + 1}</span>
+							<h3 class="mt-2 text-lg font-black">{layer.title}</h3>
+							<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{layer.text}</p>
+						</CardContent>
+					</Card>
 				{/each}
 			</div>
 		</div>
 	</section>
+	<ImgSeparator />
+	<section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+		<div class="mb-12 text-center">
+			<span class="text-xs font-bold tracking-widest text-primary uppercase"
+				>Simple Buying Flow</span
+			>
+			<h2 class="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
+				From low battery to delivered power.
+			</h2>
+		</div>
 
-	<!-- ================= SECT 4: DEPLOYMENT PORTFOLIO MATRIX ================= -->
-	<section class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
-		<Card
-			class="overflow-hidden border-primary/10 bg-gradient-to-b from-card/40 to-card/10 shadow-2xl backdrop-blur-xl"
-		>
-			<CardHeader class="border-b border-primary/5 p-6 sm:p-8">
-				<div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-					<div>
-						<CardTitle class="text-xl font-bold tracking-tight"
-							>Hardware Deployment Portfolio Matrix</CardTitle
-						>
-						<CardDescription class="text-xs font-light"
-							>Explore localized charging hardware configurations optimized for continuous system
-							uptime.</CardDescription
-						>
-					</div>
-					<span class="max-w-fit rounded-md bg-primary/10 px-3 py-1 font-mono text-xs text-primary"
-						>In-Stock In Addis Ababa</span
+		<div class="relative grid gap-5 lg:grid-cols-3">
+			<div class="absolute top-1/2 right-0 left-0 -z-10 hidden h-px bg-primary/20 lg:block"></div>
+			{#each journey as step, i}
+				<div
+					class="group relative rounded-3xl border border-primary/10 bg-card/40 p-6 shadow-xl backdrop-blur-2xl transition duration-500 hover:-translate-y-2 hover:border-primary/30"
+				>
+					<div
+						class="absolute -top-3 left-6 rounded-full border border-primary/20 bg-background px-3 py-1 font-mono text-xs text-primary shadow-lg"
 					>
+						Step {i + 1}
+					</div>
+					<div
+						class="mt-5 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-xl transition duration-500 group-hover:scale-110"
+					>
+						<svelte:component this={step.icon} class="size-6" />
+					</div>
+					<h3 class="mt-6 text-xl font-black">{step.title}</h3>
+					<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{step.text}</p>
 				</div>
-			</CardHeader>
-			<CardContent class="p-6 sm:p-8">
-				<div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-					{#each matrixProducts as prod}
+			{/each}
+		</div>
+	</section>
+	<ImgSeparator />
+	<section class="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
+		<div
+			class="relative overflow-hidden rounded-[2rem] border border-primary/10 bg-card/35 p-6 shadow-2xl backdrop-blur-2xl sm:p-8 lg:p-10"
+		>
+			<div
+				class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_bottom_left,hsl(var(--primary)/0.16),transparent_40%)]"
+			></div>
+			<div class="grid gap-8 lg:grid-cols-12 lg:items-center">
+				<div class="lg:col-span-4">
+					<div
+						class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold tracking-wider text-primary uppercase"
+					>
+						<BoxIcon class="size-3" />
+						Trust System
+					</div>
+					<h2 class="mt-4 text-3xl font-black tracking-tight sm:text-4xl">
+						Designed to feel clear before you buy.
+					</h2>
+					<p class="mt-4 text-sm leading-relaxed text-muted-foreground">
+						The page experience, product packaging, support flow, and delivery promise all work
+						together to make TMAX easier to choose.
+					</p>
+				</div>
+
+				<div class="grid gap-4 sm:grid-cols-2 lg:col-span-8">
+					{#each trustSignals as signal}
 						<div
-							class="group relative flex flex-col justify-between gap-6 rounded-xl border border-primary/5 bg-background/50 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-primary/20 hover:bg-card/40"
+							class="group flex gap-4 rounded-2xl border border-primary/10 bg-background/40 p-5 backdrop-blur-xl transition duration-300 hover:border-primary/30 hover:bg-primary/5"
 						>
-							<div class="space-y-4">
-								<div
-									class="w-fit rounded-lg border border-primary/10 bg-primary/5 p-2.5 text-primary transition-all duration-300 group-hover:bg-primary group-hover:text-primary-foreground"
-								>
-									<svelte:component this={prod.icon} class="size-4" />
-								</div>
-								<div>
-									<h4 class="text-sm font-bold tracking-wide">{prod.name}</h4>
-									<p class="mt-1 text-xs leading-snug font-light text-muted-foreground">
-										{prod.desc}
-									</p>
-								</div>
-							</div>
 							<div
-								class="flex items-center justify-between border-t border-primary/5 pt-3 font-mono text-[10px] text-muted-foreground/80"
+								class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition group-hover:scale-110"
 							>
-								<span class="flex items-center gap-1"
-									><span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span> Sealed Brand New</span
-								>
-								<span>ETB Units</span>
+								<svelte:component this={signal.icon} class="size-5" />
+							</div>
+							<div>
+								<h3 class="text-sm font-bold">{signal.title}</h3>
+								<p class="mt-2 text-xs leading-relaxed text-muted-foreground">{signal.text}</p>
 							</div>
 						</div>
 					{/each}
 				</div>
-			</CardContent>
-		</Card>
+			</div>
+		</div>
 	</section>
-
-	<!-- ================= SECT 5: DISPATCH CTA INTERFACE ================= -->
+	<ImgSeparator />
 	<section class="mx-auto max-w-4xl px-4 py-24 text-center sm:px-6 lg:px-8">
 		<div
-			class="relative overflow-hidden rounded-3xl border border-primary/20 bg-gradient-to-tr from-card via-card/90 to-primary/5 p-8 shadow-2xl backdrop-blur-2xl sm:p-12"
+			class="relative overflow-hidden rounded-3xl border border-primary/20 bg-card/40 p-8 shadow-2xl backdrop-blur-2xl sm:p-12"
 		>
-			<!-- Visual Grid Accents inside CTA -->
 			<div
-				class="absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(var(--primary),0.02)_1px,transparent_1px)] bg-[size:40px_40px]"
+				class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_top,hsl(var(--primary)/0.16),transparent_45%)]"
 			></div>
 
-			<div class="relative z-10 mx-auto flex max-w-xl flex-col items-center gap-6">
+			<div class="mx-auto flex max-w-xl flex-col items-center gap-6">
 				<div
-					class="flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 font-mono text-[10px] tracking-widest text-primary uppercase"
+					class="flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold tracking-wider text-primary uppercase"
 				>
-					<SparklesIcon class="size-3" /> System Deployment Ready
+					<SparklesIcon class="size-3" />
+					Power Ready
 				</div>
+
 				<h2 class="text-3xl font-black tracking-tight sm:text-4xl">
-					Secure Your Mobile Power Vault
+					Stay charged wherever the day takes you.
 				</h2>
-				<p class="text-sm leading-relaxed font-light text-muted-foreground">
-					Never let grid variations interrupt your digital production. Secure grade-A powerbanks and
-					fast-charging hardware infrastructure natively in Birr today.
+
+				<p class="text-sm leading-relaxed text-muted-foreground">
+					Get authentic TMAX fast-charging power banks with local support, Birr pricing, and
+					same-day delivery.
 				</p>
 
-				<Separator class="my-2 bg-primary/10" />
+				<Separator class="bg-primary/10" />
 
-				<div class="flex w-full flex-col justify-center gap-4 sm:flex-row">
-					<Button
-						size="lg"
-						class="group gap-2 font-mono text-xs tracking-wider uppercase shadow-xl shadow-primary/10"
-					>
-						Order Now for Delivery
-						<ArrowRightIcon class="size-4 transition-transform group-hover:translate-x-1" />
-					</Button>
-					<Button
-						size="lg"
-						variant="outline"
-						class="border-primary/10 bg-background/30 font-mono text-xs tracking-wider uppercase hover:bg-background/80"
-					>
-						Read Testing Specs
-					</Button>
-				</div>
+				<Button href="/shop" size="lg" class="group gap-2">
+					Order for Delivery
+					<ZapIcon class="size-4 transition-transform group-hover:scale-110" />
+				</Button>
 			</div>
 		</div>
 	</section>
 </div>
-
+<ImgSeparator />
 {#if data?.imagesList?.length > 0}
-	<Slider imagesList={data?.imagesList} />
+	<Slider imagesList={data.imagesList} />
 {/if}
-
-{#if data?.testimonialList.length > 0}
-	<main class="flex flex-col items-center justify-center px-4 py-12 md:py-20">
-		<!-- Section Header -->
-		<div class="mb-12 max-w-2xl text-center">
-			<h2 class="mb-4 text-3xl font-bold text-foreground md:text-4xl">What Our Customers Say</h2>
-			<p class="text-lg text-muted-foreground">
-				Don't just take our word for it. Here's what people are saying about their experience.
-			</p>
+<ImgSeparator />
+{#if data?.testimonialList?.length > 0}
+	<main class="flex flex-col items-center justify-center px-4 py-16">
+		<div class="mb-10 max-w-2xl text-center">
+			<h2 class="text-3xl font-bold md:text-4xl">What Customers Say</h2>
+			<p class="mt-3 text-muted-foreground">Real feedback from people using TMAX products.</p>
 		</div>
 
-		<!-- Testimonial Carousel -->
 		<Testimonial testimonials={data.testimonialList} />
 	</main>
 {/if}
+<ImgSeparator />
 <Faq />
 
 <style>
-	/* Custom slow-pulse keyframe variables */
-	:global(.duration-6000) {
-		animation-duration: 6000ms;
+	@keyframes float-slow {
+		0%,
+		100% {
+			transform: translate3d(0, 0, 0) rotate(0deg);
+		}
+		50% {
+			transform: translate3d(0, -14px, 0) rotate(-2deg);
+		}
 	}
-	:global(.duration-8000) {
-		animation-duration: 8000ms;
+
+	@keyframes grid-drift {
+		0% {
+			background-position: 0 0;
+		}
+		100% {
+			background-position: 56px 56px;
+		}
+	}
+
+	.float-slow {
+		animation: float-slow 7s ease-in-out infinite;
+	}
+
+	.float-card:nth-child(odd) {
+		animation: float-slow 8s ease-in-out infinite;
+	}
+
+	.float-card:nth-child(even) {
+		animation: float-slow 9s ease-in-out infinite reverse;
+	}
+
+	.grid-drift {
+		animation: grid-drift 18s linear infinite;
 	}
 </style>

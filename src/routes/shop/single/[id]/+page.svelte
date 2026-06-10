@@ -80,13 +80,8 @@
 			</div>
 
 			<!-- Premium Glassmorphism Wrapper for the Gallery -->
-			<div
-				class="relative overflow-hidden rounded-2xl border border-border bg-card/50 p-3 shadow-md backdrop-blur-md"
-			>
+			<div class="rounded-2xl border border-border bg-card/50 p-3 shadow-md backdrop-blur-md">
 				<!-- Subtle tech decorative gradient glow inside card container -->
-				<div
-					class="pointer-events-none absolute -right-20 -bottom-20 -z-10 h-40 w-40 rounded-full bg-primary/5 blur-2xl"
-				></div>
 
 				<Gallery images={data?.images} title={data?.product?.productName} />
 			</div>

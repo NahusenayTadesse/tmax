@@ -4,24 +4,20 @@
 	import PortfolioGrid from '$lib/components/blogs/portfolio-grid.svelte';
 	import type { BlogItem } from '$lib/data/portfolio';
 
-	// Set app hook
-
-	// Filter state
 	let searchQuery = $state('');
-	let selectedEventType = $state<string | null>(null);
+	let selectedCategory = $state<string | null>(null);
 	let { data } = $props();
-	// Filtered items
+
 	const filteredItems = $derived.by(() => {
 		let items: BlogItem[] = data?.portfolioItems ?? [];
 
-		// Filter by event type
-		if (selectedEventType) {
-			items = items.filter((item) => item.category === selectedEventType);
+		if (selectedCategory) {
+			items = items.filter((item) => item.category === selectedCategory);
 		}
 
-		// Filter by search query
 		if (searchQuery.trim()) {
 			const query = searchQuery.toLowerCase().trim();
+
 			items = items.filter(
 				(item) =>
 					item.title.toLowerCase().includes(query) ||
@@ -38,58 +34,63 @@
 </script>
 
 <svelte:head>
-	<title>Insights & Event Trends | Yebehir Ventures Blog</title>
-	<meta name="title" content="Insights & Event Trends | Yebehir Ventures Blog" />
+	<title>TMAX Blog | Power Bank Guides, Charging Tips & Battery Safety</title>
+	<meta name="title" content="TMAX Blog | Power Bank Guides, Charging Tips & Battery Safety" />
 	<meta
 		name="description"
-		content="Expert advice on event management, brand experiences, and venue hosting in Ethiopia. Stay ahead of the curve with the Yebehir Ventures blog."
+		content="Read TMAX guides about power banks, fast charging, battery capacity, safe charging habits, product care, and same-day delivery in Addis Ababa."
+	/>
+	<meta
+		name="keywords"
+		content="TMAX blog, TMAX power bank, power bank Ethiopia, Addis Ababa power bank, fast charging tips, battery safety, 22.5W charging, power bank guide"
 	/>
 
-	<!-- Open Graph -->
 	<meta property="og:type" content="website" />
-	<meta property="og:url" content="/blog" />
-	<meta property="og:title" content="Yebehir Ventures Blog | Event Excellence in Addis" />
+	<meta property="og:url" content="https://tmax.et/blog" />
+	<meta
+		property="og:title"
+		content="TMAX Blog | Power Bank Guides, Charging Tips & Battery Safety"
+	/>
 	<meta
 		property="og:description"
-		content="Discover professional insights on creating, managing, and monetizing events."
+		content="Explore practical TMAX articles about choosing the right power bank, understanding fast charging, battery safety, and daily backup power."
 	/>
-	<meta property="og:image" content="/logo.jpg" />
+	<meta property="og:image" content="https://tmax.et/logo.png" />
 
-	<!-- Twitter -->
-	<meta property="twitter:card" content="summary_large_image" />
-	<meta property="twitter:title" content="Yebehir Ventures Blog" />
-	<meta property="twitter:image" content="/logo.jpg" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<meta
+		name="twitter:title"
+		content="TMAX Blog | Power Bank Guides, Charging Tips & Battery Safety"
+	/>
+	<meta
+		name="twitter:description"
+		content="Helpful TMAX power bank guides, charging tips, safety advice, and product care articles."
+	/>
+	<meta name="twitter:image" content="https://tmax.et/logo.png" />
 
-	<link rel="canonical" href="https://yebehir.com/blog" />
+	<link rel="canonical" href="https://tmax.et/blog" />
 </svelte:head>
 
 <div class="min-h-dvh bg-background text-foreground">
-	<!-- Header -->
-
-	<!-- Hero Section -->
 	<PortfolioHero />
 
-	<!-- Main Content -->
 	<main class="mx-auto mt-10 max-w-7xl px-4 pb-20">
-		<!-- Filters -->
 		<div class="mb-10">
 			<PortfolioFilters
 				portfolioItems={data?.portfolioItems}
 				bind:searchQuery
-				placeholder="Search blogs"
-				bind:selectedEventType
+				placeholder="Search power bank guides"
+				bind:selectedEventType={selectedCategory}
 			/>
 		</div>
 
-		<!-- Results count -->
 		<div class="mb-6 text-center">
-			<p class="text-muted-foreground">
+			<p class="text-sm text-muted-foreground">
 				Showing <span class="font-semibold text-foreground">{resultsCount}</span>
-				{resultsCount === 1 ? 'blog' : 'blogss'}
+				{resultsCount === 1 ? ' article' : ' articles'}
 			</p>
 		</div>
 
-		<!-- Portfolio Grid -->
 		<PortfolioGrid items={filteredItems} />
 	</main>
 </div>

@@ -50,7 +50,7 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		.leftJoin(productTags, eq(productTags.productId, products.id))
 		.leftJoin(tags, eq(tags.id, productTags.tagId))
 		.leftJoin(prices, eq(prices.productId, products.id))
-		.innerJoin(orderItems, eq(orderItems.productId, products.id))
+		.leftJoin(orderItems, eq(orderItems.productId, products.id))
 		.groupBy(products.id)
 		.orderBy(desc(sum(orderItems.quantity)))
 		.limit(10);

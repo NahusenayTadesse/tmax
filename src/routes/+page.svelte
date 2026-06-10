@@ -16,15 +16,17 @@
 	import Faq from '$lib/components/faq.svelte';
 	import Slider from '$lib/components/slider.svelte';
 	import Testimonial from '$lib/components/testimonial.svelte';
+	import ImgSeparator from '$lib/components/imgSeparator.svelte';
 </script>
 
 <svelte:head>
 	<title>Home - TMAX</title>
 </svelte:head>
 
-<Hero />
+<Hero bestSelling={data?.bestSelling[0]?.productName ?? ''} id={data?.bestSelling[0]?.productId} />
+<ImgSeparator />
 <About />
-
+<ImgSeparator />
 <section
 	class="relative mx-auto flex max-w-7xl flex-col items-center justify-center overflow-hidden px-4 py-16 sm:px-6 lg:px-8"
 >
@@ -88,11 +90,11 @@
 		View More Products <ArrowBigRight />
 	</Button>
 </section>
-
+<ImgSeparator />
 {#if data?.imagesList?.length > 0}
 	<Slider imagesList={data?.imagesList} />
 {/if}
-
+<ImgSeparator />
 {#if data?.testimonialList.length > 0}
 	<main class="flex flex-col items-center justify-center px-4 py-12 md:py-20">
 		<!-- Section Header -->
@@ -107,4 +109,5 @@
 		<Testimonial testimonials={data.testimonialList} />
 	</main>
 {/if}
+<ImgSeparator />
 <Faq />
