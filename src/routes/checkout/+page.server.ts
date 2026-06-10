@@ -47,6 +47,8 @@ export const actions: Actions = {
 		let transactionId;
 		let txnRef;
 
+		const total = selectedProducts.reduce((acc, p) => acc + p.price * p.quantity, 0);
+
 		try {
 			let customerInfo;
 
@@ -70,7 +72,7 @@ export const actions: Actions = {
 
 				const [transaction] = await tx
 					.insert(transactions)
-					.values({ amount: total, paymentStatus: 'pending' })
+					.values({ amount: String(total), paymentStatus: 'pending' })
 					.$returningId();
 				transactionId = transaction.id;
 
@@ -92,8 +94,6 @@ export const actions: Actions = {
 					);
 				}
 			});
-
-			const total = selectedProducts.reduce((acc, p) => acc + p.price * p.quantity, 0);
 
 			if (payWithChapa) {
 				// Generate transaction reference using our utility method or provide your own
