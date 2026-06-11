@@ -27,10 +27,10 @@
 		item?.createdAt ? formatEthiopianDate(new Date(item.createdAt)) : null
 	);
 
-	const pageTitle = $derived(`${post?.title ?? 'TMAX Power Guide'} | TMAX Blog`);
+	const pageTitle = $derived(`${post?.title ?? 'TMax Technology Guide'} | TMax Blog`);
 	const pageDescription = $derived(
 		post?.excerpt ||
-			'Read TMAX guides about products, fast charging, battery capacity, safe charging, and everyday backup power.'
+			'Read TMax guides about electronics, mobile accessories, power solutions, storage devices, audio products, smart technology, warranty support, and everyday digital convenience.'
 	);
 </script>
 
@@ -40,19 +40,19 @@
 	<meta name="description" content={pageDescription} />
 	<meta
 		name="keywords"
-		content="TMAX blog, TMAX ele, electronics Ethiopia, Addis Ababa electronics, fast charging, battery safety, 22.5W charging"
+		content="TMax blog, TMax Electronics, electronics Ethiopia, Addis Ababa electronics, mobile accessories, power solutions, storage devices, audio products, smart electronics"
 	/>
 
 	<meta property="og:type" content="article" />
-	<meta property="og:url" content={`https://tmax.et/blogs/${post?.slug ?? ''}`} />
+	<meta property="og:url" content={`https://tmaxelectronics.com/blogs/${post?.slug ?? ''}`} />
 	<meta property="og:title" content={pageTitle} />
 	<meta property="og:description" content={pageDescription} />
 	<meta
 		property="og:image"
 		content={`https://tmax.et/files/${post?.featuredImage ?? 'logo.png'}`}
 	/>
-	<meta property="article:section" content={post?.category || 'electronics Guide'} />
-	<meta property="article:author" content="TMAX" />
+	<meta property="article:section" content={post?.category || 'Electronics Guide'} />
+	<meta property="article:author" content="TMax Electronics" />
 
 	<meta name="twitter:card" content="summary_large_image" />
 	<meta name="twitter:url" content={`https://tmax.et/blogs/${post?.slug ?? ''}`} />
@@ -64,7 +64,7 @@
 	/>
 
 	<link rel="canonical" href={`https://tmax.et/blogs/${post?.slug ?? ''}`} />
-	<meta name="author" content="TMAX" />
+	<meta name="author" content="TMax Electronics" />
 </svelte:head>
 
 <div
@@ -91,7 +91,7 @@
 						href="/blogs"
 					>
 						<ArrowLeftIcon class="mr-2 size-4" />
-						Back to Guides
+						Back to Insights
 					</Button>
 				</div>
 				{#if item?.category}
@@ -111,7 +111,7 @@
 						class="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-xs font-bold tracking-widest text-primary uppercase backdrop-blur-xl"
 					>
 						<BatteryCharging class="size-4" />
-						TMAX Electronics
+						TMax Electronics
 					</div>
 
 					<h1 class="text-4xl font-black tracking-tight sm:text-5xl lg:text-6xl">
@@ -186,10 +186,11 @@
 			<div
 				class="rounded-3xl border border-primary/10 bg-primary/5 p-6 text-center backdrop-blur-xl"
 			>
-				<h2 class="text-2xl font-black tracking-tight">Need help choosing a TMAX product?</h2>
+				<h2 class="text-2xl font-black tracking-tight">Need help choosing a TMax product?</h2>
 				<p class="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-muted-foreground">
-					Explore our models or contact TMAX support for help choosing the right capacity and
-					charging speed.
+					Explore our products or contact TMax support for help choosing the right electronics,
+					mobile accessories, power solutions, storage devices, audio products, or smart technology
+					solutions.
 				</p>
 
 				<div class="mt-6 flex flex-col gap-3 sm:flex-row">
@@ -204,7 +205,7 @@
 						size="lg"
 						href="/blogs"
 					>
-						Read More Guides
+						Read More Insights
 					</Button>
 				</div>
 			</div>

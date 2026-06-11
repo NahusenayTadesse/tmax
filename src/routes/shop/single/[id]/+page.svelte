@@ -1,6 +1,7 @@
 <script lang="ts">
 	import ProductDetail from '$lib/components/product-detail.svelte';
 	import Gallery from '$lib/components/gallery.svelte';
+	import Warranty from '$lib/components/warranty.svelte';
 
 	let { data } = $props();
 
@@ -88,3 +89,5 @@
 		</div>
 	{/if}
 </div>
+
+<Warranty />

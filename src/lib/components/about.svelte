@@ -16,67 +16,66 @@
 		CableIcon
 	} from '@lucide/svelte';
 
-	import { fly, fade, scale, blur } from 'svelte/transition';
+	import { fly, scale } from 'svelte/transition';
 
 	const features = [
 		{
-			icon: ZapIcon,
-			label: 'Fast Charging Technology',
-			description: '22.5W fast charging support for phones, tablets, and everyday digital devices.'
+			icon: ShieldCheckIcon,
+			label: 'Quality Assured Products',
+			description:
+				'Every product is carefully selected to ensure durability, reliability, and performance.'
 		},
 		{
-			icon: ShieldCheckIcon,
-			label: 'Smart Safety Protection',
-			description: 'Built-in smart chip protection for safer, more stable power delivery.'
+			icon: ZapIcon,
+			label: 'Competitive Pricing',
+			description: 'Access premium technology products at competitive market prices.'
 		},
 		{
 			icon: UsbIcon,
-			label: 'Chargers, Cables & Accessories',
-			description:
-				'A growing electronics lineup with USB, Type-C, IOS line, adapters, and charging tools.'
+			label: 'Trusted Customer Support',
+			description: 'Our team is always ready to assist before and after every purchase.'
 		},
 		{
 			icon: MonitorIcon,
-			label: 'Modern LED Display',
-			description:
-				'Selected power bank models include LED digital battery display for easier monitoring.'
+			label: 'Nationwide Availability',
+			description: 'Reliable electronics and accessories available for customers across Ethiopia.'
 		}
 	];
 
 	const galleryImages = [
 		{
 			image: '/gallery (1).webp',
-			alt: 'T-max power bank and electronics lifestyle image'
+			alt: 'TMax electronics and accessories lifestyle image'
 		},
 		{
 			image: '/gallery (2).webp',
-			alt: 'T-max charger and mobile accessories image'
+			alt: 'TMax mobile accessories and charging products image'
 		},
 		{
 			image: '/gallery (3).webp',
-			alt: 'T-max electronics product packaging image'
+			alt: 'TMax electronics product packaging image'
 		},
 		{
 			image: '/gallery (4).webp',
-			alt: 'T-max power bank charging setup image'
+			alt: 'TMax technology products and smart accessories image'
 		}
 	];
 
 	const productPillars = [
 		{
 			icon: BatteryChargingIcon,
-			title: 'Power Banks',
-			copy: 'High-capacity backup power designed for phones, tablets, headphones, and USB-powered devices.'
+			title: 'Power Solutions',
+			copy: 'High-capacity power banks, charging accessories, power sockets, and extension solutions for everyday use.'
 		},
 		{
 			icon: ZapIcon,
-			title: 'Chargers',
-			copy: 'Fast, efficient charging solutions for everyday homes, offices, shops, and travel use.'
+			title: 'Mobile Accessories',
+			copy: 'Chargers, cables, adapters, holders, and essential accessories designed for modern mobile devices.'
 		},
 		{
 			icon: CableIcon,
-			title: 'Cables & Lines',
-			copy: 'USB, Type-C, and IOS line support built for convenience, compatibility, and durability.'
+			title: 'Storage & Smart Electronics',
+			copy: 'USB flash drives, storage devices, audio products, and innovative technology solutions.'
 		}
 	];
 </script>
@@ -97,17 +96,16 @@
 			<span
 				class="mx-auto mb-4 inline-flex rounded-full border border-primary/20 bg-primary/5 px-4 py-1 text-xs font-semibold tracking-wider text-primary uppercase"
 			>
-				T-max Electronics
+				Technology You Can Trust
 			</span>
 
 			<h2 class="text-4xl font-extrabold tracking-tight sm:text-6xl">
-				Power Banks, Chargers & Smart Electronics.
+				Premium Electronics for Everyday Performance.
 			</h2>
 
 			<p class="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground">
-				T-max delivers dependable electronics for modern lifestyles, including high-capacity power
-				banks, fast chargers, USB and Type-C accessories, cable solutions, LED display models, and
-				smart chip protection.
+				TMax Electronics delivers reliable, innovative, and high-quality technology products that
+				keep you connected, productive, and powered wherever you go.
 			</p>
 		</div>
 
@@ -129,27 +127,29 @@
 							<div class="mb-4 flex items-center gap-2 text-primary">
 								<BatteryChargingIcon class="size-5" />
 								<span class="text-xs font-bold tracking-widest uppercase">
-									Complete Charging Line
+									Our Product Categories
 								</span>
 							</div>
 
-							<h3 class="text-3xl font-bold tracking-tight">Reliable Power for Every Device</h3>
+							<h3 class="text-3xl font-bold tracking-tight">
+								Technology Designed for Modern Living
+							</h3>
 
 							<p class="mt-4 text-sm leading-relaxed text-muted-foreground">
-								From power banks and fast chargers to USB, Type-C, IOS lines, and daily mobile
-								accessories, T-max electronics are built to support customers at home, at work, in
-								retail, and on the move.
+								Whether you're looking for power solutions, mobile accessories, storage devices,
+								audio products, or smart electronic gadgets, every product is selected to meet our
+								standards of quality, durability, and performance.
 							</p>
 
 							<div class="mt-6 grid grid-cols-2 gap-3">
 								<div class="rounded-xl border border-primary/10 bg-primary/5 p-4">
-									<p class="text-xs text-muted-foreground">Power Bank Range</p>
-									<p class="text-2xl font-bold text-primary">20000–80000mAh</p>
+									<p class="text-xs text-muted-foreground">Product Range</p>
+									<p class="text-2xl font-bold text-primary">5+</p>
 								</div>
 
 								<div class="rounded-xl border border-primary/10 bg-primary/5 p-4">
-									<p class="text-xs text-muted-foreground">Fast Charging</p>
-									<p class="text-2xl font-bold text-primary">22.5W</p>
+									<p class="text-xs text-muted-foreground">Customer Commitment</p>
+									<p class="text-2xl font-bold text-primary">100%</p>
 								</div>
 							</div>
 						</div>
@@ -161,7 +161,7 @@
 							>
 								<img
 									src="/hero.webp"
-									alt="T-max electronics power bank product"
+									alt="TMax Electronics product showcase"
 									class="aspect-4/5 w-full rounded-xl object-cover transition duration-700 hover:scale-105"
 								/>
 
@@ -170,19 +170,19 @@
 								>
 									<div class="mb-2 flex items-center justify-between">
 										<span class="font-mono text-[10px] text-muted-foreground">
-											TMAX_POWER_STATUS
+											TMAX_ELECTRONICS
 										</span>
 										<span
 											class="rounded-full bg-primary/10 px-2 py-1 text-[10px] font-semibold text-primary"
 										>
-											Active
+											Trusted
 										</span>
 									</div>
 
 									<div class="mb-3">
 										<div class="mb-1 flex justify-between text-xs">
-											<span class="text-muted-foreground">Charging Speed</span>
-											<span class="font-mono text-primary">22.5W</span>
+											<span class="text-muted-foreground">Quality Assurance</span>
+											<span class="font-mono text-primary">Verified</span>
 										</div>
 										<div class="h-2 rounded-full bg-primary/10">
 											<div class="h-2 w-4/5 rounded-full bg-primary"></div>
@@ -191,7 +191,7 @@
 
 									<div class="flex items-center gap-2">
 										<CableIcon class="size-4 text-primary" />
-										<span class="text-xs font-semibold">USB / Type-C / IOS Support</span>
+										<span class="text-xs font-semibold"> Electronics • Accessories • Storage </span>
 									</div>
 								</div>
 							</div>
@@ -232,13 +232,15 @@
 				class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between"
 			>
 				<div>
-					<p class="text-xs font-bold tracking-widest text-primary uppercase">Featured Lineup</p>
-					<h3 class="mt-2 text-3xl font-bold tracking-tight">T-max Product Highlights</h3>
+					<p class="text-xs font-bold tracking-widest text-primary uppercase">
+						Featured Categories
+					</p>
+					<h3 class="mt-2 text-3xl font-bold tracking-tight">Explore Our Product Range</h3>
 				</div>
 
 				<p class="max-w-xl text-sm leading-relaxed text-muted-foreground">
-					A modern electronics range created for charging performance, everyday reliability, and
-					retail-ready presentation.
+					Technology products designed to improve convenience, productivity, and everyday
+					connectivity.
 				</p>
 			</div>
 
@@ -248,16 +250,16 @@
 					class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between"
 				>
 					<div>
-						<p class="text-xs font-bold tracking-widest text-primary uppercase">T-max Gallery</p>
+						<p class="text-xs font-bold tracking-widest text-primary uppercase">TMax Gallery</p>
 
 						<h3 class="mt-2 text-3xl font-bold tracking-tight">
-							Power, Design & Everyday Electronics
+							Innovation, Quality & Reliability
 						</h3>
 					</div>
 
 					<p class="max-w-xl text-sm leading-relaxed text-muted-foreground">
-						A closer look at T-max electronics, from power banks and fast charging solutions to
-						modern mobile accessories built for daily use.
+						Explore a growing collection of electronics, accessories, storage solutions, and smart
+						technology products.
 					</p>
 				</div>
 
@@ -281,10 +283,10 @@
 									class="absolute inset-x-4 bottom-4 translate-y-3 rounded-2xl border border-white/10 bg-background/70 p-4 opacity-0 backdrop-blur-md transition duration-500 group-hover:translate-y-0 group-hover:opacity-100"
 								>
 									<p class="text-xs font-semibold tracking-widest text-primary uppercase">
-										T-max Electronics
+										TMax Electronics
 									</p>
 
-									<p class="mt-1 text-sm font-bold">Smart charging for modern devices</p>
+									<p class="mt-1 text-sm font-bold">Technology that keeps you connected</p>
 								</div>
 
 								<div
@@ -298,10 +300,10 @@
 
 			<Card class="overflow-hidden border-primary/10 bg-card/30 shadow-xl backdrop-blur-lg">
 				<CardHeader>
-					<CardTitle>Why Choose T-max Electronics?</CardTitle>
+					<CardTitle>Why Choose TMax Electronics?</CardTitle>
 					<CardDescription>
-						A dependable electronics brand for charging, power backup, mobile accessories, and daily
-						digital convenience.
+						Committed to delivering dependable technology products that combine quality, value, and
+						innovation.
 					</CardDescription>
 				</CardHeader>
 

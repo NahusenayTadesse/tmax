@@ -120,8 +120,8 @@
 				Get in Touch
 			</h2>
 			<p class="max-w-xl text-base text-muted-foreground">
-				Have questions about specifications, order dispatch, or our 12-month warranty? Drop us a
-				line.
+				We 'd Love To Hear From You! Have questions about our products or services? Contact our team
+				today.
 			</p>
 		</div>
 
@@ -216,7 +216,7 @@
 				<div transition:fly={{ y: 20, duration: 600, delay: 200 }}>
 					<Card class="border-primary/10 bg-card/40 shadow-md backdrop-blur-md">
 						<CardHeader>
-							<CardTitle class="text-lg font-bold tracking-wide">Direct Lines</CardTitle>
+							<CardTitle class="text-lg font-bold tracking-wide">Contact Information</CardTitle>
 						</CardHeader>
 						<CardContent class="flex flex-col gap-3">
 							{#each contactInfo as info (info.label)}
@@ -247,7 +247,10 @@
 				<div transition:fly={{ y: 20, duration: 600, delay: 300 }}>
 					<Card class="border-primary/10 bg-card/40 shadow-md backdrop-blur-md">
 						<CardHeader>
-							<CardTitle class="text-lg font-bold tracking-wide">Follow Channels</CardTitle>
+							<CardTitle class="text-lg font-bold tracking-wide">Follow Us</CardTitle>
+							<CardDescription class="text-sm text-muted-foreground"
+								>Stay updated with our latest products, promotions, and technology updates.
+							</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<div class="grid grid-cols-2 gap-3">

@@ -27,8 +27,8 @@
 					$form.slug = $form.title?.toLowerCase().replace(/\s+/g, '-');
 				}
 			},
-			validators: zod4Client(schema),
-			dataType: 'json'
+
+			validators: zod4Client(schema)
 		}
 	);
 
@@ -91,6 +91,7 @@
 			label="Category"
 			placeholder="Select Category"
 			items={data?.cats}
+			required
 		/>
 		<InputComp
 			{form}

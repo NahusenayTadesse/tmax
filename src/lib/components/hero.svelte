@@ -156,33 +156,35 @@
 				class="mb-8 inline-flex w-fit items-center gap-2 self-start rounded-full border border-primary/20 bg-secondary px-3 py-1.5 text-xs font-medium text-foreground transition-transform hover:scale-[1.02] md:text-sm"
 			>
 				<span class="h-2 w-2 animate-pulse rounded-full bg-primary"></span>
-				{bestSelling}
+				Quality Assured Products
 			</a>
 
 			<div class="max-w-2xl space-y-6">
 				<h1
 					class="text-4xl leading-[1.1] font-extrabold tracking-tight text-balance md:text-5xl lg:text-6xl"
 				>
-					Real tech.<br />
-					<span class="text-primary">Real warranty.</span><br />
-					Ethiopia-ready.
+					Powering Your<br />
+					<span class="text-primary">Digital Lifestyle.</span><br />
+					Technology You Can Trust.
 				</h1>
 
 				<p class="max-w-xl text-sm leading-relaxed font-medium text-muted-foreground md:text-base">
-					Phones, laptops, audio and smart home — sourced directly, priced in birr, delivered the
-					same day in Addis. Every device covered by our 12-month TMAX warranty.
+					Premium electronics, mobile accessories, storage devices, and smart technology solutions
+					designed for everyday performance. At TMax Electronics, we deliver reliable, innovative,
+					and high-quality technology products that keep you connected, productive, and powered
+					wherever you go.
 				</p>
 			</div>
 
 			<div class="mt-8 flex flex-wrap items-center gap-4 md:mt-12">
 				<Button href="/shop" variant="default">
-					Shop the catalog
+					Shop Now
 					<ArrowRight class="h-4 w-4" />
 				</Button>
 
 				<Button variant="outline">
 					<MessageSquareCode class="h-4 w-4 opacity-70" />
-					Ask the assistant
+					Need Assistance?
 				</Button>
 			</div>
 		</div>
@@ -212,7 +214,7 @@
 				>
 					<img
 						src={heroImage[currentImage]}
-						alt="hero"
+						alt="TMax Electronics product showcase"
 						class="hero-device h-full w-full object-contain p-6 sm:p-8 lg:p-10"
 						draggable="false"
 					/>

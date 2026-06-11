@@ -20,66 +20,66 @@
 
 	const features = [
 		{
-			id: 'fast-charging',
-			title: 'Do T-max power banks support fast charging?',
+			id: 'product-quality',
+			title: 'What makes TMax Electronics products reliable?',
 			description:
-				'Yes. Selected T-max power banks support 22.5W fast charging, helping you power phones, tablets, and other USB devices faster than standard output power banks.',
-			icon: ZapIcon
-		},
-		{
-			id: 'capacity-options',
-			title: 'What battery capacities are available?',
-			description:
-				'T-max power banks come in high-capacity options such as 20000mAh, 40000mAh, 70000mAh, and 80000mAh, giving customers choices for daily use, travel, work, and backup power.',
-			icon: BatteryChargingIcon
-		},
-		{
-			id: 'device-compatibility',
-			title: 'Which devices can I charge?',
-			description:
-				'They are designed for common USB-powered devices including smartphones, tablets, earbuds, smart watches, portable speakers, and other Type-C or USB-compatible devices.',
-			icon: UsbIcon
-		},
-		{
-			id: 'smart-protection',
-			title: 'Are they safe for daily charging?',
-			description:
-				'Yes. T-max power banks include smart chip protection features that help support safer charging, stable current output, and protection against common charging risks.',
+				'TMax Electronics carefully selects products to ensure quality, durability, and everyday performance. Each product is chosen to meet customer needs for dependable technology.',
 			icon: ShieldCheckIcon
 		},
 		{
-			id: 'led-display',
-			title: 'Do they show battery percentage?',
+			id: 'product-categories',
+			title: 'What products does TMax Electronics offer?',
 			description:
-				'Some models include an LED digital display, making it easier to check remaining battery level before leaving home, work, or travel.',
-			icon: MonitorIcon
-		},
-		{
-			id: 'delivery',
-			title: 'Is same-day delivery available?',
-			description:
-				'Yes. Orders within Addis Ababa can be delivered the same day during working hours, depending on product availability and delivery location.',
-			icon: TruckIcon
-		},
-		{
-			id: 'local-payment',
-			title: 'Can I pay in Ethiopian Birr?',
-			description:
-				'Yes. T-max products are priced locally in Ethiopian Birr, with simple payment options for customers in Addis Ababa.',
-			icon: CoinsIcon
-		},
-		{
-			id: 'packaging',
-			title: 'What comes with the packaging?',
-			description:
-				'Each product comes in branded T-max packaging with model information, capacity details, charging specifications, QR code labeling, and product safety information.',
+				'TMax Electronics offers mobile accessories, power solutions, storage devices, audio devices, smart electronics, and corporate or bulk order solutions.',
 			icon: PackageIcon
 		},
 		{
-			id: 'support',
-			title: 'Can I get help choosing a model?',
+			id: 'power-solutions',
+			title: 'Do you offer power banks and charging products?',
 			description:
-				'Yes. Support is available to help you choose the right power bank based on your phone, charging habits, capacity needs, and daily usage.',
+				'Yes. TMax Electronics provides high-capacity power banks, mobile chargers, power sockets, extension solutions, and other charging products for home, business, and everyday use.',
+			icon: BatteryChargingIcon
+		},
+		{
+			id: 'mobile-accessories',
+			title: 'What mobile accessories are available?',
+			description:
+				'TMax Electronics offers chargers, cables, adapters, holders, and essential accessories designed for modern mobile devices and daily convenience.',
+			icon: UsbIcon
+		},
+		{
+			id: 'storage-devices',
+			title: 'Do you sell storage devices?',
+			description:
+				'Yes. TMax Electronics provides USB flash drives, memory storage products, and reliable data transfer solutions available in different capacities.',
+			icon: MonitorIcon
+		},
+		{
+			id: 'pricing',
+			title: 'Are the products affordably priced?',
+			description:
+				'Yes. TMax Electronics focuses on providing premium technology products at competitive market prices while maintaining quality and value.',
+			icon: CoinsIcon
+		},
+		{
+			id: 'availability',
+			title: 'Are TMax Electronics products available nationwide?',
+			description:
+				'TMax Electronics aims to make reliable electronics and technology accessories available to customers across Ethiopia through strong market availability and customer support.',
+			icon: TruckIcon
+		},
+		{
+			id: 'warranty-support',
+			title: 'Do you provide warranty support?',
+			description:
+				'Yes. TMax Electronics provides warranty assistance, product replacement guidance, technical support, and customer service after purchase.',
+			icon: ShieldCheckIcon
+		},
+		{
+			id: 'customer-support',
+			title: 'Can I get help choosing the right product?',
+			description:
+				'Yes. The TMax Electronics support team can assist with product information, technical questions, warranty guidance, and corporate customer support.',
 			icon: HelpCircleIcon
 		}
 	];
@@ -103,7 +103,7 @@
 			<span
 				class="rounded-full border border-primary/20 bg-primary/5 px-4 py-1 text-[11px] font-bold tracking-widest text-primary uppercase backdrop-blur-xl"
 			>
-				Power Bank Guide
+				Customer Support
 			</span>
 
 			<h1
@@ -113,7 +113,8 @@
 			</h1>
 
 			<p class="max-w-xl text-base text-muted-foreground">
-				Quick answers about T-max capacity, fast charging, safety, delivery, and daily use.
+				Quick answers about TMax Electronics products, categories, pricing, warranty support, and
+				customer service.
 			</p>
 		</div>
 

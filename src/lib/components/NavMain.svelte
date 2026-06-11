@@ -41,7 +41,7 @@
 		<div class="mb-1">
 			{#if section}
 				<div
-					class="px-3 pt-3 pb-1 text-[9px] font-medium tracking-[0.1em] text-muted-foreground/70 uppercase"
+					class="px-3 pt-3 pb-1 text-[9px] font-medium tracking-widest text-muted-foreground/70 uppercase"
 				>
 					{section}
 				</div>
@@ -67,23 +67,23 @@
 									)}
 								>
 									{#if item.icon}
-										<item.icon class="h-[15px] w-[15px] shrink-0 opacity-70" />
+										<item.icon class="h-3.75 w-3.75 shrink-0 opacity-70" />
 									{/if}
 									<span class="flex-1 text-left">{item.title}</span>
 
 									{#if item.counter > 0}
 										<span
-											class="flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-foreground px-1.5 text-[10px] font-semibold"
+											class="flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-accent px-1.5 text-[10px] font-semibold"
 											in:scale={{ duration: 200 }}
 										>
 											{formatCount(item.counter)}
 										</span>
 									{/if}
 
-									<Collapsible.Trigger asChild>
-										{#snippet child({ props: triggerProps })}
+									<Collapsible.Trigger {...props}>
+										{#snippet child({ props })}
 											<span
-												{...triggerProps}
+												{...props}
 												onclick={(e) => e.stopPropagation()}
 												class="ml-0.5 rounded p-0.5 opacity-40 hover:opacity-70"
 											>
@@ -151,7 +151,7 @@
 
 							{#if item.counter > 0}
 								<span
-									class="flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-foreground px-1.5 text-[10px] font-semibold"
+									class="flex h-4.5 min-w-4.5 items-center justify-center rounded-full px-1.5 text-[10px] font-semibold"
 									in:scale={{ duration: 200 }}
 								>
 									{formatCount(item.counter)}

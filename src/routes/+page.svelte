@@ -18,6 +18,7 @@
 	import Testimonial from '$lib/components/testimonial.svelte';
 	import ImgSeparator from '$lib/components/imgSeparator.svelte';
 	import BlogCard from '$lib/components/blogs/portfolio-card.svelte';
+	import ProductSeparator from '$lib/components/productSeparator.svelte';
 </script>
 
 <svelte:head>
@@ -27,7 +28,7 @@
 <Hero bestSelling={data?.bestSelling[0]?.productName ?? ''} id={data?.bestSelling[0]?.productId} />
 <ImgSeparator />
 <About />
-<ImgSeparator />
+<ProductSeparator />
 <section
 	class="relative mx-auto flex max-w-7xl flex-col items-center justify-center overflow-hidden px-4 py-16 sm:px-6 lg:px-8"
 >

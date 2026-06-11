@@ -79,27 +79,29 @@
 
 				<div class="mt-2 flex flex-col gap-3 text-sm">
 					<a
-						href="https://maps.google.com"
+						href="https://maps.app.goo.gl/9fpn43xdxMFbNGEp7"
 						target="_blank"
 						rel="noopener noreferrer"
 						class="group flex items-start gap-3 text-muted-foreground transition-colors hover:text-foreground"
 					>
 						<MapPinIcon class="mt-0.5 size-4 shrink-0 text-primary" />
-						<span>Main HQ Showroom, Addis Ababa, Ethiopia</span>
+						<span>Yirga Haile Market Center, Addis Ababa, Ethiopia</span>
 					</a>
 					<a
 						href="tel:+251933111111"
+						target="_blank"
 						class="flex items-center gap-3 text-muted-foreground transition-colors hover:text-foreground"
 					>
 						<PhoneIcon class="size-4 shrink-0 text-primary" />
 						<span>+251 933111111</span>
 					</a>
 					<a
-						href="mailto:info@tmaxelectronics.com"
+						href="mailto:support@tmaxelectronics.com"
+						target="_blank"
 						class="flex items-center gap-3 text-muted-foreground transition-colors hover:text-foreground"
 					>
 						<MailIcon class="size-4 shrink-0 text-primary" />
-						<span>info@tmaxelectronics.com</span>
+						<span>support@tmaxelectronics.com</span>
 					</a>
 					<a
 						href="https://tmaxelectronics.com"
@@ -107,6 +109,15 @@
 					>
 						<GlobeIcon class="size-4 shrink-0 text-primary" />
 						<span>tmaxelectronics.com</span>
+					</a>
+
+					<a
+						href="https://wanetrading.com"
+						target="_blank"
+						class="flex items-center gap-3 text-muted-foreground transition-colors hover:text-foreground"
+					>
+						<GlobeIcon class="size-4 shrink-0 text-primary" />
+						<span>wanetrading.com</span>
 					</a>
 				</div>
 			</div>
@@ -128,8 +139,8 @@
 						>
 					</li>
 					<li>
-						<a href="/orders" class="text-muted-foreground transition-colors hover:text-foreground"
-							>Orders</a
+						<a href="/blogs" class="text-muted-foreground transition-colors hover:text-foreground"
+							>Blogs</a
 						>
 					</li>
 					<li>

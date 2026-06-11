@@ -170,6 +170,7 @@
 
 	import { isMobile } from '$lib/global.svelte.js';
 	import { fly } from 'svelte/transition';
+	import Warranty from '$lib/components/warranty.svelte';
 
 	const mobile = isMobile();
 
@@ -466,3 +467,5 @@
 		</div>
 	</main>
 </div>
+
+<Warranty />

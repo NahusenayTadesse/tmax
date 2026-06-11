@@ -56,25 +56,5 @@
 				{item.excerpt}
 			</p>
 		{/if}
-		<!-- <div class="flex flex-wrap gap-3 pt-2 text-xs text-muted-foreground">
-			{#if formattedDate}
-				<div class="flex items-center gap-1.5">
-					<CalendarIcon class="size-3.5" />
-					<span>{formattedDate}</span>
-				</div>
-			{/if}
-			{#if item.client}
-				<div class="flex items-center gap-1.5">
-					<UserIcon class="size-3.5" />
-					<span class="max-w-24 truncate">{item.client}</span>
-				</div>
-			{/if}
-			{#if item.location}
-				<div class="flex items-center gap-1.5">
-					<MapPinIcon class="size-3.5" />
-					<span class="max-w-32 truncate">{item.location}</span>
-				</div>
-			{/if}
-		</div> -->
 	</CardContent>
 </Card>

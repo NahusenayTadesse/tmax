@@ -39,6 +39,7 @@
 		{ label: 'About Us', href: '/about', icon: InfoIcon },
 		{ label: 'Blog', href: '/blogs', icon: InfoIcon },
 		{ label: 'Contact Us', href: '/contact-us', icon: ContactIcon }
+		// { label: 'Wane Trading', href: 'https://wanetrading.com', icon: PackageCheckIcon }
 	];
 
 	// Triggers URL changes routing seamlessly to /shop with query parameters

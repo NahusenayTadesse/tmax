@@ -25,22 +25,23 @@
 			class="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-2 text-xs font-bold tracking-widest text-primary uppercase backdrop-blur-xl"
 		>
 			<BookOpenIcon class="size-4" />
-			TMAX Power Insights
+			TMax Technology Insights
 		</div>
 
 		<h1
 			in:fly={{ y: 24, duration: 700, delay: 100 }}
 			class="mx-auto max-w-4xl text-4xl font-black tracking-tight sm:text-6xl lg:text-7xl"
 		>
-			Learn how to choose better power.
+			Learn how to choose better technology.
 		</h1>
 
 		<p
 			in:fade={{ duration: 700, delay: 220 }}
 			class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg"
 		>
-			Guides, tips, and updates about TMAX electronics, fast charging, battery safety, capacity,
-			delivery, and everyday backup power.
+			Guides, tips, and updates about TMax Electronics, mobile accessories, power solutions, storage
+			devices, audio products, smart electronics, warranty support, and everyday digital
+			convenience.
 		</p>
 
 		<div
@@ -49,20 +50,24 @@
 		>
 			<div class="rounded-2xl border border-primary/10 bg-card/40 p-5 backdrop-blur-2xl">
 				<BatteryChargingIcon class="mx-auto mb-3 size-6 text-primary" />
-				<p class="text-sm font-bold">Capacity Guides</p>
-				<p class="mt-1 text-xs text-muted-foreground">Pick the right mAh for your day.</p>
+				<p class="text-sm font-bold">Power Solutions</p>
+				<p class="mt-1 text-xs text-muted-foreground">Choose reliable charging and backup power.</p>
 			</div>
 
 			<div class="rounded-2xl border border-primary/10 bg-card/40 p-5 backdrop-blur-2xl">
 				<ZapIcon class="mx-auto mb-3 size-6 text-primary" />
-				<p class="text-sm font-bold">Fast Charging Tips</p>
-				<p class="mt-1 text-xs text-muted-foreground">Understand 22.5W power output.</p>
+				<p class="text-sm font-bold">Smart Accessories</p>
+				<p class="mt-1 text-xs text-muted-foreground">
+					Find useful electronics for daily productivity.
+				</p>
 			</div>
 
 			<div class="rounded-2xl border border-primary/10 bg-card/40 p-5 backdrop-blur-2xl">
 				<ShieldCheckIcon class="mx-auto mb-3 size-6 text-primary" />
-				<p class="text-sm font-bold">Safety & Care</p>
-				<p class="mt-1 text-xs text-muted-foreground">Use your electronic safely.</p>
+				<p class="text-sm font-bold">Quality & Support</p>
+				<p class="mt-1 text-xs text-muted-foreground">
+					Buy with confidence, warranty, and service.
+				</p>
 			</div>
 		</div>
 	</div>

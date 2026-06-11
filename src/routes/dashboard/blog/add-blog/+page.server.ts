@@ -47,7 +47,7 @@ export const actions: Actions = {
 			// 1. Upload images first (usually done before the DB transaction starts
 			// to avoid keeping a DB connection open during slow network I/O)
 			const featuredImage = await saveUploadedFile(image);
-			const galleryImages = await uploadGallery(gallery);
+			const galleryImages = gallery ? await uploadGallery(gallery) : [];
 
 			let newSlug: string;
 
