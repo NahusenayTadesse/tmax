@@ -5,7 +5,6 @@
 	import {
 		ShieldCheckIcon,
 		TruckIcon,
-		CoinsIcon,
 		ActivityIcon,
 		ArrowRightIcon,
 		SparklesIcon,
@@ -19,12 +18,12 @@
 		BadgeCheckIcon,
 		CableIcon,
 		SmartphoneIcon,
-		GaugeIcon,
 		BoxIcon,
 		HeadphonesIcon,
 		LayersIcon
 	} from '@lucide/svelte';
 	import { fly, fade } from 'svelte/transition';
+	import TeamStoreGallery from '$lib/components/TeamStoreGallery.svelte';
 
 	import Faq from '$lib/components/faq.svelte';
 	import Testimonial from '$lib/components/testimonial.svelte';
@@ -32,47 +31,57 @@
 	import ImgSeparator from '$lib/components/imgSeparator.svelte';
 
 	const meta = {
-		title: 'About TMAX | High-Capacity Power Banks in Addis Ababa',
+		title: 'About TMAX Electronics | Power Banks & Chargers in Addis Ababa',
 		description:
-			'TMAX delivers authentic, high-capacity power banks with fast charging, smart protection, Birr pricing, and same-day delivery in Addis Ababa.',
+			'TMAX Electronics delivers authentic power banks and chargers with fast charging, smart protection, Birr pricing, and same-day delivery in Addis Ababa.',
 		url: 'https://tmax.et/about',
 		image: 'https://tmax.et/og-about.jpg',
-		keywords: 'TMAX power bank, Addis Ababa power bank, fast charging Ethiopia, backup battery Birr'
+		keywords:
+			'TMAX electronics, power banks Addis Ababa, chargers Ethiopia, fast charging accessories, backup battery Birr'
 	};
 
-	type TabKey = 'power' | 'safety' | 'trust';
+	type TabKey = 'power' | 'chargers' | 'trust';
 	let activeTab = $state<TabKey>('power');
 
 	const tabs = {
 		power: {
-			label: 'Power',
+			label: 'Power Banks',
 			title: 'High-Capacity Backup Power',
 			text: 'TMAX power banks are built for dependable daily backup, from compact carry models to larger reserve power units.',
 			points: [
-				'Up to 80000mAh options',
-				'22.5W fast charging',
+				'Up to 80000mAh power bank options',
+				'Fast charging support',
 				'USB, Type-C, and cable-ready models'
 			]
 		},
-		safety: {
-			label: 'Safety',
-			title: 'Smart Chip Protection',
-			text: 'Integrated protection systems help support stable charging and protect connected devices from unstable output.',
-			points: ['Short-circuit protection', 'Power-current control', 'Safer multi-device charging']
+		chargers: {
+			label: 'Chargers',
+			title: 'Fast Daily Charging Accessories',
+			text: 'TMAX chargers are selected for dependable everyday charging at home, work, travel, and shop-counter use.',
+			points: [
+				'Fast charging options',
+				'Phone and accessory charging',
+				'Stable output for daily electronics'
+			]
 		},
 		trust: {
 			label: 'Trust',
-			title: 'Authentic TMAX Packaging',
-			text: 'Each unit is presented in branded packaging with model details, QR codes, and quality-focused product information.',
+			title: 'Product Trust',
+			text: 'Each power bank and charger is presented with clear product details, brand identity, and quality-focused information.',
 			points: ['Clear model labeling', 'Verified brand identity', 'Warranty-backed experience']
 		}
 	} as const;
 
 	const benefits = [
 		{
-			icon: ShieldCheckIcon,
-			title: '12-Month Warranty',
-			text: 'Confidence after purchase with warranty-backed support.'
+			icon: BatteryChargingIcon,
+			title: 'Power Banks',
+			text: 'Backup power options for phones, accessories, travel, and everyday use.'
+		},
+		{
+			icon: ZapIcon,
+			title: 'Chargers',
+			text: 'Fast charging accessories for daily electronics and mobile devices.'
 		},
 		{
 			icon: TruckIcon,
@@ -80,20 +89,15 @@
 			text: 'Fast local delivery across Addis Ababa.'
 		},
 		{
-			icon: CoinsIcon,
-			title: 'Priced in Birr',
-			text: 'Transparent local pricing without hidden costs.'
-		},
-		{
-			icon: ScanQrCodeIcon,
-			title: 'Brand Verification',
-			text: 'Packaging includes QR and model details for better trust.'
+			icon: ShieldCheckIcon,
+			title: '12-Month Warranty',
+			text: 'Warranty-backed support for a more confident purchase.'
 		}
 	];
 
 	const stats = [
-		{ value: '80K', label: 'mAh capacity options', detail: 'Reserve power for longer days' },
-		{ value: '22.5W', label: 'fast charging', detail: 'Built for quick top-ups' },
+		{ value: '80K', label: 'mAh power bank options', detail: 'Backup power for longer days' },
+		{ value: '22.5W', label: 'fast charging options', detail: 'Quick top-ups for daily devices' },
 		{ value: '12', label: 'month warranty', detail: 'Local after-sales support' },
 		{ value: '1 Day', label: 'Addis delivery', detail: 'Same-day dispatch available' }
 	];
@@ -101,36 +105,36 @@
 	const productLayers = [
 		{
 			icon: BatteryChargingIcon,
-			title: 'Capacity Core',
-			text: 'Large battery reserves designed for phones, accessories, travel, work, and emergency backup.'
+			title: 'Power Bank Capacity',
+			text: 'Backup battery options designed for phones, accessories, travel, work, and emergency use.'
 		},
 		{
-			icon: GaugeIcon,
-			title: 'Fast Output System',
-			text: '22.5W-ready models help reduce downtime when your phone needs a fast power boost.'
+			icon: ZapIcon,
+			title: 'Fast Charger Options',
+			text: 'Charging accessories selected to keep everyday electronics powered with less downtime.'
 		},
 		{
 			icon: CpuIcon,
-			title: 'Smart Control Chip',
-			text: 'Internal protection logic supports safer current control and more stable charging behavior.'
+			title: 'Smart Protection',
+			text: 'Protection-focused charging behavior supports safer current control and stable device charging.'
 		},
 		{
 			icon: CableIcon,
-			title: 'Multi-Port Flexibility',
-			text: 'USB, Type-C, and cable-ready choices make it easier to power different daily devices.'
+			title: 'Port & Cable Flexibility',
+			text: 'USB, Type-C, and cable-ready choices make it easier to charge different daily devices.'
 		}
 	];
 
 	const journey = [
 		{
 			icon: SmartphoneIcon,
-			title: 'Pick your capacity',
-			text: 'Choose a compact daily model or a larger reserve unit based on how much backup you need.'
+			title: 'Choose your product',
+			text: 'Pick a power bank for backup power or a charger for everyday fast charging needs.'
 		},
 		{
 			icon: ScanQrCodeIcon,
 			title: 'Check product details',
-			text: 'Review model labels, QR information, cable options, charging speed, and warranty support.'
+			text: 'Review model labels, charging speed, port type, cable options, and warranty support.'
 		},
 		{
 			icon: TruckIcon,
@@ -143,7 +147,7 @@
 		{
 			icon: PackageCheckIcon,
 			title: 'Branded packaging',
-			text: 'Clear TMAX model presentation and retail-ready product information.'
+			text: 'Clear TMAX model presentation for power banks and chargers.'
 		},
 		{
 			icon: BadgeCheckIcon,
@@ -158,7 +162,7 @@
 		{
 			icon: HeadphonesIcon,
 			title: 'Human support',
-			text: 'Contact the team before or after purchase for guidance.'
+			text: 'Contact the team before or after purchase for product guidance.'
 		}
 	];
 
@@ -193,16 +197,17 @@
 				class="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-primary uppercase backdrop-blur-xl"
 			>
 				<ActivityIcon class="size-3 animate-pulse" />
-				TMAX Power System
+				TMAX Electronics
 			</div>
 
 			<h1 class="text-5xl leading-none font-black tracking-tight sm:text-7xl">
-				Power that keeps you moving.
+				Power banks and chargers for everyday electronics.
 			</h1>
 
 			<p class="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
-				Authentic TMAX power banks with large capacity, 22.5W fast charging, smart chip protection,
-				and same-day delivery in Addis Ababa.
+				TMAX is an electronics company focused on authentic power banks and chargers, offering
+				reliable backup power, fast charging accessories, smart protection, and same-day delivery in
+				Addis Ababa.
 			</p>
 
 			<div class="mt-8 flex flex-col gap-3 sm:flex-row">
@@ -235,7 +240,7 @@
 
 				<CardContent class="relative p-6 sm:p-8">
 					<div class="mb-6 flex items-center justify-between border-b border-primary/10 pb-4">
-						<span class="font-mono text-xs text-muted-foreground">POWER_STATUS</span>
+						<span class="font-mono text-xs text-muted-foreground">ELECTRONICS_STATUS</span>
 						<span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
 							READY
 						</span>
@@ -269,7 +274,7 @@
 			<div class="mb-10 text-center">
 				<span class="text-xs font-bold tracking-widest text-primary uppercase">Why TMAX</span>
 				<h2 class="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
-					Fast. Safe. Built for daily power.
+					Power banks. Chargers. Everyday reliability.
 				</h2>
 			</div>
 
@@ -300,8 +305,8 @@
 						>
 							{#if activeTab === 'power'}
 								<BatteryChargingIcon class="size-6" />
-							{:else if activeTab === 'safety'}
-								<CpuIcon class="size-6" />
+							{:else if activeTab === 'chargers'}
+								<ZapIcon class="size-6" />
 							{:else}
 								<ShieldCheckIcon class="size-6" />
 							{/if}
@@ -330,6 +335,7 @@
 		</div>
 	</section>
 	<ImgSeparator />
+
 	<section class="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
 		<div class="absolute inset-x-8 top-24 -z-10 h-48 rounded-full bg-primary/10 blur-3xl"></div>
 
@@ -364,14 +370,14 @@
 					class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold tracking-wider text-primary uppercase backdrop-blur-xl"
 				>
 					<LayersIcon class="size-3" />
-					Inside the Build
+					Product Focus
 				</div>
 				<h2 class="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
-					More than a battery. A complete power layer.
+					Electronics built around power and charging.
 				</h2>
 				<p class="mt-5 max-w-lg text-sm leading-relaxed text-muted-foreground">
-					TMAX combines capacity, output speed, smart protection, and flexible ports into a daily
-					backup system for Addis Ababa customers.
+					TMAX brings together power banks, chargers, smart protection, and flexible connection
+					options for Addis Ababa customers who need dependable everyday electronics.
 				</p>
 			</div>
 
@@ -399,13 +405,17 @@
 		</div>
 	</section>
 	<ImgSeparator />
+
+	<TeamStoreGallery />
+
+	<ImgSeparator />
 	<section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
 		<div class="mb-12 text-center">
 			<span class="text-xs font-bold tracking-widest text-primary uppercase"
 				>Simple Buying Flow</span
 			>
 			<h2 class="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
-				From low battery to delivered power.
+				From low battery to the right charging solution.
 			</h2>
 		</div>
 
@@ -452,7 +462,7 @@
 					</h2>
 					<p class="mt-4 text-sm leading-relaxed text-muted-foreground">
 						The page experience, product packaging, support flow, and delivery promise all work
-						together to make TMAX easier to choose.
+						together to make TMAX easier to choose for power banks and chargers.
 					</p>
 				</div>
 
@@ -490,22 +500,22 @@
 					class="flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold tracking-wider text-primary uppercase"
 				>
 					<SparklesIcon class="size-3" />
-					Power Ready
+					Electronics Ready
 				</div>
 
 				<h2 class="text-3xl font-black tracking-tight sm:text-4xl">
-					Stay charged wherever the day takes you.
+					Stay powered with TMAX power banks and chargers.
 				</h2>
 
 				<p class="text-sm leading-relaxed text-muted-foreground">
-					Get authentic TMAX fast-charging power banks with local support, Birr pricing, and
-					same-day delivery.
+					Get authentic TMAX power banks and chargers with local support, Birr pricing, and same-day
+					delivery.
 				</p>
 
 				<Separator class="bg-primary/10" />
 
 				<Button href="/shop" size="lg" class="group gap-2">
-					Order for Delivery
+					Shop Power Banks & Chargers
 					<ZapIcon class="size-4 transition-transform group-hover:scale-110" />
 				</Button>
 			</div>
@@ -521,7 +531,9 @@
 	<main class="flex flex-col items-center justify-center px-4 py-16">
 		<div class="mb-10 max-w-2xl text-center">
 			<h2 class="text-3xl font-bold md:text-4xl">What Customers Say</h2>
-			<p class="mt-3 text-muted-foreground">Real feedback from people using TMAX products.</p>
+			<p class="mt-3 text-muted-foreground">
+				Real feedback from people using TMAX power banks and chargers.
+			</p>
 		</div>
 
 		<Testimonial testimonials={data.testimonialList} />

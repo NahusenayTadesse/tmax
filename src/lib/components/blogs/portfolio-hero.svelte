@@ -39,7 +39,7 @@
 			in:fade={{ duration: 700, delay: 220 }}
 			class="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg"
 		>
-			Guides, tips, and updates about TMAX power banks, fast charging, battery safety, capacity,
+			Guides, tips, and updates about TMAX electronics, fast charging, battery safety, capacity,
 			delivery, and everyday backup power.
 		</p>
 
@@ -62,7 +62,7 @@
 			<div class="rounded-2xl border border-primary/10 bg-card/40 p-5 backdrop-blur-2xl">
 				<ShieldCheckIcon class="mx-auto mb-3 size-6 text-primary" />
 				<p class="text-sm font-bold">Safety & Care</p>
-				<p class="mt-1 text-xs text-muted-foreground">Use your power bank safely.</p>
+				<p class="mt-1 text-xs text-muted-foreground">Use your electronic safely.</p>
 			</div>
 		</div>
 	</div>

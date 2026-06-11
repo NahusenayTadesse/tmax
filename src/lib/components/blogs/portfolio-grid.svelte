@@ -2,8 +2,17 @@
 	import { fade, fly } from 'svelte/transition';
 	import PortfolioCard from './portfolio-card.svelte';
 	import { FolderOpenIcon } from '@lucide/svelte';
-	import type { BlogItem } from '$lib/data/portfolio';
+	type BlogItem = {
+		id: number;
+		title: string;
+		slug: string;
+		category: string;
+		featuredImage: string | null;
 
+		excerpt: string | null;
+		content: string | null;
+		createdAt: string | Date | null;
+	};
 	const { items }: { items: BlogItem[] } = $props();
 </script>
 

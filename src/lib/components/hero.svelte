@@ -4,7 +4,19 @@
 	import { onMount } from 'svelte';
 	import { cubicOut } from 'svelte/easing';
 
-	let heroImage = ['hero.webp', 'hero (1).webp', 'hero (2).webp', 'hero (3).webp', 'hero (4).webp'];
+	let heroImage = [
+		'hero.webp',
+		'hero (1).webp',
+		'hero (2).webp',
+		'hero (3).webp',
+		'hero (4).webp',
+		'gallery (1).webp',
+		'gallery (2).webp',
+		'gallery (3).webp',
+		'gallery (4).webp',
+		'gallery (5).webp',
+		'gallery (6).webp'
+	];
 
 	let currentImage = $state(0);
 	let touchStartX = $state(0);
@@ -208,7 +220,7 @@
 			{/key}
 
 			<div class="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 gap-2">
-				{#each heroImage as _, i (_)}
+				{#each heroImage as _, i}
 					<button
 						type="button"
 						aria-label={`Show image ${i + 1}`}

@@ -8,7 +8,7 @@
 		CardContent
 	} from '$lib/components/ui/card';
 	import { Button } from '$lib/components/ui/button';
-	import { MailIcon, SendIcon, PhoneIcon, ClockIcon, CpuIcon } from '@lucide/svelte';
+	import { MailIcon, SendIcon, PhoneIcon, ClockIcon, CpuIcon, Send, Phone } from '@lucide/svelte';
 	import { superForm } from 'sveltekit-superforms/client';
 	import { toast } from 'svelte-sonner';
 	import InputComp from '$lib/formComponents/InputComp.svelte';
@@ -24,26 +24,37 @@
 	});
 
 	// Updated Social links with proper layout matching TMAX
+
 	const socialLinks = [
 		{
-			name: 'Facebook',
-			href: 'https://www.facebook.com/',
-			icon: IconBrandFacebook
+			name: 'Phone',
+			url: 'tel:0933111111',
+			icon: Phone,
+			color: 'hover:text-pink-500 hover:border-pink-500/30'
 		},
 		{
-			icon: IconBrandInstagram,
 			name: 'Instagram',
-			href: 'https://www.instagram.com/'
+			url: 'https://www.instagram.com/tmax_electronics/',
+			icon: IconBrandInstagram,
+			color: 'hover:text-pink-500 hover:border-pink-500/30'
 		},
 		{
-			icon: IconBrandTiktok,
 			name: 'TikTok',
-			href: 'https://www.tiktok.com/'
+			url: 'https://www.tiktok.com/@tmaxelectronics',
+			icon: IconBrandTiktok,
+			color: 'hover:text-foreground hover:border-foreground/30'
 		},
 		{
-			name: 'LinkedIn',
-			href: 'https://www.linkedin.com/',
-			icon: BrandLinkedin
+			name: 'Facebook',
+			url: 'https://web.facebook.com/Tmaxflash0933111111?_rdc=1&_rdr#',
+			icon: IconBrandFacebook,
+			color: 'hover:text-blue-600 hover:border-blue-600/30'
+		},
+		{
+			name: 'Telegram',
+			url: 'https://t.me/tmaxelct',
+			icon: Send,
+			color: 'hover:text-red-600 hover:border-red-600/30'
 		}
 	];
 
@@ -58,8 +69,8 @@
 		{
 			icon: PhoneIcon,
 			label: 'Direct Call / WhatsApp',
-			value: '+251 930 109 760',
-			href: 'https://wa.me/+251930109760'
+			value: '+251 9 33 11 11 11',
+			href: 'https://wa.me/+251933111111'
 		}
 	];
 
@@ -242,7 +253,7 @@
 							<div class="grid grid-cols-2 gap-3">
 								{#each socialLinks as social (social.name)}
 									<a
-										href={social.href}
+										href={social.url}
 										target="_blank"
 										rel="noopener noreferrer"
 										class="group flex flex-col items-center gap-2 rounded-xl border border-primary/5 bg-primary/5 p-4 text-center transition-all duration-300 hover:border-primary/30 hover:bg-primary/10 hover:shadow-md"
@@ -288,7 +299,7 @@
 		<section transition:fly={{ y: 30, duration: 800, delay: 500 }} class="relative mt-16 w-full">
 			<div class="absolute inset-0 -z-10 rounded-3xl bg-primary/5 blur-xl"></div>
 			<iframe
-				src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.6989163918774!2d38.74450221007991!3d8.999827389408697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b8513494db273%3A0x88235dbe171c4224!2sDiplomat%20Building!5e0!3m2!1sen!2set!4v1772532021053!5m2!1sen!2set"
+				src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.3309312526444!2d38.73715996008017!3d9.033545988881428!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85fef49d234f%3A0x37ebbe938f6e42e3!2s&#39;Yirga%20Haile&#39;%20Market%20Center%2C%20Fitawrari%20Gebeyebu%20St%2C%20Addis%20Ababa!5e0!3m2!1sen!2set!4v1781167286180!5m2!1sen!2set"
 				style="border:0;"
 				class="h-[40vh] w-full rounded-3xl border border-primary/10 shadow-lg lg:h-[50vh]"
 				loading="lazy"

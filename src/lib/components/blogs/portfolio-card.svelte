@@ -1,8 +1,18 @@
 <script lang="ts">
 	import { Badge } from '$lib/components/ui/badge';
 	import { Card, CardContent } from '$lib/components/ui/card';
-	import { CalendarIcon, MapPinIcon, UserIcon } from '@lucide/svelte';
-	import type { BlogItem } from '$lib/data/portfolio';
+
+	type BlogItem = {
+		id: number;
+		title: string;
+		slug: string;
+		category: string;
+		featuredImage: string | null;
+
+		excerpt: string | null;
+		content: string | null;
+		createdAt: string | Date | null;
+	};
 
 	const { item }: { item: BlogItem } = $props();
 

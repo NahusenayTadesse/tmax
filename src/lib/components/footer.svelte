@@ -1,5 +1,13 @@
 <script lang="ts">
-	import { MailIcon, PhoneIcon, MapPinIcon, GlobeIcon, LaptopIcon } from '@lucide/svelte';
+	import {
+		MailIcon,
+		PhoneIcon,
+		MapPinIcon,
+		GlobeIcon,
+		LaptopIcon,
+		Send,
+		Phone
+	} from '@lucide/svelte';
 
 	// Svelte 5 state for newsletter, if you decide to add it back
 	let email = $state('');
@@ -13,8 +21,14 @@
 
 	const socialLinks = [
 		{
+			name: 'Phone',
+			url: 'tel:0933111111',
+			icon: Phone,
+			color: 'hover:text-pink-500 hover:border-pink-500/30'
+		},
+		{
 			name: 'Instagram',
-			url: 'https://www.instagram.com/tmaxelectronics',
+			url: 'https://www.instagram.com/tmax_electronics/',
 			icon: IconBrandInstagram,
 			color: 'hover:text-pink-500 hover:border-pink-500/30'
 		},
@@ -26,14 +40,14 @@
 		},
 		{
 			name: 'Facebook',
-			url: 'https://facebook.com/tmaxelectronics',
+			url: 'https://web.facebook.com/Tmaxflash0933111111?_rdc=1&_rdr#',
 			icon: IconBrandFacebook,
 			color: 'hover:text-blue-600 hover:border-blue-600/30'
 		},
 		{
-			name: 'YouTube',
-			url: 'https://youtube.com',
-			icon: IconBrandYoutube,
+			name: 'Telegram',
+			url: 'https://t.me/tmaxelct',
+			icon: Send,
 			color: 'hover:text-red-600 hover:border-red-600/30'
 		}
 	];
@@ -74,11 +88,11 @@
 						<span>Main HQ Showroom, Addis Ababa, Ethiopia</span>
 					</a>
 					<a
-						href="tel:+251900000000"
+						href="tel:+251933111111"
 						class="flex items-center gap-3 text-muted-foreground transition-colors hover:text-foreground"
 					>
 						<PhoneIcon class="size-4 shrink-0 text-primary" />
-						<span>+251 900 000 000</span>
+						<span>+251 933111111</span>
 					</a>
 					<a
 						href="mailto:info@tmaxelectronics.com"
@@ -142,7 +156,7 @@
 				<div class="relative h-36 w-full overflow-hidden rounded-xl border border-border bg-muted">
 					<!-- Standard placeholder map embed. Replace string with your exact coordinates if necessary -->
 					<iframe
-						src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.6989163918774!2d38.74450221007991!3d8.999827389408697!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zOMKwNTknNTkuNCJOIDM4wrA0NSc0MC4yIkU!5e0!3m2!1sen!2set!4v1710000000000!5m2!1sen!2set"
+						src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3940.3309312526444!2d38.73715996008017!3d9.033545988881428!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x164b85fef49d234f%3A0x37ebbe938f6e42e3!2s&#39;Yirga%20Haile&#39;%20Market%20Center%2C%20Fitawrari%20Gebeyebu%20St%2C%20Addis%20Ababa!5e0!3m2!1sen!2set!4v1781167286180!5m2!1sen!2set"
 						style="border:0;"
 						class="absolute inset-0 h-full w-full opacity-80 contrast-125 grayscale invert dark:invert-0"
 						loading="lazy"

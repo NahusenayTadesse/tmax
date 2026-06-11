@@ -6,13 +6,15 @@ import {
 	products,
 	productCategories,
 	productTags,
+	blog,
+	blogCategories,
 	tags,
 	categoriesProducts,
 	orderItems,
 	prices,
 	testimonials
 } from '$lib/server/db/schema';
-import { eq, sql, desc, sum, inArray } from 'drizzle-orm';
+import { eq, sql, desc, sum, inArray, getTableColumns } from 'drizzle-orm';
 import type { LayoutServerLoad } from './$types';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
@@ -80,9 +82,18 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		})
 		.from(testimonials);
 
+	const blogItems = await db
+		.select({
+			...getTableColumns(blog),
+			category: blogCategories.name
+		})
+		.from(blog)
+		.leftJoin(blogCategories, eq(blog.categoryId, blogCategories.id));
+
 	return {
 		roleName,
 		user: currentUser,
+		blogItems,
 		testimonialList,
 		imagesList,
 		bestSelling: productList

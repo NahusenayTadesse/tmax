@@ -5,7 +5,13 @@
 		'hero (1).webp',
 		'hero (2).webp',
 		'hero (3).webp',
-		'hero (4).webp'
+		'hero (4).webp',
+		'gallery (1).webp',
+		'gallery (2).webp',
+		'gallery (3).webp',
+		'gallery (4).webp',
+		'gallery (5).webp',
+		'gallery (6).webp'
 	];
 
 	const galleryLoop = [...heroImages, ...heroImages, ...heroImages];
@@ -13,38 +19,37 @@
 
 <div class="relative my-10 w-full overflow-hidden px-4 sm:px-6 lg:px-8">
 	<div
-		class="gallery-frame relative mx-auto h-24 w-full max-w-7xl overflow-hidden rounded-[2rem] border border-primary/15 bg-card shadow-sm sm:h-28 lg:h-32"
+		class="gallery-frame relative mx-auto h-36 w-full max-w-7xl overflow-hidden rounded-[2rem] border border-primary/15 bg-card shadow-sm lg:h-48"
 	>
 		<div
 			class="pointer-events-none absolute inset-0 z-20 bg-linear-to-r from-background via-transparent to-background"
-		/>
+		></div>
 
 		<div
 			class="pointer-events-none absolute inset-y-0 left-0 z-30 w-20 bg-linear-to-r from-background to-transparent sm:w-32"
-		/>
+		></div>
 		<div
 			class="pointer-events-none absolute inset-y-0 right-0 z-30 w-20 bg-linear-to-l from-background to-transparent sm:w-32"
-		/>
+		></div>
 
 		<div
 			class="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_50%_50%,transparent,rgba(0,0,0,0.2))]"
-		/>
-
-		<div class="gallery-track flex h-full w-max items-center gap-3 px-3 sm:gap-4 sm:px-4">
+		></div>
+		<div class="gallery-track flex h-full w-max items-center gap-3 px-0 sm:gap-4 sm:px-1">
 			{#each galleryLoop as image, index}
 				<div
-					class="gallery-card relative h-16 w-28 shrink-0 overflow-hidden rounded-2xl border border-background/20 bg-background/20 shadow-sm sm:h-20 sm:w-36 lg:h-24 lg:w-44"
+					class="gallery-card relative h-28 shrink-0 overflow-hidden rounded-2xl border border-background/20 bg-background/20 shadow-sm sm:h-20 sm:w-36 lg:h-24 lg:h-48 lg:w-44"
 				>
 					<img
-						src={image}
-						alt="Gallery separator image"
+						src="/{image}"
+						alt="Gallery separator"
 						class="h-full w-full object-contain p-2"
 						draggable="false"
 					/>
 
 					<div
 						class="pointer-events-none absolute inset-0 bg-linear-to-br from-transparent via-transparent to-primary/20"
-					/>
+					></div>
 				</div>
 			{/each}
 		</div>
