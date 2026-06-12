@@ -1,5 +1,8 @@
 import { z } from 'zod/v4';
 export const add = z.object({
+	name: z.string().optional(),
+	email: z.email().optional(),
+	phone: z.string().optional(),
 	selectedProducts: z
 		.object({
 			amount: z.string({ message: 'Variation is required' }),

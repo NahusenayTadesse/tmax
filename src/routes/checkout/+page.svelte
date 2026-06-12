@@ -157,6 +157,32 @@
 							>
 								<Errors allErrors={$allErrors} />
 								<InputComp
+									label="Name"
+									name="name"
+									type="text"
+									{form}
+									{errors}
+									placeholder="Enter Your Name"
+								/>
+								<InputComp
+									label="Email"
+									name="email"
+									type="email"
+									{form}
+									{errors}
+									placeholder="Enter Your Email"
+									required
+								/>
+								<InputComp
+									label="Phone"
+									name="phone"
+									type="text"
+									{form}
+									{errors}
+									placeholder="Enter Your Phone"
+									required
+								/>
+								<InputComp
 									label=""
 									name="selectedProducts"
 									type="hidden"
@@ -165,19 +191,36 @@
 									placeholder=""
 								/>
 
-								<div class="pt-2">
+								<div class="space-y-2 pt-4">
 									<Button
 										type="submit"
 										form="main"
 										class="h-12 w-full rounded-xl text-sm font-semibold tracking-wide shadow-md transition-all duration-300 active:scale-98"
 										disabled={cart.items.length === 0 || $delayed}
 									>
-										{#if $delayed}
-											<LoadingBtn name="Processing secure terminal context..." />
+										{#if $delayed && !$form.payWithChapa}
+											<LoadingBtn name="Adding Your Order..." />
 										{:else}
-											Pay On Delivery &mdash; {formatPrice(cart.totalPrice)}
+											Add Order with &mdash; {formatPrice(cart.totalPrice)}
 										{/if}
 									</Button>
+									<Button
+										type="submit"
+										form="main"
+										class="h-12 w-full rounded-xl text-sm font-semibold tracking-wide shadow-md transition-all duration-300 active:scale-98"
+										disabled={cart.items.length === 0 || $delayed}
+										onclick={() => ($form.payWithChapa = true)}
+									>
+										{#if $delayed && $form.payWithChapa}
+											<LoadingBtn name="Redirecting to Chapa..." />
+										{:else}
+											Pay On With Chapa &mdash; {formatPrice(cart.totalPrice)}
+										{/if}
+									</Button>
+									<p class="prose-sm max-w-prose rounded-lg border bg-muted text-center text-sm">
+										Pay with Chapa using <a href="https://telebirr.et" target="_blank">Telebirr</a>,
+										CBE Birr and More
+									</p>
 								</div>
 							</form>
 						</div>
@@ -229,10 +272,10 @@
 									class="h-12 w-full rounded-xl text-sm font-semibold tracking-wide shadow-md transition-all duration-300 active:scale-98"
 									disabled={cart.items.length === 0 || $delayed}
 								>
-									{#if $delayed}
-										<LoadingBtn name="Routing to server cluster..." />
+									{#if $delayed && !$form.payWithChapa}
+										<LoadingBtn name="Adding Your Order..." />
 									{:else}
-										Authorize Order Dispatching &mdash; {formatPrice(cart.totalPrice)}
+										Add Order with &mdash; {formatPrice(cart.totalPrice)}
 									{/if}
 								</Button>
 								<Button
@@ -242,12 +285,16 @@
 									disabled={cart.items.length === 0 || $delayed}
 									onclick={() => ($form.payWithChapa = true)}
 								>
-									{#if $delayed}
+									{#if $delayed && $form.payWithChapa}
 										<LoadingBtn name="Redirecting to Chapa..." />
 									{:else}
 										Pay On With Chapa &mdash; {formatPrice(cart.totalPrice)}
 									{/if}
 								</Button>
+								<p class="prose-sm max-w-prose rounded-lg border bg-muted text-center">
+									Pay with Chapa using <a href="https://telebirr.et" target="_blank">Telebirr</a>,
+									CBE Birr and More
+								</p>
 							</div>
 						</form>
 					{/if}

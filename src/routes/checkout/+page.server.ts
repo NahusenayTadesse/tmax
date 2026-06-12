@@ -1,4 +1,4 @@
-import { superValidate, message } from 'sveltekit-superforms';
+import { superValidate, message, setError } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { eq, and, sql, inArray } from 'drizzle-orm';
 import { sendEmail, customerCheckoutTemplate, adminCheckoutTemplate } from '$lib/server/email';
@@ -33,7 +33,6 @@ export const load: PageServerLoad = async () => {
 export const actions: Actions = {
 	add: async ({ request, locals, url }) => {
 		const form = await superValidate(request, zod4(add));
-		console.log(form.data);
 		if (!form.valid) {
 			return message(
 				form,
@@ -42,7 +41,7 @@ export const actions: Actions = {
 			);
 		}
 
-		const { selectedProducts, payWithChapa } = form.data;
+		const { name, email, phone, selectedProducts, payWithChapa } = form.data;
 		let checkoutUrl: string | null = null;
 
 		let transactionId;
@@ -56,19 +55,43 @@ export const actions: Actions = {
 
 		try {
 			await db.transaction(async (tx) => {
-				const customer = await tx
-					.select({
-						value: customers.id,
-						email: customers.email,
-						name: customers.name,
-						phone: customers.phone
-					})
-					.from(customers)
-					.where(eq(customers.userId, locals?.user?.id))
-					.limit(1)
-					.then((rows) => rows[0]);
+				if (locals?.user) {
+					const customer = await tx
+						.select({
+							value: customers.id,
+							email: customers.email,
+							name: customers.name,
+							phone: customers.phone
+						})
+						.from(customers)
+						.where(eq(customers.userId, locals?.user?.id))
+						.limit(1)
+						.then((rows) => rows[0]);
 
-				customerInfo = customer;
+					customerInfo = customer;
+				} else {
+					const doesCustomerExist = await tx
+						.select({
+							value: customers.id,
+							email: customers.email,
+							name: customers.name,
+							phone: customers.phone
+						})
+						.from(customers)
+						.where(eq(customers.email, email))
+						.limit(1)
+						.then((rows) => rows[0]);
+
+					if (doesCustomerExist) {
+						customerInfo = doesCustomerExist;
+					} else {
+						const newCustomer = await tx
+							.insert(customers)
+							.values({ name, email, phone })
+							.$returningId();
+						customerInfo = newCustomer[0];
+					}
+				}
 
 				const getProducts = await tx
 					.select({
@@ -98,7 +121,7 @@ export const actions: Actions = {
 
 				const [orderId] = await tx
 					.insert(orders)
-					.values({ customerId: customer.value, status: 'pending', transactionId })
+					.values({ customerId: customerInfo?.value, status: 'pending', transactionId })
 					.$returningId();
 				newOrderId = orderId.id;
 

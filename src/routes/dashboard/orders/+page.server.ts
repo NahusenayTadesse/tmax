@@ -1,8 +1,8 @@
 import { superValidate, message, setError } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { eq, and, sql } from 'drizzle-orm';
-// import { sendEmail, customerDeliveredTemplate, adminDeliveredTemplate } from '$lib/server/email';
-// import { USER } from '$env/static/private';
+import { sendEmail, customerDeliveredTemplate, adminDeliveredTemplate } from '$lib/server/email';
+import { USER } from '$env/static/private';
 
 import { add, edit } from './schema';
 import { db } from '$lib/server/db';
@@ -204,39 +204,38 @@ export const actions: Actions = {
 				return message(form, { type: 'success', text: 'Order Successfully Updated' });
 			}
 
-			// if (status === 'delivered') {
-			// 	const customerId = await db
-			// 		.select({
-			// 			id: orders.customerId
-			// 		})
-			// 		.from(orders)
-			// 		.where(eq(orders.id, id))
-			// 		.then((rows) => rows[0]);
+			if (status === 'delivered') {
+				const customerId = await db
+					.select({
+						id: orders.customerId
+					})
+					.from(orders)
+					.where(eq(orders.id, id))
+					.then((rows) => rows[0]);
 
-			// 	const customerInfo = await db
-			// 		.select({
-			// 			name: customers.name,
-			// 			email: customers.email
-			// 		})
-			// 		.from(customers)
-			// 		.where(eq(customers.id, customerId.id))
-			// 		.then((rows) => rows[0]);
+				const customerInfo = await db
+					.select({
+						name: customers.name,
+						email: customers.email
+					})
+					.from(customers)
+					.where(eq(customers.id, customerId.id))
+					.then((rows) => rows[0]);
 
-			// 	const total = getTotal(selectedProducts);
+				const total = getTotal(selectedProducts);
 
-			// 	// sendEmail(
-			// 	// 	customerInfo.email,
-			// 	// 	customerDeliveredTemplate(id, selectedProducts, total).subject,
-			// 	// 	customerDeliveredTemplate(id, selectedProducts, total).html
-			// 	).catch((err) => console.error('Email Error (Customer):', err));
+				sendEmail(
+					customerInfo.email,
+					customerDeliveredTemplate(id, selectedProducts, total).subject,
+					customerDeliveredTemplate(id, selectedProducts, total).html
+				).catch((err) => console.error('Email Error (Customer):', err));
 
-			// Send to Admin
-			// 	sendEmail(
-			// 		USER,
-			// 		adminDeliveredTemplate(id, selectedProducts, total).subject,
-			// 		adminDeliveredTemplate(id, selectedProducts, total).html
-			// 	).catch((err) => console.error('Email Error (Admin):', err));
-			// }
+				sendEmail(
+					USER,
+					adminDeliveredTemplate(id, selectedProducts, total).subject,
+					adminDeliveredTemplate(id, selectedProducts, total).html
+				).catch((err) => console.error('Email Error (Admin):', err));
+			}
 			return message(form, { type: 'success', text: 'Order Successfully Updated' });
 		} catch (err) {
 			console.error(err?.message);

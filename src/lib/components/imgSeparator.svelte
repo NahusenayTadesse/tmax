@@ -85,7 +85,7 @@
 	}
 
 	.gallery-track {
-		animation: gallery-slide 22s linear infinite;
+		animation: gallery-slide 55s linear infinite;
 	}
 
 	.gallery-card {
