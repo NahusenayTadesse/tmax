@@ -28,6 +28,7 @@
 	import Cart from '$lib/components/floating-cart/cart.svelte';
 	import { setCart } from '$lib/hooks/cart.svelte'; // Adjust path
 	import BottomMenu from '$lib/components/bottomMenu.svelte';
+	import FloatingChat from '$lib/components/FloatingChat.svelte';
 
 	// This initializes the class and puts it into Svelte's context
 
@@ -63,8 +64,9 @@
 	<Header data={data?.user ?? ''} />
 	{@render children()}
 	<Footer />
-	<Cart />
+	<Cart header={true} />
 	<BottomMenu />
+	<FloatingChat />
 {:else}
 	{@render children()}
 {/if}
