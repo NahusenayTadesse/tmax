@@ -1,8 +1,9 @@
 import { superValidate, message } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { eq, and, sql, inArray } from 'drizzle-orm';
-// import { sendEmail, customerCheckoutTemplate, adminCheckoutTemplate } from '$lib/server/email';
-import { SECRET_KEY } from '$env/static/private';
+import { sendEmail, customerCheckoutTemplate, adminCheckoutTemplate } from '$lib/server/email';
+
+import { SECRET_KEY, USER } from '$env/static/private';
 import { Chapa } from 'chapa-nodejs';
 
 import { redirect } from '@sveltejs/kit';
@@ -66,6 +67,8 @@ export const actions: Actions = {
 					.where(eq(customers.userId, locals?.user?.id))
 					.limit(1)
 					.then((rows) => rows[0]);
+
+				customerInfo = customer;
 
 				const getProducts = await tx
 					.select({
@@ -176,6 +179,19 @@ export const actions: Actions = {
 				{ status: 500 }
 			);
 		}
+
+		sendEmail(
+			customerInfo?.email,
+			customerCheckoutTemplate(newOrderId, selectedProducts, total).subject,
+			customerCheckoutTemplate(newOrderId, selectedProducts, total).html
+		).catch((err) => console.error('Email Error (Customer):', err));
+
+		// Send to Admin
+		sendEmail(
+			USER,
+			adminCheckoutTemplate(newOrderId, selectedProducts, total).subject,
+			adminCheckoutTemplate(newOrderId, selectedProducts, total).html
+		).catch((err) => console.error('Email Error (Admin):', err));
 		if (checkoutUrl) {
 			redirect(303, checkoutUrl);
 		}

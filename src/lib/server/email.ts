@@ -70,7 +70,164 @@ const generateOrderTable = (items) => {
     `;
 };
 
-// --- ADMIN NOTIFICATION TEMPLATE ---
+export const customerCheckoutTemplate = (orderId, items, total) => ({
+	subject: `Order Confirmed - TMax Electronics (#${orderId})`,
+	html: `
+        <div style="max-width: 600px; margin: auto; font-family: sans-serif; border: 1px solid #eee;">
+            <div style="background-color: #2596be; padding: 20px; text-align: center;">
+                <img src="https://tmaxelectronics.com/logo192.png" alt="TMax Electronics Logo" width="80" style="display: block; margin: 0 auto 10px;">
+                <h1 style="color: white; margin: 0; font-size: 20px;">Order Confirmed!</h1>
+            </div>
+            <div style="padding: 20px; color: #333;">
+                <p>We've received your order <strong>#${orderId}</strong>. Our team is now processing your technology products with care.</p>
+                ${generateOrderTable(items)}
+                <div style="text-align: right; margin-top: 15px; font-weight: bold; font-size: 1.2em;">
+                    Total: ${total} ETB
+                </div>
+            </div>
+            <div style="background: #f9f9f9; padding: 15px; text-align: center; color: #777; font-size: 12px;">
+                TMax Electronics | Technology you can trust.
+            </div>
+        </div>
+    `
+});
+
+export const adminCheckoutTemplate = (orderId, items, total) => ({
+	subject: `New Order Alert: #${orderId}`,
+	html: `
+        <div style="font-family: sans-serif; color: #333;">
+            <h2 style="color: #2596be;">New Order Received</h2>
+            <p>A new order has been placed on the website. <strong>Order ID: #${orderId}</strong></p>
+            ${generateOrderTable(items)}
+            <p style="font-size: 18px;"><strong>Total Revenue: ${total} ETB</strong></p>
+            <a href="https://tmaxelectronics.com/dashboard/orders"
+               style="background: #2596be; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+               View in Dashboard
+            </a>
+        </div>
+    `
+});
+
+export const customerWelcomeTemplate = (name: string) => ({
+	subject: `Welcome to TMax Electronics, ${name}! 🎉`,
+	html: `
+        <div style="max-width: 600px; margin: auto; font-family: sans-serif; border: 1px solid #eee;">
+
+            <!-- Header -->
+            <div style="background-color: #2596be; padding: 20px; text-align: center;">
+                <img src="https://tmaxelectronics.com/logo192.png"
+                     alt="TMax Electronics Logo"
+                     width="80"
+                     style="display: block; margin: 0 auto 10px;">
+                <h1 style="color: white; margin: 0; font-size: 20px;">
+                    Welcome to TMax Electronics!
+                </h1>
+            </div>
+
+            <!-- Body -->
+            <div style="padding: 20px; color: #333;">
+                <p>Hi <strong>${name}</strong>,</p>
+
+                <p>
+                    We're excited to have you join <strong>TMax Electronics</strong> 🔌.
+                    You're now part of a community that values reliable, innovative, and high-quality technology products.
+                </p>
+
+                <p>
+                    You can now explore mobile accessories, power solutions, storage devices, audio products, and smart electronics designed for everyday performance.
+                </p>
+
+                <div style="text-align: center; margin: 25px 0;">
+                    <a href="https://tmaxelectronics.com"
+                       style="background: #2596be; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                        Start Shopping
+                    </a>
+                </div>
+
+                <p>
+                    If you have any questions, feel free to reply to this email — our team is ready to assist before and after purchase.
+                </p>
+
+                <p style="margin-top: 20px;">
+                    Warm regards,<br/>
+                    <strong>TMax Electronics Team</strong>
+                </p>
+            </div>
+
+            <!-- Footer -->
+            <div style="background: #f9f9f9; padding: 15px; text-align: center; color: #777; font-size: 12px;">
+                TMax Electronics | Technology you can trust.
+            </div>
+        </div>
+    `
+});
+
+export const customerDeliveredTemplate = (orderId, items, total) => ({
+	subject: `Your Order Has Been Delivered! (#${orderId})`,
+	html: `
+        <div style="max-width: 600px; margin: auto; font-family: sans-serif; border: 1px solid #eee;">
+
+            <!-- Header -->
+            <div style="background-color: #2596be; padding: 20px; text-align: center;">
+                <img src="https://tmaxelectronics.com/logo192.png"
+                     alt="TMax Electronics Logo"
+                     width="80"
+                     style="display: block; margin: 0 auto 10px;">
+                <h1 style="color: white; margin: 0; font-size: 20px;">
+                    Order Delivered 🎉
+                </h1>
+            </div>
+
+            <!-- Body -->
+            <div style="padding: 20px; color: #333;">
+                <p>Your order <strong>#${orderId}</strong> has been successfully delivered.</p>
+
+                <p>We hope your new technology products keep you connected, productive, and powered wherever you go! 😊</p>
+
+                ${generateOrderTable(items)}
+
+                <div style="text-align: right; margin-top: 15px; font-weight: bold; font-size: 1.2em;">
+                    Total: ${total} ETB
+                </div>
+
+                <p style="margin-top: 20px;">
+                    Thank you for choosing <strong>TMax Electronics</strong>. We look forward to serving you again!
+                </p>
+            </div>
+
+            <!-- Footer -->
+            <div style="background: #f9f9f9; padding: 15px; text-align: center; color: #777; font-size: 12px;">
+                TMax Electronics | Technology you can trust.
+            </div>
+        </div>
+    `
+});
+
+export const adminDeliveredTemplate = (orderId, items, total) => ({
+	subject: `Order Delivered: #${orderId}`,
+	html: `
+        <div style="font-family: sans-serif; color: #333;">
+            <h2 style="color: #2596be;">Order Marked as Delivered</h2>
+
+            <p>
+                The following order has been successfully delivered.
+                <strong>Order ID: #${orderId}</strong>
+            </p>
+
+            ${generateOrderTable(items)}
+
+            <p style="font-size: 18px;">
+                <strong>Total Value: ${total} ETB</strong>
+            </p>
+
+            <a href="https://tmaxelectronics.com/dashboard/orders"
+               style="background: #2596be; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px; display: inline-block;">
+               View in Dashboard
+            </a>
+        </div>
+    `
+});
+
 export const adminContactTemplate = (data: {
 	name: string;
 	email: string;
@@ -78,89 +235,188 @@ export const adminContactTemplate = (data: {
 	subject: string;
 	contactMessage?: string;
 }) => ({
-	subject: `📩 Yebehir Lead: ${data.subject}`,
+	subject: `📩 New Contact Message: ${data.subject}`,
 	html: `
-        <div style="font-family: sans-serif; color: #091B38; max-width: 600px; margin: auto; border: 1px solid #F2E1D1; border-radius: 8px; overflow: hidden;">
+        <div style="font-family: sans-serif; color: #333; max-width: 600px; margin: auto; border: 1px solid #eee;">
+
             <!-- Header -->
-            <div style="background-color: #091B38; padding: 25px; text-align: center;">
-                <h2 style="color: #F2E1D1; margin: 0; font-size: 20px; letter-spacing: 1px;">New Website Inquiry</h2>
+            <div style="background-color: #2596be; padding: 20px; text-align: center;">
+                <h2 style="color: white; margin: 0;">New Contact Message</h2>
             </div>
 
             <!-- Body -->
-            <div style="padding: 30px; background-color: #ffffff;">
-                <p style="margin-bottom: 10px;"><strong>Client Name:</strong> ${data.name}</p>
-                <p style="margin-bottom: 10px;"><strong>Email:</strong> ${data.email}</p>
-                <p style="margin-bottom: 10px;"><strong>Phone:</strong> ${data.phoneNumber}</p>
-                <p style="margin-bottom: 20px;"><strong>Interested In:</strong> ${data.subject}</p>
+            <div style="padding: 20px;">
+                <p><strong>Name:</strong> ${data.name}</p>
+                <p><strong>Email:</strong> ${data.email}</p>
+                <p><strong>Phone:</strong> ${data.phoneNumber}</p>
+                <p><strong>Subject:</strong> ${data.subject}</p>
 
-                <div style="margin-top: 20px; border-top: 1px solid #F2E1D1; padding-top: 20px;">
-                    <strong style="color: #091B38;">Message Details:</strong>
-                    <div style="background: #fdfaf7; padding: 20px; margin-top: 10px; border-radius: 4px; border-left: 4px solid #F2E1D1; line-height: 1.6;">
+                <div style="margin-top: 15px;">
+                    <strong>Message:</strong>
+                    <div style="background: #f9f9f9; padding: 15px; margin-top: 5px; border-radius: 5px;">
                         ${data.contactMessage || '<i>No message provided</i>'}
                     </div>
                 </div>
 
-                <div style="margin-top: 30px; text-align: center;">
+                <div style="margin-top: 20px;">
                     <a href="mailto:${data.email}"
-                       style="background: #091B38; color: #F2E1D1; padding: 12px 25px; text-decoration: none; border-radius: 4px; font-weight: bold; display: inline-block;">
-                       Reply to Customer
+                       style="background: #2596be; color: white; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                        Reply to Customer
                     </a>
                 </div>
             </div>
 
             <!-- Footer -->
-            <div style="background: #F2E1D1; padding: 15px; text-align: center; font-size: 11px; color: #091B38; font-weight: bold;">
-                YEBEHIR VENTURES | INTERNAL NOTIFICATION
+            <div style="background: #f9f9f9; padding: 10px; text-align: center; font-size: 12px; color: #777;">
+                TMax Electronics - Contact Form Notification
             </div>
         </div>
     `
 });
 
-// --- CUSTOMER CONFIRMATION TEMPLATE ---
 export const customerContactTemplate = (name: string, subject: string) => ({
-	subject: `We've Received Your Inquiry - Yebehir Ventures`,
+	subject: `We received your message - TMax Electronics`,
 	html: `
-        <div style="max-width: 600px; margin: auto; font-family: sans-serif; border: 1px solid #F2E1D1; border-radius: 8px; overflow: hidden;">
+        <div style="max-width: 600px; margin: auto; font-family: sans-serif; border: 1px solid #eee;">
+
             <!-- Header -->
-            <div style="background-color: #091B38; padding: 30px; text-align: center;">
-                <img src="https://yebehir.com/logo.png"
-                     alt="Yebehir Ventures Logo"
-                     width="140"
-                     style="display: block; margin: 0 auto 15px;">
-                <h1 style="color: #F2E1D1; margin: 0; font-size: 18px; letter-spacing: 2px; text-transform: uppercase;">
-                    Inquiry Received
+            <div style="background-color: #2596be; padding: 20px; text-align: center;">
+                <img src="https://tmaxelectronics.com/logo192.png"
+                     alt="TMax Electronics Logo"
+                     width="80"
+                     style="display: block; margin: 0 auto 10px;">
+                <h1 style="color: white; margin: 0; font-size: 20px;">
+                    Message Received ✅
                 </h1>
             </div>
 
             <!-- Body -->
-            <div style="padding: 40px 30px; color: #333; background-color: #ffffff; line-height: 1.6;">
+            <div style="padding: 20px; color: #333;">
                 <p>Hi <strong>${name}</strong>,</p>
 
                 <p>
-                    Thank you for reaching out to <strong>Yebehir Ventures</strong>.
-                    We have successfully received your inquiry regarding:
+                    Thank you for reaching out to <strong>TMax Electronics</strong>.
+                    We've received your message regarding:
                 </p>
 
-                <p style="font-weight: bold; color: #091B38; margin: 15px 0; padding: 10px; background: #fdfaf7; border-radius: 4px; text-align: center;">
+                <p style="font-weight: bold; margin: 10px 0;">
                     "${subject}"
                 </p>
 
                 <p>
-                    Our team is currently reviewing your request. Whether you're looking to book <strong>4 Kilo Plaza</strong>, plan a corporate event, or explore partnership opportunities, we'll get back to you shortly to discuss how we can bring your vision to life.
+                    Our team will review your message and get back to you as soon as possible.
                 </p>
 
-                <p style="margin-top: 30px;">
+                <p style="margin-top: 20px;">
+                    If your request is urgent, feel free to contact us directly at <strong>+251 933 111 111</strong> or <strong>info@tmaxelectronics.com</strong>.
+                </p>
+
+                <p style="margin-top: 20px;">
                     Best regards,<br/>
-                    <strong style="color: #091B38;">Yebehir Ventures Team</strong><br/>
-                    <span style="font-size: 12px; color: #666;">Ahead of the curve</span>
+                    <strong>TMax Electronics Team</strong>
                 </p>
             </div>
 
             <!-- Footer -->
-            <div style="background: #F2E1D1; padding: 20px; text-align: center; color: #091B38; font-size: 11px;">
-                <strong>Yebehir Ventures</strong><br/>
-                Events | Venue | Sales<br/>
-                Addis Ababa, Ethiopia
+            <div style="background: #f9f9f9; padding: 15px; text-align: center; color: #777; font-size: 12px;">
+                TMax Electronics | Technology you can trust.
+            </div>
+        </div>
+    `
+});
+
+export async function sendResetPasswordEmail(toEmail: string, newPassword: string) {
+	// Create transporter
+	const transporter = nodemailer.createTransport({
+		host: HOST, // e.g smtp.gmail.com
+		port: PORT, // e.g 465 or 587
+		secure: true, // true for 465, false for 587
+		auth: {
+			user: USER, // sender email
+			pass: PASSWORD // sender email password / app password
+		},
+		authMethod: 'PLAIN'
+	});
+
+	const mailOptions = {
+		from: `"Support Team" <${USER}>`,
+		to: toEmail,
+		subject: 'Password Reset',
+		text: `Your password has been reset. Your new password is: ${newPassword}`,
+		html: `
+    <h3>Password Reset</h3>
+    <p>Your password has been reset successfully.</p>
+    <p><strong>New Password:</strong> ${newPassword}</p>
+    <p>Please log in and change it immediately for security reasons.</p>
+  `,
+		envelope: {
+			from: `"Support Team" <${USER}>`, // <-- important
+			to: toEmail
+		}
+	};
+
+	await transporter.sendMail(mailOptions);
+
+	return { success: true, message: 'Reset email sent successfully' };
+}
+
+export const customerResetPasswordTemplate = (url: string) => ({
+	subject: `Reset Your Password - TMax Electronics`,
+	html: `
+        <div style="max-width: 600px; margin: auto; font-family: sans-serif; border: 1px solid #eee;">
+            <!-- Header -->
+            <div style="background-color: #2596be; padding: 20px; text-align: center;">
+                <img src="https://tmaxelectronics.com/logo192.png"
+                     alt="TMax Electronics Logo"
+                     width="80"
+                     style="display: block; margin: 0 auto 10px;">
+                <h1 style="color: white; margin: 0; font-size: 20px;">
+                    Reset Your Password
+                </h1>
+            </div>
+
+            <!-- Body -->
+            <div style="padding: 20px; color: #333;">
+                <p>Hello,</p>
+
+                <p>
+                    We received a request to reset the password for your
+                    <strong>TMax Electronics</strong> account.
+                </p>
+
+                <p>
+                    Click the button below to create a new password.
+                </p>
+
+                <div style="text-align: center; margin: 25px 0;">
+                    <a href="${url}"
+                       style="background: #2596be; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
+                        Reset Password
+                    </a>
+                </div>
+
+                <p>
+                    If the button does not work, copy and paste this link into your browser:
+                </p>
+
+                <p style="word-break: break-all; color: #2596be;">
+                    ${url}
+                </p>
+
+                <p>
+                    If you did not request a password reset, you can safely ignore this email.
+                    Your password will remain unchanged.
+                </p>
+
+                <p style="margin-top: 20px;">
+                    Best regards,<br/>
+                    <strong>TMax Electronics Team</strong>
+                </p>
+            </div>
+
+            <!-- Footer -->
+            <div style="background: #f9f9f9; padding: 15px; text-align: center; color: #777; font-size: 12px;">
+                TMax Electronics | Technology You Can Trust.
             </div>
         </div>
     `
