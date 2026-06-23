@@ -5,7 +5,7 @@ import { dev } from '$app/environment';
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
 import { PROMPT, searchProductsForAi } from '$lib/server/prompt';
-import { OPENAI_KEY } from '$env/static/private';
+import { OPENAI_KEY, CHAT_LIMIT_SECRET } from '$env/static/private';
 
 import OpenAI from 'openai';
 
@@ -14,8 +14,6 @@ const CHAT_LIMIT_COOKIE = 'tmx_chat_limit';
 const MAX_AI_PROMPTS = 10;
 const LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000;
 const COOKIE_MAX_AGE_SECONDS = 24 * 60 * 60;
-
-const CHAT_LIMIT_SECRET = '7c94f3d4e0bb4fa0b6fbf8b9d8224f9e8f44f6335f4cbf34421991f8bcbf6d42';
 
 const openai = new OpenAI({
 	apiKey: OPENAI_KEY
