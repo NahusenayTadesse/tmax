@@ -4,7 +4,7 @@
 	import { Input } from '$lib/components/ui/input';
 	import { Label } from '$lib/components/ui/label';
 	import { Button } from '$lib/components/ui/button';
-	import { Loader2, AlertCircle, CheckCircle2 } from '@lucide/svelte';
+	import { AlertCircle, CheckCircle2, Loader } from '@lucide/svelte';
 
 	// Svelte 5 Runes for local state management
 	let email = $state('');
@@ -83,7 +83,7 @@
 						disabled={isLoading}
 					>
 						{#if isLoading}
-							<Loader2 class="mr-2 h-4 w-4 animate-spin" />
+							<Loader class="mr-2 h-4 w-4 animate-spin" />
 							Sending link...
 						{:else}
 							Send reset link

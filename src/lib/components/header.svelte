@@ -7,7 +7,6 @@
 		ShoppingBagIcon,
 		InfoIcon,
 		ContactIcon,
-		PackageCheckIcon,
 		LogInIcon,
 		UserPlusIcon
 	} from '@lucide/svelte';
@@ -20,29 +19,26 @@
 	import { goto } from '$app/navigation';
 	import { page, navigating } from '$app/state';
 	import Cart from '$lib/components/floating-cart/cart.svelte';
-	import { setCart } from '$lib/hooks/cart.svelte'; // Adjust path
+	import LanguageSelector from './LanguageSelector.svelte';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let { data } = $props();
 	let isOpen = $state(false);
 
-	// Locally control the input string, defaulting to an active search query if present
 	let searchQuery = $state(page.url.searchParams.get('search') ?? '');
 
 	const handleMenuClick = () => {
 		isOpen = false;
 	};
 
-	// Enhanced item objects with matching tech icons for mobile navigation draw pipelines
 	const menuItems = [
-		{ label: 'Home', href: '/', icon: HomeIcon },
-		{ label: 'Shop', href: '/shop', icon: ShoppingBagIcon },
-		{ label: 'About Us', href: '/about', icon: InfoIcon },
-		{ label: 'Blog', href: '/blogs', icon: InfoIcon },
-		{ label: 'Contact Us', href: '/contact-us', icon: ContactIcon }
-		// { label: 'Wane Trading', href: 'https://wanetrading.com', icon: PackageCheckIcon }
+		{ label: m.header_nav_home, href: '/', icon: HomeIcon },
+		{ label: m.header_nav_shop, href: '/shop', icon: ShoppingBagIcon },
+		{ label: m.header_nav_about_us, href: '/about', icon: InfoIcon },
+		{ label: m.header_nav_blog, href: '/blogs', icon: InfoIcon },
+		{ label: m.header_nav_contact_us, href: '/contact-us', icon: ContactIcon }
 	];
 
-	// Triggers URL changes routing seamlessly to /shop with query parameters
 	function executionDesktopSearch(e: KeyboardEvent) {
 		if (e.key === 'Enter') {
 			const shopUrl = new URL('/shop', window.location.origin);
@@ -69,7 +65,7 @@
 				<img
 					src="/logo.webp"
 					class="h-6 w-auto object-contain dark:brightness-110"
-					alt="Tmax Electronics Logo"
+					alt={m.header_logo_alt()}
 					fetchpriority="high"
 				/>
 			</a>
@@ -83,7 +79,7 @@
 						href={item.href}
 						class="h-9 rounded-lg text-xs font-semibold tracking-wide uppercase transition-all"
 					>
-						{item.label}
+						{item.label()}
 					</Button>
 				{/each}
 			</nav>
@@ -96,7 +92,7 @@
 				/>
 				<Input
 					type="text"
-					placeholder="Search catalog... (Press Enter)"
+					placeholder={m.header_search_placeholder()}
 					bind:value={searchQuery}
 					onkeydown={executionDesktopSearch}
 					class="h-8.5 rounded-lg border-border bg-muted/40 pl-9 text-xs shadow-inner focus-visible:border-primary focus-visible:ring-primary/20"
@@ -107,10 +103,12 @@
 				{#if data === '' || !data}
 					<div class="flex items-center gap-1.5">
 						<Button href="/login" variant="ghost" size="sm" class="h-9 text-xs font-medium">
-							<LogInIcon class="mr-1.5 size-3.5" /> Sign In
+							<LogInIcon class="mr-1.5 size-3.5" />
+							{m.header_sign_in()}
 						</Button>
 						<Button href="/signup" size="sm" class="h-9 rounded-lg text-xs font-semibold shadow-xs">
-							<UserPlusIcon class="mr-1.5 size-3.5" /> Sign Up
+							<UserPlusIcon class="mr-1.5 size-3.5" />
+							{m.header_sign_up()}
 						</Button>
 					</div>
 				{:else}
@@ -121,12 +119,15 @@
 				<div class="ml-1 border-l border-border/60 pl-2">
 					<DarkMode />
 				</div>
+				<div class="ml-1 border-l border-border/60 pl-2">
+					<LanguageSelector />
+				</div>
 				<Cart header={true} />
 			</div>
 
 			<div class="flex items-center gap-2 md:hidden">
 				<DarkMode />
-
+				<LanguageSelector />
 				<Sheet bind:open={isOpen}>
 					<SheetTrigger>
 						{#snippet child({ props: triggerProps })}
@@ -153,10 +154,10 @@
 							{#if data === '' || !data}
 								<div class="space-y-1.5">
 									<h2 class="text-base font-bold tracking-tight text-foreground">
-										Welcome to Tmax Electronics
+										{m.header_mobile_welcome_title()}
 									</h2>
 									<p class="text-xs text-muted-foreground">
-										Sign in to initialize hardware configurations & track secure delivery channels.
+										{m.header_mobile_welcome_description()}
 									</p>
 								</div>
 							{:else}
@@ -168,10 +169,10 @@
 									</div>
 									<div class="flex flex-col overflow-hidden">
 										<span class="truncate text-sm font-bold text-foreground">
-											{data.name ?? 'Tech Operator'}
+											{data.name ?? m.header_default_user_name()}
 										</span>
 										<span class="truncate font-mono text-xs text-muted-foreground">
-											{data.email ?? 'active_session'}
+											{data.email ?? m.header_default_session_label()}
 										</span>
 									</div>
 								</div>
@@ -188,12 +189,16 @@
 									onclick={handleMenuClick}
 								>
 									<item.icon class="h-4 w-4 text-primary opacity-70" />
-									{item.label}
+									{item.label()}
 								</Button>
 							{/each}
 						</nav>
 
 						<div class="space-y-4 border-t border-border bg-muted/10 p-5">
+							<div class="flex w-auto flex-row gap-1">
+								<DarkMode />
+								<LanguageSelector />
+							</div>
 							{#if data === '' || !data}
 								<div class="grid grid-cols-2 gap-2.5">
 									<Button
@@ -202,20 +207,19 @@
 										class="h-10 rounded-xl border-border text-xs font-medium"
 										href="/login"
 									>
-										Log In
+										{m.header_log_in()}
 									</Button>
 									<Button
 										onclick={handleMenuClick}
 										class="h-10 rounded-xl text-xs font-semibold shadow-xs"
 										href="/signup"
 									>
-										Join Store
+										{m.header_join_store()}
 									</Button>
 								</div>
 							{:else}
 								<div class="flex flex-row items-center justify-between p-1">
 									<AvatarSettings data={data.name} />
-									<DarkMode />
 								</div>
 							{/if}
 						</div>

@@ -7,18 +7,16 @@
 	import { Button } from '$lib/components/ui/button';
 	import { Loader2, AlertCircle, CheckCircle2 } from '@lucide/svelte';
 	import { goto } from '$app/navigation';
+	import * as m from '$lib/paraglide/messages.js';
 
-	// Extract token from URL search parameters (?token=xyz)
 	const token = $derived($page.url.searchParams.get('token'));
 
-	// Svelte 5 Form Reactive State
 	let password = $state('');
 	let confirmPassword = $state('');
 	let isLoading = $state(false);
 	let errorMessage = $state('');
 	let isSuccess = $state(false);
 
-	// Basic validation check using Svelte 5 derived state
 	const passwordsMatch = $derived(password === confirmPassword);
 	const isPasswordValid = $derived(password.length >= 8);
 	const canSubmit = $derived(passwordsMatch && isPasswordValid && token && !isLoading);
@@ -30,7 +28,7 @@
 		isLoading = true;
 		errorMessage = '';
 
-		const { data, error } = await authClient.resetPassword({
+		const { error } = await authClient.resetPassword({
 			newPassword: password,
 			token: token as string
 		});
@@ -38,10 +36,9 @@
 		isLoading = false;
 
 		if (error) {
-			errorMessage = error.message || 'Failed to reset password. The link may have expired.';
+			errorMessage = error.message || m.reset_password_default_error();
 		} else {
 			isSuccess = true;
-			// Automatically send them to login after 3 seconds
 			setTimeout(() => {
 				goto('/login');
 			}, 3000);
@@ -52,9 +49,11 @@
 <div class="container flex h-screen w-screen flex-col items-center justify-center">
 	<Card.Root class="w-full max-w-md border-border bg-card text-card-foreground shadow-lg">
 		<Card.Header class="space-y-1">
-			<Card.Title class="text-2xl font-bold tracking-tight">Reset password</Card.Title>
+			<Card.Title class="text-2xl font-bold tracking-tight">
+				{m.reset_password_title()}
+			</Card.Title>
 			<Card.Description class="text-muted-foreground">
-				Enter a secure new password for your account.
+				{m.reset_password_description()}
 			</Card.Description>
 		</Card.Header>
 		<Card.Content>
@@ -64,17 +63,17 @@
 				>
 					<AlertCircle class="h-5 w-5 shrink-0" />
 					<p>
-						<strong>Missing token:</strong> This password reset link is invalid or broken. Please request
-						a new one.
+						<strong>{m.reset_password_missing_token_title()}:</strong>
+						{m.reset_password_missing_token_description()}
 					</p>
 				</div>
 			{:else if isSuccess}
 				<div class="flex items-start gap-3 rounded-lg bg-primary/10 p-4 text-sm text-primary">
 					<CheckCircle2 class="h-5 w-5 shrink-0" />
 					<div>
-						<p class="font-medium">Password updated!</p>
+						<p class="font-medium">{m.reset_password_success_title()}</p>
 						<p class="mt-1 text-muted-foreground">
-							Your password has been changed. Redirecting you to sign in...
+							{m.reset_password_success_description()}
 						</p>
 					</div>
 				</div>
@@ -90,7 +89,7 @@
 					{/if}
 
 					<div class="space-y-2">
-						<Label for="password" class="text-foreground">New Password</Label>
+						<Label for="password" class="text-foreground">{m.reset_password_new_label()}</Label>
 						<Input
 							id="password"
 							type="password"
@@ -100,12 +99,14 @@
 							class="border-input bg-background text-foreground"
 						/>
 						{#if password && !isPasswordValid}
-							<p class="text-xs text-destructive">Password must be at least 8 characters long.</p>
+							<p class="text-xs text-destructive">{m.reset_password_min_length_error()}</p>
 						{/if}
 					</div>
 
 					<div class="space-y-2">
-						<Label for="confirmPassword" class="text-foreground">Confirm New Password</Label>
+						<Label for="confirmPassword" class="text-foreground">
+							{m.reset_password_confirm_label()}
+						</Label>
 						<Input
 							id="confirmPassword"
 							type="password"
@@ -115,7 +116,7 @@
 							class="border-input bg-background text-foreground"
 						/>
 						{#if confirmPassword && !passwordsMatch}
-							<p class="text-xs text-destructive">Passwords do not match.</p>
+							<p class="text-xs text-destructive">{m.reset_password_mismatch_error()}</p>
 						{/if}
 					</div>
 
@@ -126,9 +127,9 @@
 					>
 						{#if isLoading}
 							<Loader2 class="mr-2 h-4 w-4 animate-spin" />
-							Updating password...
+							{m.reset_password_updating()}
 						{:else}
-							Reset Password
+							{m.reset_password_submit()}
 						{/if}
 					</Button>
 				</form>

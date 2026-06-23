@@ -13,12 +13,8 @@
 		CheckIcon,
 		CpuIcon,
 		ScanQrCodeIcon,
-		PackageCheckIcon,
-		MapPinIcon,
-		BadgeCheckIcon,
 		CableIcon,
 		SmartphoneIcon,
-		BoxIcon,
 		HeadphonesIcon,
 		LayersIcon
 	} from '@lucide/svelte';
@@ -30,152 +26,128 @@
 	import Slider from '$lib/components/slider.svelte';
 	import ImgSeparator from '$lib/components/imgSeparator.svelte';
 	import Mission from '$lib/components/mission.svelte';
-
-	const meta = {
-		title: 'About TMax Electronics | Premium Electronics & Accessories in Ethiopia',
-		description:
-			'TMax Electronics delivers reliable, innovative, and high-quality electronics, mobile accessories, power solutions, storage devices, audio products, and smart technology solutions in Ethiopia.',
-		url: 'https://tmax.et/about',
-		image: 'https://tmax.et/og-about.jpg',
-		keywords:
-			'TMax Electronics, electronics Ethiopia, mobile accessories Addis Ababa, power banks Ethiopia, storage devices, audio devices, smart electronics'
-	};
+	import * as m from '$lib/paraglide/messages.js';
 
 	type TabKey = 'quality' | 'products' | 'support';
 	let activeTab = $state<TabKey>('quality');
 
 	const tabs = {
 		quality: {
-			label: 'Quality',
-			title: 'High-Quality Products',
-			text: 'TMax Electronics is committed to supplying dependable electronic products and accessories that combine quality, durability, and value.',
+			label: m.about_page_tab_quality_label,
+			title: m.about_page_tab_quality_title,
+			text: m.about_page_tab_quality_text,
 			points: [
-				'Carefully selected electronics',
-				'Products built for everyday performance',
-				'Reliable technology you can trust'
+				m.about_page_tab_quality_point_selected,
+				m.about_page_tab_quality_point_performance,
+				m.about_page_tab_quality_point_reliable
 			]
 		},
 		products: {
-			label: 'Products',
-			title: 'Technology for Modern Living',
-			text: 'From power solutions and mobile accessories to storage devices, audio products, and smart electronic gadgets, TMax offers products designed for convenience and productivity.',
+			label: m.about_page_tab_products_label,
+			title: m.about_page_tab_products_title,
+			text: m.about_page_tab_products_text,
 			points: [
-				'Mobile accessories and charging solutions',
-				'Storage devices and data transfer products',
-				'Audio devices and smart electronics'
+				m.about_page_tab_products_point_mobile,
+				m.about_page_tab_products_point_storage,
+				m.about_page_tab_products_point_audio
 			]
 		},
 		support: {
-			label: 'Support',
-			title: 'Customer-Focused Service',
-			text: 'Our commitment to customer satisfaction continues long after purchase through product guidance, warranty assistance, and professional support.',
-			points: ['Warranty assistance', 'Technical support', 'Product replacement guidance']
+			label: m.about_page_tab_support_label,
+			title: m.about_page_tab_support_title,
+			text: m.about_page_tab_support_text,
+			points: [
+				m.about_page_tab_support_point_warranty,
+				m.about_page_tab_support_point_technical,
+				m.about_page_tab_support_point_replacement
+			]
 		}
 	} as const;
 
 	const benefits = [
 		{
 			icon: ShieldCheckIcon,
-			title: 'Quality Assured Products',
-			text: 'Every product is carefully selected to ensure durability and performance.'
+			title: m.about_page_benefit_quality_title,
+			text: m.about_page_benefit_quality_text
 		},
 		{
 			icon: ZapIcon,
-			title: 'Competitive Pricing',
-			text: 'Access premium technology products at competitive market prices.'
+			title: m.about_page_benefit_pricing_title,
+			text: m.about_page_benefit_pricing_text
 		},
 		{
 			icon: TruckIcon,
-			title: 'Nationwide Availability',
-			text: 'Dependable electronics and accessories available for customers across Ethiopia.'
+			title: m.about_page_benefit_availability_title,
+			text: m.about_page_benefit_availability_text
 		},
 		{
 			icon: HeadphonesIcon,
-			title: 'Trusted Customer Support',
-			text: 'Our team is ready to assist before and after every purchase.'
+			title: m.about_page_benefit_support_title,
+			text: m.about_page_benefit_support_text
 		}
 	];
 
 	const stats = [
 		{
 			value: '5+',
-			label: 'product categories',
-			detail: 'Power, mobile, storage, audio, and smart electronics'
+			label: m.about_page_stat_categories_label,
+			detail: m.about_page_stat_categories_detail
 		},
 		{
 			value: '100%',
-			label: 'quality focus',
-			detail: 'Products selected for durability and reliability'
+			label: m.about_page_stat_quality_label,
+			detail: m.about_page_stat_quality_detail
 		},
-		{ value: '24/7', label: 'customer commitment', detail: 'Support before and after purchase' },
+		{
+			value: '24/7',
+			label: m.about_page_stat_commitment_label,
+			detail: m.about_page_stat_commitment_detail
+		},
 		{
 			value: 'ET',
-			label: 'Ethiopia market',
-			detail: 'Technology solutions for individuals and businesses'
+			label: m.about_page_stat_market_label,
+			detail: m.about_page_stat_market_detail
 		}
 	];
 
 	const productLayers = [
 		{
 			icon: BatteryChargingIcon,
-			title: 'Power Solutions',
-			text: 'High-capacity power banks, power sockets, extension cords, and charging solutions for home and business use.'
+			title: m.about_page_layer_power_title,
+			text: m.about_page_layer_power_text
 		},
 		{
 			icon: CableIcon,
-			title: 'Mobile Accessories',
-			text: 'Chargers, cables, adapters, holders, and essential accessories designed for modern mobile devices.'
+			title: m.about_page_layer_mobile_title,
+			text: m.about_page_layer_mobile_text
 		},
 		{
 			icon: CpuIcon,
-			title: 'Storage & Smart Electronics',
-			text: 'USB flash drives, memory storage products, data transfer solutions, and smart gadgets for daily convenience.'
+			title: m.about_page_layer_storage_title,
+			text: m.about_page_layer_storage_text
 		},
 		{
 			icon: HeadphonesIcon,
-			title: 'Audio Devices',
-			text: 'Wireless earbuds, headphones, speakers, and smart audio accessories for everyday entertainment and communication.'
+			title: m.about_page_layer_audio_title,
+			text: m.about_page_layer_audio_text
 		}
 	];
 
 	const journey = [
 		{
 			icon: SmartphoneIcon,
-			title: 'Explore our products',
-			text: 'Browse electronics, mobile accessories, power solutions, storage devices, audio products, and smart technology.'
+			title: m.about_page_journey_explore_title,
+			text: m.about_page_journey_explore_text
 		},
 		{
 			icon: ScanQrCodeIcon,
-			title: 'Choose with confidence',
-			text: 'Select products designed around quality, durability, affordability, and reliable everyday performance.'
+			title: m.about_page_journey_choose_title,
+			text: m.about_page_journey_choose_text
 		},
 		{
 			icon: TruckIcon,
-			title: 'Get support when needed',
-			text: 'Receive product information, warranty assistance, technical support, and customer service after purchase.'
-		}
-	];
-
-	const trustSignals = [
-		{
-			icon: PackageCheckIcon,
-			title: 'Quality first',
-			text: 'Every product is selected to meet performance and reliability standards.'
-		},
-		{
-			icon: BadgeCheckIcon,
-			title: 'Warranty support',
-			text: 'Reliable warranty assistance helps customers purchase with confidence.'
-		},
-		{
-			icon: MapPinIcon,
-			title: 'Local availability',
-			text: 'TMax Electronics serves individuals, businesses, retailers, and corporate customers in Ethiopia.'
-		},
-		{
-			icon: HeadphonesIcon,
-			title: 'Professional service',
-			text: 'Customer satisfaction remains at the center of everything we do.'
+			title: m.about_page_journey_support_title,
+			text: m.about_page_journey_support_text
 		}
 	];
 
@@ -183,12 +155,12 @@
 </script>
 
 <svelte:head>
-	<title>{meta.title}</title>
-	<meta name="description" content={meta.description} />
-	<meta name="keywords" content={meta.keywords} />
-	<meta property="og:title" content={meta.title} />
-	<meta property="og:description" content={meta.description} />
-	<meta property="og:image" content={meta.image} />
+	<title>{m.about_page_meta_title()}</title>
+	<meta name="description" content={m.about_page_meta_description()} />
+	<meta name="keywords" content={m.about_page_meta_keywords()} />
+	<meta property="og:title" content={m.about_page_meta_title()} />
+	<meta property="og:description" content={m.about_page_meta_description()} />
+	<meta property="og:image" content="https://tmax.et/og-about.jpg" />
 </svelte:head>
 
 <div class="relative min-h-screen overflow-hidden bg-background text-foreground">
@@ -210,21 +182,20 @@
 				class="mb-5 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-semibold tracking-wider text-primary uppercase backdrop-blur-xl"
 			>
 				<ActivityIcon class="size-3 animate-pulse" />
-				TMax Electronics
+				{m.about_page_hero_badge()}
 			</div>
 
 			<h1 class="text-5xl leading-none font-black tracking-tight sm:text-7xl">
-				Innovation. Quality. Reliability.
+				{m.about_page_hero_heading()}
 			</h1>
 
 			<p class="mt-6 max-w-md text-base leading-relaxed text-muted-foreground">
-				TMax Electronics is a leading provider of electronic products and technology accessories
-				dedicated to delivering practical solutions for today’s connected world.
+				{m.about_page_hero_description()}
 			</p>
 
 			<div class="mt-8 flex flex-col gap-3 sm:flex-row">
 				<Button size="lg" href="/shop" class="group gap-2">
-					Shop Now
+					{m.about_page_shop_now()}
 					<ArrowRightIcon class="size-4 transition-transform group-hover:translate-x-1" />
 				</Button>
 
@@ -234,7 +205,7 @@
 					variant="outline"
 					class="border-primary/20 bg-background/40 backdrop-blur-xl"
 				>
-					Contact Us
+					{m.about_page_contact_us()}
 				</Button>
 			</div>
 		</div>
@@ -252,9 +223,11 @@
 
 				<CardContent class="relative p-6 sm:p-8">
 					<div class="mb-6 flex items-center justify-between border-b border-primary/10 pb-4">
-						<span class="font-mono text-xs text-muted-foreground">ELECTRONICS_STATUS</span>
+						<span class="font-mono text-xs text-muted-foreground">
+							{m.about_page_status_label()}
+						</span>
 						<span class="rounded-full bg-primary/10 px-3 py-1 text-xs font-bold text-primary">
-							TRUSTED
+							{m.about_page_trusted_status()}
 						</span>
 					</div>
 
@@ -269,8 +242,8 @@
 								>
 									<svelte:component this={item.icon} class="size-5" />
 								</div>
-								<h3 class="text-sm font-bold">{item.title}</h3>
-								<p class="mt-2 text-xs leading-relaxed text-muted-foreground">{item.text}</p>
+								<h3 class="text-sm font-bold">{item.title()}</h3>
+								<p class="mt-2 text-xs leading-relaxed text-muted-foreground">{item.text()}</p>
 							</div>
 						{/each}
 					</div>
@@ -278,15 +251,19 @@
 			</Card>
 		</div>
 	</section>
+
 	<ImgSeparator />
+
 	<section
 		class="border-y border-primary/10 bg-card/20 px-4 py-20 backdrop-blur-xl sm:px-6 lg:px-8"
 	>
 		<div class="mx-auto max-w-6xl">
 			<div class="mb-10 text-center">
-				<span class="text-xs font-bold tracking-widest text-primary uppercase">Why TMax</span>
+				<span class="text-xs font-bold tracking-widest text-primary uppercase">
+					{m.about_page_why_label()}
+				</span>
 				<h2 class="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
-					Technology you can trust.
+					{m.about_page_why_heading()}
 				</h2>
 			</div>
 
@@ -301,7 +278,7 @@
 							? 'bg-primary text-primary-foreground shadow-lg'
 							: 'text-muted-foreground hover:bg-primary/10 hover:text-foreground'}"
 					>
-						{tab.label}
+						{tab.label()}
 					</button>
 				{/each}
 			</div>
@@ -324,9 +301,9 @@
 							{/if}
 						</div>
 
-						<h3 class="text-2xl font-black tracking-tight">{tabs[activeTab].title}</h3>
+						<h3 class="text-2xl font-black tracking-tight">{tabs[activeTab].title()}</h3>
 						<p class="mt-3 text-sm leading-relaxed text-muted-foreground">
-							{tabs[activeTab].text}
+							{tabs[activeTab].text()}
 						</p>
 					</div>
 
@@ -338,7 +315,7 @@
 								<span class="rounded-full bg-primary/10 p-1 text-primary">
 									<CheckIcon class="size-3" />
 								</span>
-								<span class="text-sm font-medium">{point}</span>
+								<span class="text-sm font-medium">{point()}</span>
 							</div>
 						{/each}
 					</div>
@@ -346,6 +323,7 @@
 			{/key}
 		</div>
 	</section>
+
 	<ImgSeparator />
 
 	<section class="relative mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
@@ -362,14 +340,16 @@
 					></div>
 					<div class="relative">
 						<p class="font-mono text-4xl font-black tracking-tighter text-primary">{stat.value}</p>
-						<h3 class="mt-3 text-sm font-bold tracking-wider uppercase">{stat.label}</h3>
-						<p class="mt-2 text-xs leading-relaxed text-muted-foreground">{stat.detail}</p>
+						<h3 class="mt-3 text-sm font-bold tracking-wider uppercase">{stat.label()}</h3>
+						<p class="mt-2 text-xs leading-relaxed text-muted-foreground">{stat.detail()}</p>
 					</div>
 				</div>
 			{/each}
 		</div>
 	</section>
+
 	<ImgSeparator />
+
 	<section
 		class="relative overflow-hidden border-y border-primary/10 bg-card/20 px-4 py-24 backdrop-blur-xl sm:px-6 lg:px-8"
 	>
@@ -382,14 +362,13 @@
 					class="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold tracking-wider text-primary uppercase backdrop-blur-xl"
 				>
 					<LayersIcon class="size-3" />
-					Our Product Categories
+					{m.about_page_product_categories_label()}
 				</div>
 				<h2 class="mt-5 text-4xl font-black tracking-tight sm:text-6xl">
-					Electronics designed for modern living.
+					{m.about_page_product_categories_title()}
 				</h2>
 				<p class="mt-5 max-w-lg text-sm leading-relaxed text-muted-foreground">
-					Explore our growing range of technology products designed to keep you connected,
-					productive, and powered wherever you go.
+					{m.about_page_product_categories_description()}
 				</p>
 			</div>
 
@@ -408,26 +387,28 @@
 								<svelte:component this={layer.icon} class="size-6" />
 							</div>
 							<span class="font-mono text-xs text-muted-foreground">0{i + 1}</span>
-							<h3 class="mt-2 text-lg font-black">{layer.title}</h3>
-							<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{layer.text}</p>
+							<h3 class="mt-2 text-lg font-black">{layer.title()}</h3>
+							<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{layer.text()}</p>
 						</CardContent>
 					</Card>
 				{/each}
 			</div>
 		</div>
 	</section>
+
 	<ImgSeparator />
 
 	<TeamStoreGallery />
 
 	<ImgSeparator />
+
 	<section class="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
 		<div class="mb-12 text-center">
 			<span class="text-xs font-bold tracking-widest text-primary uppercase">
-				Simple Buying Flow
+				{m.about_page_buying_flow_label()}
 			</span>
 			<h2 class="mt-3 text-3xl font-black tracking-tight sm:text-5xl">
-				From product discovery to dependable support.
+				{m.about_page_buying_flow_title()}
 			</h2>
 		</div>
 
@@ -440,66 +421,26 @@
 					<div
 						class="absolute -top-3 left-6 rounded-full border border-primary/20 bg-background px-3 py-1 font-mono text-xs text-primary shadow-lg"
 					>
-						Step {i + 1}
+						{m.about_page_step_label({ number: i + 1 })}
 					</div>
 					<div
 						class="mt-5 flex size-14 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-xl transition duration-500 group-hover:scale-110"
 					>
 						<svelte:component this={step.icon} class="size-6" />
 					</div>
-					<h3 class="mt-6 text-xl font-black">{step.title}</h3>
-					<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{step.text}</p>
+					<h3 class="mt-6 text-xl font-black">{step.title()}</h3>
+					<p class="mt-3 text-sm leading-relaxed text-muted-foreground">{step.text()}</p>
 				</div>
 			{/each}
 		</div>
 	</section>
-	<ImgSeparator />
-	<!-- <section class="mx-auto max-w-7xl px-4 pb-24 sm:px-6 lg:px-8">
-		<div
-			class="relative overflow-hidden rounded-[2rem] border border-primary/10 bg-card/35 p-6 shadow-2xl backdrop-blur-2xl sm:p-8 lg:p-10"
-		>
-			<div
-				class="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_bottom_left,hsl(var(--primary)/0.16),transparent_40%)]"
-			></div>
-			<div class="grid gap-8 lg:grid-cols-12 lg:items-center">
-				<div class="lg:col-span-4">
-					<div
-						class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold tracking-wider text-primary uppercase"
-					>
-						<BoxIcon class="size-3" />
-						Our Commitment
-					</div>
-					<h2 class="mt-4 text-3xl font-black tracking-tight sm:text-4xl">
-						Quality, integrity, innovation, and customer focus.
-					</h2>
-					<p class="mt-4 text-sm leading-relaxed text-muted-foreground">
-						TMax Electronics strives for excellence in products, service, and support while building
-						trusted customer relationships through honesty and transparency.
-					</p>
-				</div>
 
-				<div class="grid gap-4 sm:grid-cols-2 lg:col-span-8">
-					{#each trustSignals as signal}
-						<div
-							class="group flex gap-4 rounded-2xl border border-primary/10 bg-background/40 p-5 backdrop-blur-xl transition duration-300 hover:border-primary/30 hover:bg-primary/5"
-						>
-							<div
-								class="flex size-11 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary transition group-hover:scale-110"
-							>
-								<svelte:component this={signal.icon} class="size-5" />
-							</div>
-							<div>
-								<h3 class="text-sm font-bold">{signal.title}</h3>
-								<p class="mt-2 text-xs leading-relaxed text-muted-foreground">{signal.text}</p>
-							</div>
-						</div>
-					{/each}
-				</div>
-			</div>
-		</div>
-	</section> -->
-	<Mission />
 	<ImgSeparator />
+
+	<Mission />
+
+	<ImgSeparator />
+
 	<section class="mx-auto max-w-4xl px-4 py-24 text-center sm:px-6 lg:px-8">
 		<div
 			class="relative overflow-hidden rounded-3xl border border-primary/20 bg-card/40 p-8 shadow-2xl backdrop-blur-2xl sm:p-12"
@@ -513,46 +454,51 @@
 					class="flex items-center gap-2 rounded-full bg-primary/10 px-4 py-1.5 text-xs font-bold tracking-wider text-primary uppercase"
 				>
 					<SparklesIcon class="size-3" />
-					Ready to Upgrade Your Technology?
+					{m.about_page_cta_badge()}
 				</div>
 
 				<h2 class="text-3xl font-black tracking-tight sm:text-4xl">
-					Discover products that combine performance, reliability, and value.
+					{m.about_page_cta_title()}
 				</h2>
 
 				<p class="text-sm leading-relaxed text-muted-foreground">
-					Explore premium electronics, mobile accessories, power solutions, storage devices, audio
-					products, and smart technology solutions from TMax Electronics.
+					{m.about_page_cta_description()}
 				</p>
 
 				<Separator class="bg-primary/10" />
 
 				<Button href="/shop" size="lg" class="group gap-2">
-					Shop Now
+					{m.about_page_shop_now()}
 					<ZapIcon class="size-4 transition-transform group-hover:scale-110" />
 				</Button>
 			</div>
 		</div>
 	</section>
 </div>
+
 <ImgSeparator />
+
 {#if data?.imagesList?.length > 0}
 	<Slider imagesList={data.imagesList} />
 {/if}
+
 <ImgSeparator />
+
 {#if data?.testimonialList?.length > 0}
 	<main class="flex flex-col items-center justify-center px-4 py-16">
 		<div class="mb-10 max-w-2xl text-center">
-			<h2 class="text-3xl font-bold md:text-4xl">Trusted by Customers</h2>
+			<h2 class="text-3xl font-bold md:text-4xl">{m.about_page_testimonials_title()}</h2>
 			<p class="mt-3 text-muted-foreground">
-				Real feedback from customers choosing TMax Electronics for dependable technology products.
+				{m.about_page_testimonials_description()}
 			</p>
 		</div>
 
 		<Testimonial testimonials={data.testimonialList} />
 	</main>
 {/if}
+
 <ImgSeparator />
+
 <Faq />
 
 <style>

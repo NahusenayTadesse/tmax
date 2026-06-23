@@ -120,7 +120,7 @@
 		<FilterMenu
 			bind:filteredList
 			data={data?.productList}
-			filterKeys={['categories', 'tags', 'prices', 'quantity', 'supplier']}
+			filterKeys={['category', 'tag', 'prices', 'quantity', 'supplier']}
 		/>
 		<DataTable bind:selected data={filteredList} {columns} fileName="Product List" />
 	</div>

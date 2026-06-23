@@ -121,7 +121,7 @@ export const columns = [
 	},
 
 	{
-		accessorKey: 'categories',
+		accessorKey: 'category',
 		header: ({ column }) =>
 			renderComponent(DataTableSort, {
 				name: 'Categories',
@@ -130,13 +130,13 @@ export const columns = [
 		sortable: true,
 		cell: ({ row }) => {
 			return renderComponent(CatList, {
-				names: row.original.categories,
+				names: row.original.category,
 				title: 'Categories'
 			});
 		}
 	},
 	{
-		accessorKey: 'tags',
+		accessorKey: 'tag',
 		header: ({ column }) =>
 			renderComponent(DataTableSort, {
 				name: 'Tags',
@@ -146,7 +146,7 @@ export const columns = [
 		cell: ({ row }) => {
 			// You can pass whatever you need from `row.original` to the component
 			return renderComponent(CatList, {
-				names: row.original.tags,
+				names: row.original.tag,
 				title: 'Tags'
 			});
 		}

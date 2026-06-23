@@ -9,7 +9,8 @@
 		ArrowRightIcon,
 		SparklesIcon
 	} from '@lucide/svelte';
-	import { fly, scale, fade } from 'svelte/transition';
+	import { fly, scale } from 'svelte/transition';
+	import * as m from '$lib/paraglide/messages.js';
 
 	type ProductItem = {
 		productName: string;
@@ -54,26 +55,32 @@
 				class="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold tracking-widest text-primary uppercase backdrop-blur-xl"
 			>
 				<SparklesIcon class="size-3" />
-				Payment Successful
+				{m.payment_success_badge()}
 			</div>
 
-			<h1 class="text-4xl font-black tracking-tight sm:text-6xl">Thank you for your order.</h1>
+			<h1 class="text-4xl font-black tracking-tight sm:text-6xl">
+				{m.payment_success_title()}
+			</h1>
 
 			<p class="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
-				Your payment has been confirmed. Here is a quick summary of the products in your order.
+				{m.payment_success_description()}
 			</p>
 		</div>
 		<div in:fly={{ y: 28, duration: 700, delay: 150 }}>
 			<Card class="overflow-hidden border-primary/20 bg-card/40 shadow-2xl backdrop-blur-2xl">
 				<CardContent class="p-0">
 					<div class="relative overflow-hidden border-b border-primary/10 bg-primary/5 p-6">
-						<div class="absolute top-4 right-6 text-7xl font-black text-primary/10">PAID</div>
+						<div class="absolute top-4 right-6 text-7xl font-black text-primary/10">
+							{m.payment_success_paid_stamp()}
+						</div>
 
 						<div class="relative flex items-start justify-between gap-6">
 							<div>
 								<div class="mb-2 flex items-center gap-2 text-primary">
 									<ReceiptTextIcon class="size-5" />
-									<span class="text-xs font-bold tracking-widest uppercase">Order Total</span>
+									<span class="text-xs font-bold tracking-widest uppercase">
+										{m.payment_success_order_total()}
+									</span>
 								</div>
 
 								<p class="text-4xl font-black tracking-tight text-primary">
@@ -84,7 +91,7 @@
 							<div
 								class="rounded-2xl border border-primary/10 bg-background/50 px-4 py-3 text-right backdrop-blur-xl"
 							>
-								<p class="text-xs text-muted-foreground">Items</p>
+								<p class="text-xs text-muted-foreground">{m.payment_success_items_label()}</p>
 								<p class="text-2xl font-bold">{productList.length}</p>
 							</div>
 						</div>
@@ -108,7 +115,9 @@
 											{item.productName}
 										</h3>
 										<p class="mt-1 text-xs text-muted-foreground">
-											Qty: {item.quantity} × {formatBirr(Number(item.price))}
+											{m.payment_success_quantity_label()}: {item.quantity} × {formatBirr(
+												Number(item.price)
+											)}
 										</p>
 									</div>
 
@@ -124,7 +133,7 @@
 
 					<div class="flex flex-col gap-3 p-6 sm:flex-row">
 						<Button href="/shop" class="group flex-1 gap-2">
-							Continue Shopping
+							{m.payment_success_continue_shopping()}
 							<ArrowRightIcon class="size-4 transition-transform group-hover:translate-x-1" />
 						</Button>
 
@@ -133,7 +142,7 @@
 							class="flex-1 border-primary/20 bg-background/40 backdrop-blur-xl"
 							href="/account/orders"
 						>
-							View Orders
+							{m.payment_success_view_orders()}
 						</Button>
 					</div>
 				</CardContent>

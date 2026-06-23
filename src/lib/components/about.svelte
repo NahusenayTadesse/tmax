@@ -17,65 +17,65 @@
 	} from '@lucide/svelte';
 
 	import { fly, scale } from 'svelte/transition';
+	import * as m from '$lib/paraglide/messages.js';
 
 	const features = [
 		{
 			icon: ShieldCheckIcon,
-			label: 'Quality Assured Products',
-			description:
-				'Every product is carefully selected to ensure durability, reliability, and performance.'
+			label: m.about_feature_quality_label,
+			description: m.about_feature_quality_description
 		},
 		{
 			icon: ZapIcon,
-			label: 'Competitive Pricing',
-			description: 'Access premium technology products at competitive market prices.'
+			label: m.about_feature_pricing_label,
+			description: m.about_feature_pricing_description
 		},
 		{
 			icon: UsbIcon,
-			label: 'Trusted Customer Support',
-			description: 'Our team is always ready to assist before and after every purchase.'
+			label: m.about_feature_support_label,
+			description: m.about_feature_support_description
 		},
 		{
 			icon: MonitorIcon,
-			label: 'Nationwide Availability',
-			description: 'Reliable electronics and accessories available for customers across Ethiopia.'
+			label: m.about_feature_availability_label,
+			description: m.about_feature_availability_description
 		}
 	];
 
 	const galleryImages = [
 		{
 			image: '/gallery (1).webp',
-			alt: 'TMax electronics and accessories lifestyle image'
+			alt: m.about_gallery_lifestyle_alt
 		},
 		{
 			image: '/gallery (2).webp',
-			alt: 'TMax mobile accessories and charging products image'
+			alt: m.about_gallery_mobile_alt
 		},
 		{
 			image: '/gallery (3).webp',
-			alt: 'TMax electronics product packaging image'
+			alt: m.about_gallery_packaging_alt
 		},
 		{
 			image: '/gallery (4).webp',
-			alt: 'TMax technology products and smart accessories image'
+			alt: m.about_gallery_smart_accessories_alt
 		}
 	];
 
 	const productPillars = [
 		{
 			icon: BatteryChargingIcon,
-			title: 'Power Solutions',
-			copy: 'High-capacity power banks, charging accessories, power sockets, and extension solutions for everyday use.'
+			title: m.about_pillar_power_title,
+			copy: m.about_pillar_power_copy
 		},
 		{
 			icon: ZapIcon,
-			title: 'Mobile Accessories',
-			copy: 'Chargers, cables, adapters, holders, and essential accessories designed for modern mobile devices.'
+			title: m.about_pillar_mobile_title,
+			copy: m.about_pillar_mobile_copy
 		},
 		{
 			icon: CableIcon,
-			title: 'Storage & Smart Electronics',
-			copy: 'USB flash drives, storage devices, audio products, and innovative technology solutions.'
+			title: m.about_pillar_storage_title,
+			copy: m.about_pillar_storage_copy
 		}
 	];
 </script>
@@ -96,16 +96,15 @@
 			<span
 				class="mx-auto mb-4 inline-flex rounded-full border border-primary/20 bg-primary/5 px-4 py-1 text-xs font-semibold tracking-wider text-primary uppercase"
 			>
-				Technology You Can Trust
+				{m.about_badge_trusted_technology()}
 			</span>
 
 			<h2 class="text-4xl font-extrabold tracking-tight sm:text-6xl">
-				Premium Electronics for Everyday Performance.
+				{m.about_heading()}
 			</h2>
 
 			<p class="mx-auto mt-5 max-w-2xl text-lg text-muted-foreground">
-				TMax Electronics delivers reliable, innovative, and high-quality technology products that
-				keep you connected, productive, and powered wherever you go.
+				{m.about_description()}
 			</p>
 		</div>
 
@@ -127,28 +126,28 @@
 							<div class="mb-4 flex items-center gap-2 text-primary">
 								<BatteryChargingIcon class="size-5" />
 								<span class="text-xs font-bold tracking-widest uppercase">
-									Our Product Categories
+									{m.about_product_categories_label()}
 								</span>
 							</div>
 
 							<h3 class="text-3xl font-bold tracking-tight">
-								Technology Designed for Modern Living
+								{m.about_product_categories_title()}
 							</h3>
 
 							<p class="mt-4 text-sm leading-relaxed text-muted-foreground">
-								Whether you're looking for power solutions, mobile accessories, storage devices,
-								audio products, or smart electronic gadgets, every product is selected to meet our
-								standards of quality, durability, and performance.
+								{m.about_product_categories_description()}
 							</p>
 
 							<div class="mt-6 grid grid-cols-2 gap-3">
 								<div class="rounded-xl border border-primary/10 bg-primary/5 p-4">
-									<p class="text-xs text-muted-foreground">Product Range</p>
+									<p class="text-xs text-muted-foreground">{m.about_product_range_label()}</p>
 									<p class="text-2xl font-bold text-primary">5+</p>
 								</div>
 
 								<div class="rounded-xl border border-primary/10 bg-primary/5 p-4">
-									<p class="text-xs text-muted-foreground">Customer Commitment</p>
+									<p class="text-xs text-muted-foreground">
+										{m.about_customer_commitment_label()}
+									</p>
 									<p class="text-2xl font-bold text-primary">100%</p>
 								</div>
 							</div>
@@ -161,7 +160,7 @@
 							>
 								<img
 									src="/hero.webp"
-									alt="TMax Electronics product showcase"
+									alt={m.about_product_showcase_alt()}
 									class="aspect-4/5 w-full rounded-xl object-cover transition duration-700 hover:scale-105"
 								/>
 
@@ -175,14 +174,14 @@
 										<span
 											class="rounded-full bg-primary/10 px-2 py-1 text-[10px] font-semibold text-primary"
 										>
-											Trusted
+											{m.about_trusted_badge()}
 										</span>
 									</div>
 
 									<div class="mb-3">
 										<div class="mb-1 flex justify-between text-xs">
-											<span class="text-muted-foreground">Quality Assurance</span>
-											<span class="font-mono text-primary">Verified</span>
+											<span class="text-muted-foreground">{m.about_quality_assurance_label()}</span>
+											<span class="font-mono text-primary">{m.about_verified_label()}</span>
 										</div>
 										<div class="h-2 rounded-full bg-primary/10">
 											<div class="h-2 w-4/5 rounded-full bg-primary"></div>
@@ -191,7 +190,9 @@
 
 									<div class="flex items-center gap-2">
 										<CableIcon class="size-4 text-primary" />
-										<span class="text-xs font-semibold"> Electronics • Accessories • Storage </span>
+										<span class="text-xs font-semibold">
+											{m.about_product_types_label()}
+										</span>
 									</div>
 								</div>
 							</div>
@@ -214,9 +215,9 @@
 								</div>
 
 								<div>
-									<p class="text-sm font-semibold">{feature.label}</p>
+									<p class="text-sm font-semibold">{feature.label()}</p>
 									<p class="mt-1 text-xs leading-relaxed text-muted-foreground">
-										{feature.description}
+										{feature.description()}
 									</p>
 								</div>
 							</CardContent>
@@ -233,14 +234,15 @@
 			>
 				<div>
 					<p class="text-xs font-bold tracking-widest text-primary uppercase">
-						Featured Categories
+						{m.about_featured_categories_label()}
 					</p>
-					<h3 class="mt-2 text-3xl font-bold tracking-tight">Explore Our Product Range</h3>
+					<h3 class="mt-2 text-3xl font-bold tracking-tight">
+						{m.about_explore_product_range_title()}
+					</h3>
 				</div>
 
 				<p class="max-w-xl text-sm leading-relaxed text-muted-foreground">
-					Technology products designed to improve convenience, productivity, and everyday
-					connectivity.
+					{m.about_featured_categories_description()}
 				</p>
 			</div>
 
@@ -250,16 +252,17 @@
 					class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between"
 				>
 					<div>
-						<p class="text-xs font-bold tracking-widest text-primary uppercase">TMax Gallery</p>
+						<p class="text-xs font-bold tracking-widest text-primary uppercase">
+							{m.about_gallery_label()}
+						</p>
 
 						<h3 class="mt-2 text-3xl font-bold tracking-tight">
-							Innovation, Quality & Reliability
+							{m.about_gallery_title()}
 						</h3>
 					</div>
 
 					<p class="max-w-xl text-sm leading-relaxed text-muted-foreground">
-						Explore a growing collection of electronics, accessories, storage solutions, and smart
-						technology products.
+						{m.about_gallery_description()}
 					</p>
 				</div>
 
@@ -271,7 +274,7 @@
 							>
 								<img
 									src={item.image}
-									alt={item.alt}
+									alt={item.alt()}
 									class="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-110"
 								/>
 
@@ -283,10 +286,12 @@
 									class="absolute inset-x-4 bottom-4 translate-y-3 rounded-2xl border border-white/10 bg-background/70 p-4 opacity-0 backdrop-blur-md transition duration-500 group-hover:translate-y-0 group-hover:opacity-100"
 								>
 									<p class="text-xs font-semibold tracking-widest text-primary uppercase">
-										TMax Electronics
+										{m.about_gallery_brand()}
 									</p>
 
-									<p class="mt-1 text-sm font-bold">Technology that keeps you connected</p>
+									<p class="mt-1 text-sm font-bold">
+										{m.about_gallery_card_caption()}
+									</p>
 								</div>
 
 								<div
@@ -300,10 +305,9 @@
 
 			<Card class="overflow-hidden border-primary/10 bg-card/30 shadow-xl backdrop-blur-lg">
 				<CardHeader>
-					<CardTitle>Why Choose TMax Electronics?</CardTitle>
+					<CardTitle>{m.about_why_choose_title()}</CardTitle>
 					<CardDescription>
-						Committed to delivering dependable technology products that combine quality, value, and
-						innovation.
+						{m.about_why_choose_description()}
 					</CardDescription>
 				</CardHeader>
 
@@ -319,10 +323,10 @@
 									class="mb-4 size-7 text-primary transition duration-500 group-hover:scale-110"
 								/>
 
-								<h4 class="text-sm font-bold">{pillar.title}</h4>
+								<h4 class="text-sm font-bold">{pillar.title()}</h4>
 
 								<p class="mt-2 text-xs leading-relaxed text-muted-foreground">
-									{pillar.copy}
+									{pillar.copy()}
 								</p>
 							</div>
 						{/each}

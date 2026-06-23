@@ -21,11 +21,11 @@
 	import DialogComp from '$lib/formComponents/DialogComp.svelte';
 	import Signup from '$lib/forms/Signup.svelte';
 	import Login from '$lib/forms/Login.svelte';
+	import * as m from '$lib/paraglide/messages.js';
 
 	const cart = useCart();
 	let { data } = $props();
 
-	// Reusable, local-safe currency formatter
 	const formatPrice = (price: number) => {
 		return new Intl.NumberFormat('en-US', {
 			style: 'currency',
@@ -37,19 +37,16 @@
 		dataType: 'json',
 		resetForm: true,
 		onResult: ({ result }) => {
-			// Clear the cart for BOTH regular success and Chapa redirects
 			if (result.type === 'success' || result.type === 'redirect') {
 				cart.clearCart();
 			}
 
-			// Only show the instant success toast if they aren't being redirected
 			if (result.type === 'success') {
-				toast.success('Secure digital transaction processed successfully!');
+				toast.success(m.checkout_transaction_success());
 			}
 		}
 	});
 
-	// Pure reactive derivation for item sub-arrays
 	const formattedData = $derived(
 		cart?.items.map((item) => ({
 			product: item.productId,
@@ -75,7 +72,7 @@
 </script>
 
 <svelte:head>
-	<title>Secure Checkout | Tmax Electronics</title>
+	<title>{m.checkout_meta_title()}</title>
 	<meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
@@ -98,9 +95,11 @@
 					<ShoppingCartIcon class="size-5" />
 				</div>
 				<div>
-					<h1 class="text-2xl font-extrabold tracking-tight sm:text-3xl">Secure Checkout</h1>
+					<h1 class="text-2xl font-extrabold tracking-tight sm:text-3xl">
+						{m.checkout_heading()}
+					</h1>
 					<p class="text-sm text-muted-foreground">
-						Review your hardware configuration payload and settle distribution dispatching lines.
+						{m.checkout_description()}
 					</p>
 				</div>
 			</div>
@@ -108,7 +107,7 @@
 				class="flex items-center gap-2 self-start rounded-xl border border-border/80 bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground sm:self-center"
 			>
 				<ShieldCheckIcon class="size-3.5 text-green-500" />
-				<span>End-to-End Encrypted Gateway</span>
+				<span>{m.checkout_encrypted_gateway()}</span>
 			</div>
 		</div>
 
@@ -119,7 +118,7 @@
 				>
 					<div class="mb-6 flex items-center gap-2 border-b border-border/60 pb-4">
 						<CreditCardIcon class="size-4 text-primary" />
-						<h2 class="text-lg font-bold tracking-tight">Customer Verification</h2>
+						<h2 class="text-lg font-bold tracking-tight">{m.checkout_customer_verification()}</h2>
 					</div>
 
 					{#if !data?.user}
@@ -128,20 +127,23 @@
 								class="rounded-xl border border-dashed border-border bg-muted/20 p-5 text-center"
 							>
 								<p class="mb-4 text-sm text-muted-foreground">
-									You are currently checking out as a guest. Authenticate to sync order tracking
-									details and hardware logs with an account profile.
+									{m.checkout_guest_message()}
 								</p>
 
 								<div class="flex flex-wrap items-center justify-center gap-3">
 									<DialogComp
-										title="Create Profile Account"
+										title={m.checkout_create_profile_account()}
 										variant="default"
 										IconComp={UserRoundPlusIcon}
 									>
 										<Signup data={data?.signupForm} action="/signup/?/signup" />
 									</DialogComp>
 
-									<DialogComp title="Log In with Credentials" variant="outline" IconComp={UserIcon}>
+									<DialogComp
+										title={m.checkout_login_with_credentials()}
+										variant="outline"
+										IconComp={UserIcon}
+									>
 										<Login data={data?.loginForm} action="/login/?/login" />
 									</DialogComp>
 								</div>
@@ -157,29 +159,29 @@
 							>
 								<Errors allErrors={$allErrors} />
 								<InputComp
-									label="Name"
+									label={m.checkout_name_label()}
 									name="name"
 									type="text"
 									{form}
 									{errors}
-									placeholder="Enter Your Name"
+									placeholder={m.checkout_name_placeholder()}
 								/>
 								<InputComp
-									label="Email"
+									label={m.checkout_email_label()}
 									name="email"
 									type="email"
 									{form}
 									{errors}
-									placeholder="Enter Your Email"
+									placeholder={m.checkout_email_placeholder()}
 									required
 								/>
 								<InputComp
-									label="Phone"
+									label={m.checkout_phone_label()}
 									name="phone"
 									type="text"
 									{form}
 									{errors}
-									placeholder="Enter Your Phone"
+									placeholder={m.checkout_phone_placeholder()}
 									required
 								/>
 								<InputComp
@@ -199,9 +201,9 @@
 										disabled={cart.items.length === 0 || $delayed}
 									>
 										{#if $delayed && !$form.payWithChapa}
-											<LoadingBtn name="Adding Your Order..." />
+											<LoadingBtn name={m.checkout_adding_order_loading()} />
 										{:else}
-											Add Order with &mdash; {formatPrice(cart.totalPrice)}
+											{m.checkout_add_order_with()} &mdash; {formatPrice(cart.totalPrice)}
 										{/if}
 									</Button>
 									<Button
@@ -212,14 +214,15 @@
 										onclick={() => ($form.payWithChapa = true)}
 									>
 										{#if $delayed && $form.payWithChapa}
-											<LoadingBtn name="Redirecting to Chapa..." />
+											<LoadingBtn name={m.checkout_redirecting_chapa_loading()} />
 										{:else}
-											Pay On With Chapa &mdash; {formatPrice(cart.totalPrice)}
+											{m.checkout_pay_with_chapa()} &mdash; {formatPrice(cart.totalPrice)}
 										{/if}
 									</Button>
 									<p class="prose-sm max-w-prose rounded-lg border bg-muted text-center text-sm">
-										Pay with Chapa using <a href="https://telebirr.et" target="_blank">Telebirr</a>,
-										CBE Birr and More
+										{m.checkout_chapa_note_prefix()}
+										<a href="https://telebirr.et" target="_blank">Telebirr</a>
+										{m.checkout_chapa_note_suffix()}
 									</p>
 								</div>
 							</form>
@@ -248,20 +251,23 @@
 								<div class="space-y-0.5">
 									<span
 										class="text-[10px] font-bold tracking-widest text-muted-foreground uppercase"
-										>Authenticated Secure Profile</span
 									>
+										{m.checkout_authenticated_profile()}
+									</span>
 									<p class="text-sm font-medium text-foreground">
-										{data.user.email || 'Verified User'}
+										{data.user.email || m.checkout_verified_user()}
 									</p>
 									<p class="text-xs text-muted-foreground">
-										{cart.totalItems} pipeline items staged in memory
+										{m.checkout_pipeline_items({ count: cart.totalItems })}
 									</p>
 								</div>
 								<div class="text-right">
-									<span class="block text-xs text-muted-foreground">Allocation Total</span>
-									<span class="font-mono text-lg font-bold text-primary"
-										>{formatPrice(cart.totalPrice)}</span
-									>
+									<span class="block text-xs text-muted-foreground">
+										{m.checkout_allocation_total()}
+									</span>
+									<span class="font-mono text-lg font-bold text-primary">
+										{formatPrice(cart.totalPrice)}
+									</span>
 								</div>
 							</div>
 
@@ -273,9 +279,9 @@
 									disabled={cart.items.length === 0 || $delayed}
 								>
 									{#if $delayed && !$form.payWithChapa}
-										<LoadingBtn name="Adding Your Order..." />
+										<LoadingBtn name={m.checkout_adding_order_loading()} />
 									{:else}
-										Add Order with &mdash; {formatPrice(cart.totalPrice)}
+										{m.checkout_add_order_with()} &mdash; {formatPrice(cart.totalPrice)}
 									{/if}
 								</Button>
 								<Button
@@ -286,14 +292,15 @@
 									onclick={() => ($form.payWithChapa = true)}
 								>
 									{#if $delayed && $form.payWithChapa}
-										<LoadingBtn name="Redirecting to Chapa..." />
+										<LoadingBtn name={m.checkout_redirecting_chapa_loading()} />
 									{:else}
-										Pay On With Chapa &mdash; {formatPrice(cart.totalPrice)}
+										{m.checkout_pay_with_chapa()} &mdash; {formatPrice(cart.totalPrice)}
 									{/if}
 								</Button>
 								<p class="prose-sm max-w-prose rounded-lg border bg-muted text-center">
-									Pay with Chapa using <a href="https://telebirr.et" target="_blank">Telebirr</a>,
-									CBE Birr and More
+									{m.checkout_chapa_note_prefix()}
+									<a href="https://telebirr.et" target="_blank">Telebirr</a>
+									{m.checkout_chapa_note_suffix()}
 								</p>
 							</div>
 						</form>
@@ -309,12 +316,12 @@
 						<div class="mb-5 flex items-center justify-between border-b border-border/60 pb-3">
 							<h2 class="flex items-center gap-2 text-base font-bold tracking-tight">
 								<PackageIcon class="size-4 text-muted-foreground" />
-								<span>Manifest Summary</span>
+								<span>{m.checkout_manifest_summary()}</span>
 							</h2>
 							<Badge
 								class="rounded-md border-primary/20 bg-primary/10 font-mono text-[11px] font-bold text-primary hover:bg-primary/20"
 							>
-								{cart.totalItems} Units
+								{m.checkout_units({ count: cart.totalItems })}
 							</Badge>
 						</div>
 
@@ -331,21 +338,21 @@
 
 							<div class="mt-6 space-y-3 border-t border-border/60 pt-4">
 								<div class="flex justify-between text-xs sm:text-sm">
-									<span class="text-muted-foreground">Subtotal Allocation</span>
+									<span class="text-muted-foreground">{m.checkout_subtotal_allocation()}</span>
 									<span class="font-mono font-medium">{formatPrice(cart.totalPrice)}</span>
 								</div>
 								<div class="flex justify-between text-xs sm:text-sm">
-									<span class="text-muted-foreground">Logistics Premium Shipping</span>
+									<span class="text-muted-foreground">{m.checkout_shipping_label()}</span>
 									<span
 										class="rounded-md border border-green-500/20 bg-green-500/10 px-2 py-0.5 font-sans text-xs font-bold tracking-wider text-green-500 uppercase"
 									>
-										Complimentary
+										{m.checkout_complimentary()}
 									</span>
 								</div>
 								<div
 									class="flex justify-between border-t border-border pt-4 text-base font-bold sm:text-lg"
 								>
-									<span class="tracking-tight">Gross Total Cost</span>
+									<span class="tracking-tight">{m.checkout_gross_total_cost()}</span>
 									<span class="font-mono text-primary">{formatPrice(cart.totalPrice)}</span>
 								</div>
 							</div>
@@ -353,7 +360,7 @@
 							<div class="py-12 text-center">
 								<PackageIcon class="mx-auto mb-3.5 size-10 stroke-[1.5] text-muted-foreground/30" />
 								<p class="mb-4 text-sm font-medium text-muted-foreground">
-									No active allocations found in cart storage memory.
+									{m.checkout_empty_cart_message()}
 								</p>
 								<Button
 									href="/shop"
@@ -361,7 +368,7 @@
 									class="h-9 gap-2 rounded-xl border-border bg-background/50 text-xs hover:bg-background"
 								>
 									<ArrowLeftIcon class="size-3.5" />
-									<span>Browse Hardware Store</span>
+									<span>{m.checkout_browse_hardware_store()}</span>
 								</Button>
 							</div>
 						{/if}

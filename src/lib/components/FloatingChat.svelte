@@ -1,5 +1,3 @@
-<!-- src/lib/components/FloatingChat.svelte -->
-
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { Bot, Send, X, BotMessageSquare, Loader } from '@lucide/svelte';
@@ -8,6 +6,7 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Input } from '$lib/components/ui/input';
 	import * as Avatar from '$lib/components/ui/avatar';
+	import * as m from '$lib/paraglide/messages.js';
 
 	type ChatMessage = {
 		role: 'user' | 'assistant';
@@ -22,15 +21,14 @@
 	let messages: ChatMessage[] = $state([
 		{
 			role: 'assistant',
-			content:
-				'Hi! I’m the TMax Electronics assistant. I can help you find products, support, warranty information, bulk orders, and website links.'
+			content: m.floating_chat_initial_message()
 		}
 	]);
 
 	const quickLinks = [
-		{ label: 'Shop products', href: '/shop' },
-		{ label: 'Warranty support', href: '/contact-us' },
-		{ label: 'Bulk orders', href: '/contact-us' }
+		{ label: m.floating_chat_quick_shop_products, href: '/shop' },
+		{ label: m.floating_chat_quick_warranty_support, href: '/contact-us' },
+		{ label: m.floating_chat_quick_bulk_orders, href: '/contact-us' }
 	];
 
 	async function scrollToBottom() {
@@ -63,24 +61,37 @@
 
 			const data = await response.json();
 
+			if (response.status === 429) {
+				messages = [
+					...messages,
+					{
+						role: 'assistant',
+						content:
+							data.error ??
+							'You have reached the chat limit for this device. Please try again later.'
+					}
+				];
+
+				return;
+			}
+
 			if (!response.ok) {
-				throw new Error(data.error ?? 'Request failed');
+				throw new Error(data.error ?? m.floating_chat_request_failed());
 			}
 
 			messages = [
 				...messages,
 				{
 					role: 'assistant',
-					content: data.reply ?? 'Sorry, I could not answer that right now.'
+					content: data.reply ?? m.floating_chat_fallback_reply()
 				}
 			];
-		} catch {
+		} catch (error) {
 			messages = [
 				...messages,
 				{
 					role: 'assistant',
-					content:
-						'Sorry, something went wrong. Please try again or contact TMax Electronics at info@tmaxelectronics.com.'
+					content: error instanceof Error ? error.message : m.floating_chat_error_reply()
 				}
 			];
 		} finally {
@@ -97,7 +108,7 @@
 	}
 </script>
 
-<div class="fixed right-5 bottom-5 z-50">
+<div class="fixed right-5 bottom-22 z-50 lg:bottom-5">
 	{#if open}
 		<Card.Root
 			class="mb-4 flex h-[min(42rem,calc(100vh-6rem))] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden border bg-background shadow-2xl sm:w-96"
@@ -112,8 +123,8 @@
 						</Avatar.Root>
 
 						<div>
-							<Card.Title class="text-base">TMax Assistant</Card.Title>
-							<Card.Description>Products, support, and website help</Card.Description>
+							<Card.Title class="text-base">{m.floating_chat_title()}</Card.Title>
+							<Card.Description>{m.floating_chat_description()}</Card.Description>
 						</div>
 					</div>
 
@@ -121,7 +132,7 @@
 						type="button"
 						variant="ghost"
 						size="icon"
-						aria-label="Close chat"
+						aria-label={m.floating_chat_close_chat()}
 						onclick={() => (open = false)}
 					>
 						<X class="h-4 w-4" />
@@ -136,7 +147,7 @@
 							href={link.href}
 							class="rounded-full border bg-secondary px-3 py-1 text-xs font-medium text-secondary-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
 						>
-							{link.label}
+							{link.label()}
 						</a>
 					{/each}
 				</div>
@@ -173,7 +184,7 @@
 								class="flex items-center gap-2 rounded-2xl bg-muted px-4 py-2 text-sm text-muted-foreground"
 							>
 								<Loader class="h-4 w-4 animate-spin" />
-								Thinking...
+								{m.floating_chat_thinking()}
 							</div>
 						</div>
 					{/if}
@@ -190,7 +201,7 @@
 				<div class="flex gap-2">
 					<Input
 						bind:value={input}
-						placeholder="Ask about products, warranty, or support..."
+						placeholder={m.floating_chat_placeholder()}
 						disabled={loading}
 						onkeydown={handleKeydown}
 					/>
@@ -199,7 +210,7 @@
 						type="submit"
 						size="icon"
 						disabled={loading || !input.trim()}
-						aria-label="Send message"
+						aria-label={m.floating_chat_send_message()}
 					>
 						<Send class="h-4 w-4" />
 					</Button>
@@ -212,7 +223,7 @@
 		type="button"
 		size="lg"
 		class="h-14 w-14 rounded-full shadow-2xl"
-		aria-label="Open chat"
+		aria-label={open ? m.floating_chat_close_chat() : m.floating_chat_open_chat()}
 		onclick={() => (open = !open)}
 	>
 		{#if open}

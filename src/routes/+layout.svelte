@@ -1,4 +1,7 @@
 <script lang="ts">
+	import type { Pathname } from '$app/types';
+	import { resolve } from '$app/paths';
+	import { locales, localizeHref } from '$lib/paraglide/runtime';
 	import './layout.css';
 	import { getFlash } from 'sveltekit-flash-message';
 	import { page } from '$app/state';
@@ -8,7 +11,6 @@
 	const flash = getFlash(page, { clearAfterMs: 5000 });
 
 	import { ModeWatcher } from 'mode-watcher';
-
 	import { toast } from 'svelte-sonner';
 
 	async function notifyBrowser(title: string, body: string) {
@@ -31,8 +33,8 @@
 	import FloatingChat from '$lib/components/FloatingChat.svelte';
 
 	// This initializes the class and puts it into Svelte's context
-
 	let { data, children } = $props();
+
 	setCart();
 
 	$effect(() => {
@@ -64,9 +66,15 @@
 	<Header data={data?.user ?? ''} />
 	{@render children()}
 	<Footer />
-	<Cart header={true} />
+	<!-- <Cart header={true} /> -->
 	<BottomMenu />
 	<FloatingChat />
 {:else}
 	{@render children()}
 {/if}
+
+<div style="display:none">
+	{#each locales as locale (locale)}
+		<a href={resolve(localizeHref(page.url.pathname, { locale }) as Pathname)}>{locale}</a>
+	{/each}
+</div>

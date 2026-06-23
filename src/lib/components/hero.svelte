@@ -1,8 +1,9 @@
 <script lang="ts">
-	import { MessageSquareCode, ArrowRight, Star } from '@lucide/svelte';
+	import { MessageSquareCode, ArrowRight } from '@lucide/svelte';
 	import { Button } from '$lib/components/ui/button';
 	import { onMount } from 'svelte';
 	import { cubicOut } from 'svelte/easing';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let heroImage = [
 		'hero.webp',
@@ -156,35 +157,32 @@
 				class="mb-8 inline-flex w-fit items-center gap-2 self-start rounded-full border border-primary/20 bg-secondary px-3 py-1.5 text-xs font-medium text-foreground transition-transform hover:scale-[1.02] md:text-sm"
 			>
 				<span class="h-2 w-2 animate-pulse rounded-full bg-primary"></span>
-				Quality Assured Products
+				{m.hero_quality_assured_products()}
 			</a>
 
 			<div class="max-w-2xl space-y-6">
 				<h1
 					class="text-4xl leading-[1.1] font-extrabold tracking-tight text-balance md:text-5xl lg:text-6xl"
 				>
-					Powering Your<br />
-					<span class="text-primary">Digital Lifestyle.</span><br />
-					Technology You Can Trust.
+					{m.hero_heading_powering_your()}<br />
+					<span class="text-primary">{m.hero_heading_digital_lifestyle()}</span><br />
+					{m.hero_heading_trusted_technology()}
 				</h1>
 
 				<p class="max-w-xl text-sm leading-relaxed font-medium text-muted-foreground md:text-base">
-					Premium electronics, mobile accessories, storage devices, and smart technology solutions
-					designed for everyday performance. At TMax Electronics, we deliver reliable, innovative,
-					and high-quality technology products that keep you connected, productive, and powered
-					wherever you go.
+					{m.hero_description()}
 				</p>
 			</div>
 
 			<div class="mt-8 flex flex-wrap items-center gap-4 md:mt-12">
 				<Button href="/shop" variant="default">
-					Shop Now
+					{m.hero_shop_now()}
 					<ArrowRight class="h-4 w-4" />
 				</Button>
 
 				<Button variant="outline">
 					<MessageSquareCode class="h-4 w-4 opacity-70" />
-					Need Assistance?
+					{m.hero_need_assistance()}
 				</Button>
 			</div>
 		</div>
@@ -192,7 +190,7 @@
 			class="relative h-[420px] w-full touch-pan-y overflow-hidden rounded-[2rem] bg-linear-to-br from-background via-primary to-secondary shadow-md sm:h-[520px] lg:col-span-5 lg:h-full"
 			ontouchstart={handleTouchStart}
 			ontouchend={handleTouchEnd}
-			aria-label="Hero section gallery section"
+			aria-label={m.hero_gallery_aria_label()}
 			role="region"
 		>
 			<div
@@ -214,7 +212,7 @@
 				>
 					<img
 						src={heroImage[currentImage]}
-						alt="TMax Electronics product showcase"
+						alt={m.hero_product_showcase_alt()}
 						class="hero-device h-full w-full object-contain p-6 sm:p-8 lg:p-10"
 						draggable="false"
 					/>
@@ -225,7 +223,7 @@
 				{#each heroImage as _, i}
 					<button
 						type="button"
-						aria-label={`Show image ${i + 1}`}
+						aria-label={m.hero_show_image({ number: i + 1 })}
 						onclick={() => {
 							currentImage = i;
 							resetAutoSlide();

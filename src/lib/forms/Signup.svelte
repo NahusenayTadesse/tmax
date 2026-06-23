@@ -10,9 +10,10 @@
 	import type { SuperValidated, Infer } from 'sveltekit-superforms';
 	import { superForm } from 'sveltekit-superforms';
 	import type { SignupSchema } from '$lib/ZodSchema';
-	import DarkMode from '$lib/components/DarkMode.svelte';
 	import { Eye, EyeOff } from '@lucide/svelte';
 	import Errors from '$lib/formComponents/Errors.svelte';
+	import { toast } from 'svelte-sonner';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let {
 		data,
@@ -21,7 +22,6 @@
 
 	const { form, errors, delayed, enhance, allErrors, message } = superForm(data, {});
 
-	import { toast } from 'svelte-sonner';
 	$effect(() => {
 		if ($message) {
 			if ($message.type === 'error') {
@@ -36,13 +36,13 @@
 	let EyeIcon = $derived(eye ? EyeOff : Eye);
 </script>
 
-<Card.Root class="mx-auto flex w-full max-w-md flex-col justify-center justify-self-center ">
+<Card.Root class="mx-auto flex w-full max-w-md flex-col justify-center justify-self-center">
 	<Card.Header>
 		<div class="flex w-full flex-col items-center justify-center">
-			<img src="/logo.webp" class="my-4 h-8" alt="Logo" />
+			<img src="/logo.webp" class="my-4 h-8" alt={m.signup_logo_alt()} />
 		</div>
-		<Card.Title class="flex flex-row justify-between text-2xl">Sign Up</Card.Title>
-		<Card.Description>Enter your email below to login to your account</Card.Description>
+		<Card.Title class="flex flex-row justify-between text-2xl">{m.signup_title()}</Card.Title>
+		<Card.Description>{m.signup_description()}</Card.Description>
 	</Card.Header>
 	<Card.Content>
 		<form method="POST" id="main" class="space-y-4" {action} use:enhance>
@@ -50,33 +50,33 @@
 
 			<div class="grid gap-4">
 				<InputComp
-					label="Full Name"
+					label={m.signup_full_name_label()}
 					name="name"
 					type="text"
 					{form}
 					{errors}
-					placeholder="John Doe"
+					placeholder={m.signup_full_name_placeholder()}
 				/>
 			</div>
 			<InputComp
-				label="Email Address"
+				label={m.signup_email_label()}
 				name="email"
 				type="email"
 				{form}
 				{errors}
-				placeholder="john@example.com"
+				placeholder={m.signup_email_placeholder()}
 			/>
 			<InputComp
-				label="Phone Number"
+				label={m.signup_phone_label()}
 				name="phone"
 				type="tel"
 				{form}
 				{errors}
-				placeholder="+251 9-11-00-00-00"
+				placeholder={m.signup_phone_placeholder()}
 			/>
 			<div class="grid gap-2">
 				<div class="flex items-center">
-					<Label for="password">Password</Label>
+					<Label for="password">{m.signup_password_label()}</Label>
 				</div>
 				<div class="relative">
 					<Input
@@ -86,7 +86,12 @@
 						bind:value={$form.password}
 						required
 					/>
-					<button type="button" onclick={() => (eye = !eye)} title="Make Password Visible">
+					<button
+						type="button"
+						onclick={() => (eye = !eye)}
+						title={eye ? m.signup_hide_password() : m.signup_show_password()}
+						aria-label={eye ? m.signup_hide_password() : m.signup_show_password()}
+					>
 						<EyeIcon
 							class="absolute top-0.5 right-2 h-6 w-6 transition-transform duration-300 ease-in-out"
 						/>
@@ -96,9 +101,9 @@
 			</div>
 			<Button type="submit" form="main" class="h-12 w-full text-lg shadow-md">
 				{#if $delayed}
-					<LoadingBtn name="Signing You Up" />
+					<LoadingBtn name={m.signup_loading()} />
 				{:else}
-					Sign Up
+					{m.signup_submit()}
 				{/if}
 			</Button>
 		</form>

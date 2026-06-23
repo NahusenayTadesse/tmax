@@ -11,75 +11,66 @@
 		ShieldCheckIcon,
 		HelpCircleIcon,
 		CoinsIcon,
-		ZapIcon,
 		BatteryChargingIcon,
 		UsbIcon,
 		MonitorIcon
 	} from '@lucide/svelte';
 	import { fly } from 'svelte/transition';
+	import * as m from '$lib/paraglide/messages.js';
 
 	const features = [
 		{
 			id: 'product-quality',
-			title: 'What makes TMax Electronics products reliable?',
-			description:
-				'TMax Electronics carefully selects products to ensure quality, durability, and everyday performance. Each product is chosen to meet customer needs for dependable technology.',
+			title: m.faq_product_quality_title,
+			description: m.faq_product_quality_description,
 			icon: ShieldCheckIcon
 		},
 		{
 			id: 'product-categories',
-			title: 'What products does TMax Electronics offer?',
-			description:
-				'TMax Electronics offers mobile accessories, power solutions, storage devices, audio devices, smart electronics, and corporate or bulk order solutions.',
+			title: m.faq_product_categories_title,
+			description: m.faq_product_categories_description,
 			icon: PackageIcon
 		},
 		{
 			id: 'power-solutions',
-			title: 'Do you offer power banks and charging products?',
-			description:
-				'Yes. TMax Electronics provides high-capacity power banks, mobile chargers, power sockets, extension solutions, and other charging products for home, business, and everyday use.',
+			title: m.faq_power_solutions_title,
+			description: m.faq_power_solutions_description,
 			icon: BatteryChargingIcon
 		},
 		{
 			id: 'mobile-accessories',
-			title: 'What mobile accessories are available?',
-			description:
-				'TMax Electronics offers chargers, cables, adapters, holders, and essential accessories designed for modern mobile devices and daily convenience.',
+			title: m.faq_mobile_accessories_title,
+			description: m.faq_mobile_accessories_description,
 			icon: UsbIcon
 		},
 		{
 			id: 'storage-devices',
-			title: 'Do you sell storage devices?',
-			description:
-				'Yes. TMax Electronics provides USB flash drives, memory storage products, and reliable data transfer solutions available in different capacities.',
+			title: m.faq_storage_devices_title,
+			description: m.faq_storage_devices_description,
 			icon: MonitorIcon
 		},
 		{
 			id: 'pricing',
-			title: 'Are the products affordably priced?',
-			description:
-				'Yes. TMax Electronics focuses on providing premium technology products at competitive market prices while maintaining quality and value.',
+			title: m.faq_pricing_title,
+			description: m.faq_pricing_description,
 			icon: CoinsIcon
 		},
 		{
 			id: 'availability',
-			title: 'Are TMax Electronics products available nationwide?',
-			description:
-				'TMax Electronics aims to make reliable electronics and technology accessories available to customers across Ethiopia through strong market availability and customer support.',
+			title: m.faq_availability_title,
+			description: m.faq_availability_description,
 			icon: TruckIcon
 		},
 		{
 			id: 'warranty-support',
-			title: 'Do you provide warranty support?',
-			description:
-				'Yes. TMax Electronics provides warranty assistance, product replacement guidance, technical support, and customer service after purchase.',
+			title: m.faq_warranty_support_title,
+			description: m.faq_warranty_support_description,
 			icon: ShieldCheckIcon
 		},
 		{
 			id: 'customer-support',
-			title: 'Can I get help choosing the right product?',
-			description:
-				'Yes. The TMax Electronics support team can assist with product information, technical questions, warranty guidance, and corporate customer support.',
+			title: m.faq_customer_support_title,
+			description: m.faq_customer_support_description,
 			icon: HelpCircleIcon
 		}
 	];
@@ -103,18 +94,17 @@
 			<span
 				class="rounded-full border border-primary/20 bg-primary/5 px-4 py-1 text-[11px] font-bold tracking-widest text-primary uppercase backdrop-blur-xl"
 			>
-				Customer Support
+				{m.faq_customer_support_badge()}
 			</span>
 
 			<h1
 				class="bg-gradient-to-r from-foreground via-foreground to-foreground/60 bg-clip-text text-4xl font-extrabold tracking-tight text-transparent sm:text-5xl"
 			>
-				Frequently Asked Questions
+				{m.faq_heading()}
 			</h1>
 
 			<p class="max-w-xl text-base text-muted-foreground">
-				Quick answers about TMax Electronics products, categories, pricing, warranty support, and
-				customer service.
+				{m.faq_description()}
 			</p>
 		</div>
 
@@ -136,7 +126,7 @@
 								<h3
 									class="text-sm font-bold tracking-wide transition-colors duration-300 group-hover:text-primary group-data-[state=open]:text-primary"
 								>
-									{feature.title}
+									{feature.title()}
 								</h3>
 							</div>
 						</AccordionTrigger>
@@ -145,7 +135,7 @@
 							class="border-t border-primary/10 bg-background/40 px-6 py-4 backdrop-blur-xl"
 						>
 							<p class="text-xs leading-relaxed text-muted-foreground">
-								{feature.description}
+								{feature.description()}
 							</p>
 						</AccordionContent>
 					</AccordionItem>

@@ -11,6 +11,8 @@
 		ShoppingCart
 	} from '@lucide/svelte';
 	import { toast } from 'svelte-sonner';
+	import { useCart } from '$lib/hooks/cart.svelte.js';
+	import * as m from '$lib/paraglide/messages.js';
 
 	type Props = {
 		productId: number;
@@ -40,7 +42,6 @@
 
 	let quantity = $state(1);
 
-	import { useCart } from '$lib/hooks/cart.svelte.js';
 	const cart = useCart();
 
 	let justAdded = $state(false);
@@ -48,13 +49,11 @@
 	let currentAmount = $derived(priceList?.[0]?.amount ?? '');
 	let displayImage = $derived(image || (images.length ? images[0] : ''));
 
-	// Reusable formatter
 	const formatter = new Intl.NumberFormat('en-US', {
 		style: 'currency',
 		currency: 'ETB'
 	});
 
-	// Derived values for clarity
 	const numericPrice = $derived(
 		typeof currentPrice === 'string' ? parseFloat(currentPrice) : currentPrice
 	);
@@ -67,8 +66,8 @@
 		cart.addItem({ productId, productName, price: numericPrice, amount: currentAmount });
 		justAdded = true;
 
-		toast.success(`${productName} added to cart`, {
-			description: `Total in cart: ${quantityInCart + quantity}`
+		toast.success(m.product_detail_added_to_cart({ productName }), {
+			description: m.product_detail_total_in_cart({ total: quantityInCart + quantity })
 		});
 
 		setTimeout(() => {
@@ -78,12 +77,13 @@
 
 	const handleShare = () => {
 		navigator.clipboard.writeText(window.location.href);
-		toast.success('Product link copied to clipboard');
+		toast.success(m.product_detail_link_copied());
 	};
 
 	const incrementQuantity = () => {
 		quantity += 1;
 	};
+
 	const decrementQuantity = () => {
 		if (quantity > 1) quantity -= 1;
 	};
@@ -97,7 +97,6 @@
 <div
 	class="relative min-h-screen bg-gradient-to-b from-background via-background/95 to-muted/30 antialiased selection:bg-primary/20"
 >
-	<!-- Aesthetic Tech Backdrop Glows -->
 	<div
 		class="pointer-events-none absolute top-0 right-1/4 -z-10 h-[500px] w-[500px] rounded-full bg-primary/5 blur-[120px]"
 	></div>
@@ -107,9 +106,7 @@
 
 	<div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
 		<div class="grid gap-8 lg:grid-cols-12 lg:gap-12">
-			<!-- SECTION 1: Dynamic Vertical Image Layout (Spans 7 columns on large screens) -->
 			<div class="flex flex-col-reverse gap-4 lg:col-span-7 lg:flex-row">
-				<!-- Left Thumbnails Container: Stacked Vertically on Desktop, Horizontal on Mobile -->
 				{#if images && images.length > 0}
 					<div
 						class="flex shrink-0 scrollbar-none flex-row gap-2.5 overflow-x-auto pb-2 lg:flex-col lg:overflow-x-visible lg:pb-0"
@@ -121,12 +118,12 @@
 								{isSelected
 									? 'border-primary shadow-md ring-2 ring-primary/20'
 									: 'border-border hover:border-primary/40'}"
-								aria-label="View product image {i + 1}"
+								aria-label={m.product_detail_view_image({ number: i + 1 })}
 								onclick={() => (displayImage = img)}
 							>
 								<img
 									src="/files/{img}"
-									alt="Thumbnail {i + 1}"
+									alt={m.product_detail_thumbnail_alt({ number: i + 1 })}
 									class="h-full w-full rounded-lg object-cover"
 								/>
 							</button>
@@ -134,7 +131,6 @@
 					</div>
 				{/if}
 
-				<!-- Main Showcase Display Panel -->
 				<div
 					class="group relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-2xl border border-border bg-card/40 p-2 shadow-lg backdrop-blur-md lg:flex-1"
 				>
@@ -157,10 +153,8 @@
 				</div>
 			</div>
 
-			<!-- SECTION 2: Premium Control Panel (Spans 5 columns on large screens) -->
 			<div class="flex flex-col justify-between lg:col-span-5">
 				<div class="space-y-6">
-					<!-- Categories Row -->
 					{#if category?.length > 0}
 						<div class="flex flex-wrap items-center gap-1.5">
 							<LayersIcon class="mr-1 size-3.5 text-primary" />
@@ -174,7 +168,6 @@
 						</div>
 					{/if}
 
-					<!-- Title and Pricing -->
 					<div class="space-y-3">
 						<h1
 							class="bg-linear-to-r from-foreground to-foreground/80 bg-clip-text text-3xl font-extrabold tracking-tight text-transparent sm:text-4xl"
@@ -191,7 +184,6 @@
 						</div>
 					</div>
 
-					<!-- Technical Specifications/Description -->
 					<div
 						class="rounded-2xl border border-border bg-card/30 p-4 shadow-inner backdrop-blur-md"
 					>
@@ -200,13 +192,12 @@
 						</p>
 					</div>
 
-					<!-- Package Selection Matrix -->
 					{#if priceList && priceList.length > 0}
 						<div class="space-y-3">
 							<h3
 								class="flex items-center gap-1.5 text-xs font-bold tracking-widest text-muted-foreground uppercase"
 							>
-								<span>Select Package Configuration</span>
+								<span>{m.product_detail_select_package_configuration()}</span>
 							</h3>
 
 							<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-2 xl:grid-cols-3">
@@ -243,7 +234,6 @@
 						</div>
 					{/if}
 
-					<!-- Tags Layout Component -->
 					{#if tags?.length > 0}
 						<div class="border-t border-border/60 pt-2">
 							<div class="flex flex-wrap items-center gap-1.5">
@@ -261,15 +251,13 @@
 					{/if}
 				</div>
 
-				<!-- SECTION 3: Action Controls Segment -->
 				<div class="mt-8 space-y-4 border-t border-border/80 pt-6">
-					<!-- Quantity Selector Module -->
 					<div
 						class="flex max-w-45 items-center justify-between rounded-xl border border-border bg-card/40 p-2 backdrop-blur-sm"
 					>
-						<span class="pl-2 text-xs font-bold tracking-wider text-muted-foreground uppercase"
-							>Qty</span
-						>
+						<span class="pl-2 text-xs font-bold tracking-wider text-muted-foreground uppercase">
+							{m.product_detail_quantity_short()}
+						</span>
 						<div
 							class="flex items-center gap-1 rounded-lg border border-border bg-background/80 p-0.5 shadow-inner"
 						>
@@ -279,7 +267,7 @@
 								onclick={decrementQuantity}
 								class="size-7 rounded-md hover:bg-muted"
 								disabled={quantity <= 1}
-								aria-label="Decrease quantity"
+								aria-label={m.product_detail_decrease_quantity()}
 							>
 								<MinusIcon class="size-3" />
 							</Button>
@@ -289,14 +277,13 @@
 								size="icon"
 								onclick={incrementQuantity}
 								class="size-7 rounded-md hover:bg-muted"
-								aria-label="Increase quantity"
+								aria-label={m.product_detail_increase_quantity()}
 							>
 								<PlusIcon class="size-3" />
 							</Button>
 						</div>
 					</div>
 
-					<!-- Primary Actions Row -->
 					<div class="flex flex-col gap-3 sm:flex-row">
 						<Button
 							class="h-12 flex-1 rounded-xl text-sm font-semibold tracking-wide shadow-md transition-all duration-300 active:scale-98"
@@ -306,10 +293,10 @@
 						>
 							{#if justAdded}
 								<CheckIcon class="mr-2 size-4 animate-bounce text-green-500" />
-								Item Saved to Cart
+								{m.product_detail_item_saved_to_cart()}
 							{:else}
 								<ShoppingCart class="mr-2 size-4" />
-								Add to Cart
+								{m.product_detail_add_to_cart()}
 							{/if}
 						</Button>
 
@@ -319,7 +306,7 @@
 							onclick={handleShare}
 						>
 							<ShareIcon class="size-4" />
-							<span class="sm:hidden lg:inline">Share</span>
+							<span class="sm:hidden lg:inline">{m.product_detail_share()}</span>
 						</Button>
 					</div>
 				</div>

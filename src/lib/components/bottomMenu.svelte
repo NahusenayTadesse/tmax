@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { navigating, page } from '$app/state';
-	import { Container, LayoutGrid, House, ShoppingCart, User, Search } from '@lucide/svelte';
+	import { page } from '$app/state';
+	import { LayoutGrid, House, ShoppingCart, User, Search } from '@lucide/svelte';
+	import { m } from '$lib/paraglide/messages.js';
 
 	const mobNav = [
-		{ title: 'Home', url: '/', icon: House },
-		{ title: 'Shop', url: '/shop', icon: LayoutGrid },
-		{ title: 'Orders', url: '/account/orders', icon: ShoppingCart },
-		{ title: 'Account', url: '/account', icon: User }
+		{ title: m.header_nav_home(), url: '/', icon: House },
+		{ title: m.header_nav_shop(), url: '/shop', icon: LayoutGrid },
+		{ title: m.header_nav_orders(), url: '/account/orders', icon: ShoppingCart },
+		{ title: m.header_nav_account(), url: '/account', icon: User }
 	];
 
 	const on = 'text-primary shadow-lg shadow-primary/20 bg-primary/10';
@@ -47,7 +48,7 @@
 <nav
 	class="fixed right-0 bottom-0 left-0 z-40 flex w-screen border-t border-border/50 bg-gradient-to-t from-background via-background/95 to-background/80 backdrop-blur-xl lg:hidden"
 >
-	<div class="grid grid-cols-5 items-center justify-between px-2 py-3">
+	<div class="grid w-full grid-cols-5 items-center justify-between px-2 py-3">
 		{#each mobNav as item (item.url)}
 			<a
 				href={item.url}
@@ -97,7 +98,7 @@
 				<span
 					class="text-xs leading-none font-medium whitespace-nowrap transition-all duration-300"
 				>
-					Search
+					{m.header_search()}
 				</span></Dialog.Trigger
 			>
 			<Dialog.Content class="pt-8">
@@ -107,7 +108,7 @@
 					/>
 					<Input
 						type="search"
-						placeholder="Search catalog... (Press Enter)"
+						placeholder={m.header_search_placeholder()}
 						bind:value={searchQuery}
 						onkeydown={executionDesktopSearch}
 						class="h-8.5 rounded-lg border-border bg-muted/40 pl-9 text-xs shadow-inner focus-visible:border-primary focus-visible:ring-primary/20"

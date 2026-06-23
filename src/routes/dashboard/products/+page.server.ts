@@ -85,8 +85,8 @@ export const load: PageServerLoad = async () => {
 			amount: `${price.amount} Pieces`,
 			price: `ETB ${price.price}`
 		})),
-		categories: Object.values(categoriesMap[p.id] || {}).map((cat) => cat.name),
-		tags: Object.values(tagsMap[p.id] || {}).map((tag) => tag.name)
+		category: Object.values(categoriesMap[p.id] || {}).map((cat) => cat.name),
+		tag: Object.values(tagsMap[p.id] || {}).map((tag) => tag.name)
 	}));
 
 	return {

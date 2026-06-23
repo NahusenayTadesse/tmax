@@ -9,7 +9,6 @@
 		ChevronLeft,
 		ChevronRight,
 		FilterIcon,
-		SlidersHorizontalIcon,
 		X,
 		SlidersHorizontal
 	} from '@lucide/svelte';
@@ -18,10 +17,13 @@
 	import { page as sveltePage } from '$app/state';
 	import Slider from '$lib/components/ui/slider/slider.svelte';
 	import { toast } from 'svelte-sonner';
+	import { isMobile } from '$lib/global.svelte.js';
+	import { fly } from 'svelte/transition';
+	import Warranty from '$lib/components/warranty.svelte';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let { data } = $props();
 
-	// Search & Bounds State Management
 	let searchQuery = $state(sveltePage.url.searchParams.get('search') ?? '');
 	let minPrice = $derived(Number(data?.priceRange?.minPrice) || 0);
 	let maxPrice = $derived(Number(data?.priceRange?.maxPrice) || 50000);
@@ -31,7 +33,6 @@
 		Number(sveltePage.url.searchParams.get('max')) || maxPrice
 	]);
 
-	// Filter Matrices Arrays
 	let selectedCategories = $state(
 		sveltePage.url.searchParams.get('categories')?.split(',').filter(Boolean) ?? []
 	);
@@ -47,12 +48,10 @@
 			sveltePage.url.searchParams.toString() !== 'page=1'
 	);
 
-	// Reactive Lists from Data Hooks
 	const categories = $derived(data?.categories ?? []);
 	const brands = $derived(data?.brandList?.map((b) => b.name) ?? []);
 	const tags = $derived(data?.tagList ?? []);
 
-	// Active Toggle State Evaluators
 	const isAllSelected = $derived(selectedCategories.length === 0);
 	const isAllTagsSelected = $derived(selectedTags.length === 0);
 	const isAllBrandsSelected = $derived(selectedBrands.length === 0);
@@ -83,7 +82,7 @@
 	}
 
 	function applyPriceFilter() {
-		toast.success('Price bounds applied');
+		toast.success(m.shop_price_bounds_applied());
 		const newUrl = new URL(sveltePage.url);
 		newUrl.searchParams.set('min', sliderPrices[0].toString());
 		newUrl.searchParams.set('max', sliderPrices[1].toString());
@@ -168,10 +167,6 @@
 
 	const goToPage = (p: number) => updateFilters({ page: p });
 
-	import { isMobile } from '$lib/global.svelte.js';
-	import { fly } from 'svelte/transition';
-	import Warranty from '$lib/components/warranty.svelte';
-
 	const mobile = isMobile();
 
 	let showFilter = $derived(mobile ? false : true);
@@ -180,17 +175,13 @@
 </script>
 
 <svelte:head>
-	<title>Products Marketplace | Tmax Electronics</title>
-	<meta
-		name="description"
-		content="Explore Tmax Electronics premium catalog. Discover smartphones, dynamic power banks, and authentic tech components with official warranties."
-	/>
+	<title>{m.shop_meta_title()}</title>
+	<meta name="description" content={m.shop_meta_description()} />
 </svelte:head>
 
 <div
 	class="min-h-screen bg-linear-to-b from-background via-background/98 to-muted/20 pb-16 text-foreground antialiased transition-colors duration-300"
 >
-	<!-- Top Sticky Dynamic Filter Hub Bar -->
 	<header
 		class="sticky top-0 z-40 border-b border-border/80 bg-background/75 shadow-xs backdrop-blur-md"
 	>
@@ -200,11 +191,13 @@
 					<h1
 						class="bg-linear-to-r from-foreground to-foreground/80 bg-clip-text text-2xl font-extrabold tracking-tight text-transparent sm:text-3xl"
 					>
-						Hardware Catalog
+						{m.shop_heading()}
 					</h1>
 					<p class="mt-1 text-xs text-muted-foreground sm:text-sm">
-						Found {Number(data?.productCount?.count || 0)} premium products across {brands.length} authorized
-						suppliers.
+						{m.shop_found_products_summary({
+							productCount: Number(data?.productCount?.count || 0),
+							supplierCount: brands.length
+						})}
 					</p>
 				</div>
 
@@ -215,19 +208,19 @@
 						onclick={resetFilters}
 						class="h-8 self-start rounded-lg border border-destructive/20 text-xs text-destructive transition-all hover:bg-destructive/10 sm:self-center"
 					>
-						<XIcon size={12} class="mr-1.5" /> Clear active specs
+						<XIcon size={12} class="mr-1.5" />
+						{m.shop_clear_active_specs()}
 					</Button>
 				{/if}
 			</div>
 
-			<!-- Core Search Execution Field -->
 			<div class="relative">
 				<SearchIcon
 					class="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-muted-foreground/80"
 				/>
 				<Input
 					type="text"
-					placeholder="Query model indexes, device names, specifications..."
+					placeholder={m.shop_search_placeholder()}
 					bind:value={searchQuery}
 					oninput={handleSearch}
 					class="h-10 rounded-xl border-border bg-card/50 pl-10 shadow-inner focus-visible:border-primary focus-visible:ring-primary/20"
@@ -236,15 +229,12 @@
 		</div>
 	</header>
 
-	<!-- Primary Content Split Matrix -->
 	<main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
 		<div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
-			<!-- SECTION 1: Advanced Filtering Control Sidebar -->
-
 			{#if mobile}
 				<Button onclick={() => (showFilter = !showFilter)} class="w-40">
 					<Icon class="size-4" />
-					<span class="text-sm font-bold tracking-wider uppercase">Filter</span>
+					<span class="text-sm font-bold tracking-wider uppercase">{m.shop_filter_button()}</span>
 				</Button>
 			{/if}
 
@@ -255,13 +245,14 @@
 					>
 						<div class="flex items-center gap-2 border-b border-border/60 pb-3">
 							<SlidersHorizontal class="size-4 text-primary" />
-							<h3 class="text-sm font-bold tracking-wider text-foreground uppercase">Filters</h3>
+							<h3 class="text-sm font-bold tracking-wider text-foreground uppercase">
+								{m.shop_filters_title()}
+							</h3>
 						</div>
 
-						<!-- Price Sliders Control Block -->
 						<div class="space-y-4 border-b border-border/60 pb-5">
 							<div class="flex items-center justify-between text-xs">
-								<span class="font-medium text-muted-foreground">Price Bracket</span>
+								<span class="font-medium text-muted-foreground">{m.shop_price_bracket()}</span>
 								<span
 									class="rounded border bg-muted px-1.5 py-0.5 font-mono text-[11px] font-semibold text-primary"
 								>
@@ -283,12 +274,11 @@
 							</div>
 						</div>
 
-						<!-- Brands Selection Module -->
 						<div
 							class="max-h-55 scrollbar-none space-y-2.5 overflow-y-auto border-b border-border/60 pb-5"
 						>
 							<h4 class="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-								Brands
+								{m.shop_brands_title()}
 							</h4>
 							<div class="flex items-center gap-2.5 py-0.5">
 								<Checkbox
@@ -297,9 +287,9 @@
 									onCheckedChange={clearBrands}
 									class="rounded-md"
 								/>
-								<Label for="brand-all" class="flex-1 cursor-pointer text-sm font-medium"
-									>All Brands</Label
-								>
+								<Label for="brand-all" class="flex-1 cursor-pointer text-sm font-medium">
+									{m.shop_all_brands()}
+								</Label>
 							</div>
 							{#each brands as brand}
 								<div class="flex items-center gap-2.5 py-0.5">
@@ -319,12 +309,11 @@
 							{/each}
 						</div>
 
-						<!-- Categories Selection Module -->
 						<div
 							class="max-h-55 scrollbar-none space-y-2.5 overflow-y-auto border-b border-border/60 pb-5"
 						>
 							<h4 class="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-								Categories
+								{m.shop_categories_title()}
 							</h4>
 							<div class="flex items-center gap-2.5 py-0.5">
 								<Checkbox
@@ -333,9 +322,9 @@
 									onCheckedChange={clearCategories}
 									class="rounded-md"
 								/>
-								<Label for="category-all" class="flex-1 cursor-pointer text-sm font-medium"
-									>All Categories</Label
-								>
+								<Label for="category-all" class="flex-1 cursor-pointer text-sm font-medium">
+									{m.shop_all_categories()}
+								</Label>
 							</div>
 							{#each categories as category (category.name)}
 								<div class="flex items-center gap-2.5 py-0.5">
@@ -355,10 +344,9 @@
 							{/each}
 						</div>
 
-						<!-- System Tags Module -->
 						<div class="max-h-55 scrollbar-none space-y-2.5 overflow-y-auto">
 							<h4 class="text-xs font-bold tracking-wider text-muted-foreground uppercase">
-								Hardware Labels
+								{m.shop_hardware_labels_title()}
 							</h4>
 							<div class="flex items-center gap-2.5 py-0.5">
 								<Checkbox
@@ -367,9 +355,9 @@
 									onCheckedChange={clearTags}
 									class="rounded-md"
 								/>
-								<Label for="tag-all" class="flex-1 cursor-pointer text-sm font-medium"
-									>All Tags</Label
-								>
+								<Label for="tag-all" class="flex-1 cursor-pointer text-sm font-medium">
+									{m.shop_all_tags()}
+								</Label>
 							</div>
 							{#each tags as tag (tag.name)}
 								<div class="flex items-center gap-2.5 py-0.5">
@@ -392,23 +380,22 @@
 				</aside>
 			{/if}
 
-			<!-- SECTION 2: Dynamic Products Grid Canvas -->
 			<div class="space-y-8 lg:col-span-3">
 				{#if data.productList.length === 0}
 					<div
 						class="flex flex-col items-center justify-center rounded-2xl border border-dashed border-border bg-card/20 py-28 text-center backdrop-blur-xs"
 					>
 						<FilterIcon class="mb-4 size-10 stroke-[1.5] text-muted-foreground/30" />
-						<h3 class="text-base font-bold tracking-tight">No specifications found</h3>
+						<h3 class="text-base font-bold tracking-tight">{m.shop_empty_title()}</h3>
 						<p class="mt-1 max-w-xs text-sm text-muted-foreground">
-							No items match these filters. Modify parameters or reset values to try again.
+							{m.shop_empty_description()}
 						</p>
 						<Button
 							variant="outline"
 							class="mt-5 h-9 rounded-xl px-4 text-xs"
 							onclick={resetFilters}
 						>
-							Reset Canvas Engine
+							{m.shop_reset_canvas_engine()}
 						</Button>
 					</div>
 				{:else}
@@ -420,7 +407,6 @@
 						{/each}
 					</div>
 
-					<!-- High-End Monospace Pagination Block -->
 					{#if data.pagination.totalPages > 1}
 						<div
 							class="mt-12 flex items-center justify-center gap-1.5 border-t border-border/40 pt-6"
@@ -431,7 +417,7 @@
 								class="size-8 rounded-lg border-border"
 								disabled={!data.pagination.hasPrevPage}
 								onclick={() => goToPage(data.pagination.currentPage - 1)}
-								aria-label="Previous page"
+								aria-label={m.shop_previous_page()}
 							>
 								<ChevronLeft size={14} />
 							</Button>
@@ -456,7 +442,7 @@
 								class="size-8 rounded-lg border-border"
 								disabled={!data.pagination.hasNextPage}
 								onclick={() => goToPage(data.pagination.currentPage + 1)}
-								aria-label="Next page"
+								aria-label={m.shop_next_page()}
 							>
 								<ChevronRight size={14} />
 							</Button>

@@ -108,7 +108,7 @@
 			{errors}
 			type="textarea"
 			name="description"
-			label="Product Discription"
+			label="Product Description"
 			placeholder="Enter Product Description"
 			required
 		/>

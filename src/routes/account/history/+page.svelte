@@ -2,19 +2,16 @@
 	import Button from '$lib/components/ui/button/button.svelte';
 	import { ShoppingCart } from '@lucide/svelte';
 	import type { PageData } from './$types';
+	import * as m from '$lib/paraglide/messages.js';
 
-	// Svelte 5 Rune for props
 	let { data }: { data: PageData } = $props();
 
-	// Fallback safe extraction from your PageServerLoad return
 	let customer = $derived(data.customer);
 	let orderCounts = $derived(data.orderCounts || []);
 	let allMethods = $derived(data.allMethods || []);
 	let allData = $derived(data.allData || []);
 	let allItems = $derived(data.allItems || []);
 
-	// --- Polymorphic Status Config using Shadcn Color Variables ---
-	// This maps backend database statuses to semantic Shadcn classes dynamically
 	const statusConfig: Record<string, { bg: string; text: string; border: string }> = {
 		pending: {
 			bg: 'bg-warning/10',
@@ -22,7 +19,7 @@
 			border: 'border-warning/20'
 		},
 		completed: {
-			bg: 'bg-success/10', // Or custom extensions, defaults to primary/secondary
+			bg: 'bg-success/10',
 			text: 'text-primary',
 			border: 'border-primary/20'
 		},
@@ -39,12 +36,31 @@
 	};
 
 	function getStatusStyles(status: string) {
-		return statusConfig[status.toLowerCase()] || statusConfig.default;
+		return statusConfig[status?.toLowerCase?.() ?? ''] || statusConfig.default;
+	}
+
+	function getStatusLabel(status: string) {
+		switch (status?.toLowerCase?.()) {
+			case 'pending':
+				return m.order_history_status_pending();
+			case 'completed':
+				return m.order_history_status_completed();
+			case 'cancelled':
+				return m.order_history_status_cancelled();
+			case 'delivered':
+				return m.order_history_status_delivered();
+			case 'processing':
+				return m.order_history_status_processing();
+			case 'shipped':
+				return m.order_history_status_shipped();
+			default:
+				return status;
+		}
 	}
 </script>
 
 <svelte:head>
-	<title>Order History - TMAX</title>
+	<title>{m.order_history_meta_title()}</title>
 </svelte:head>
 
 <div class="mx-auto min-h-screen max-w-7xl space-y-8 bg-background p-6 text-foreground">
@@ -53,19 +69,21 @@
 	>
 		<div>
 			<h1 class="text-3xl font-bold tracking-tight">
-				Welcome back, {customer?.customerName ?? 'Customer'}
+				{m.order_history_welcome_back({
+					name: customer?.customerName ?? m.order_history_customer_fallback()
+				})}
 			</h1>
 			<p class="mt-1 text-muted-foreground">
-				Manage your orders, items, and billing configurations.
+				{m.order_history_description()}
 			</p>
 		</div>
 		<div class="flex gap-2">
-			<Button href="/shop"><ShoppingCart /> New Order</Button>
+			<Button href="/shop"><ShoppingCart /> {m.order_history_new_order()}</Button>
 		</div>
 	</header>
 
 	<section aria-labelledby="metrics-title">
-		<h2 id="metrics-title" class="sr-only">Order Metrics</h2>
+		<h2 id="metrics-title" class="sr-only">{m.order_history_metrics_title()}</h2>
 		<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 			{#each orderCounts as metric}
 				{@const styles = getStatusStyles(metric.status)}
@@ -74,7 +92,7 @@
 				>
 					<div class="space-y-1">
 						<p class="text-sm font-medium tracking-tight text-muted-foreground capitalize">
-							{metric.status} Orders
+							{m.order_history_metric_orders({ status: getStatusLabel(metric.status) })}
 						</p>
 						<div class="text-2xl font-bold">{metric.count}</div>
 					</div>
@@ -89,25 +107,29 @@
 			class="rounded-xl border border-border bg-card text-card-foreground shadow-sm md:col-span-2"
 		>
 			<div class="p-6">
-				<h3 class="text-lg leading-none font-semibold tracking-tight">Recent Orders</h3>
+				<h3 class="text-lg leading-none font-semibold tracking-tight">
+					{m.order_history_recent_orders_title()}
+				</h3>
 				<p class="mt-1 text-sm text-muted-foreground">
-					A historical view of your generated invoices.
+					{m.order_history_recent_orders_description()}
 				</p>
 			</div>
 			<div class="overflow-x-auto border-t border-border">
 				<table class="w-full text-left text-sm">
 					<thead class="border-b border-border bg-muted/50 font-medium text-muted-foreground">
 						<tr>
-							<th class="p-4">Order ID</th>
-							<th class="p-4">Customer</th>
-							<th class="p-4">Date</th>
-							<th class="p-4 text-right">Status</th>
+							<th class="p-4">{m.order_history_order_id()}</th>
+							<th class="p-4">{m.order_history_customer()}</th>
+							<th class="p-4">{m.order_history_date()}</th>
+							<th class="p-4 text-right">{m.order_history_status()}</th>
 						</tr>
 					</thead>
 					<tbody class="divide-y divide-border">
 						{#if allData.length === 0}
 							<tr>
-								<td colspan="4" class="p-8 text-center text-muted-foreground">No orders found.</td>
+								<td colspan="4" class="p-8 text-center text-muted-foreground">
+									{m.order_history_no_orders()}
+								</td>
 							</tr>
 						{:else}
 							{#each allData as order}
@@ -120,7 +142,7 @@
 										<span
 											class={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold ${styles.bg} ${styles.text} ${styles.border} capitalize`}
 										>
-											{order.status}
+											{getStatusLabel(order.status)}
 										</span>
 									</td>
 								</tr>
@@ -136,9 +158,11 @@
 		>
 			<div>
 				<div class="p-6">
-					<h3 class="text-lg leading-none font-semibold tracking-tight">Active Payment Channels</h3>
+					<h3 class="text-lg leading-none font-semibold tracking-tight">
+						{m.order_history_payment_channels_title()}
+					</h3>
 					<p class="mt-1 text-sm text-muted-foreground">
-						Your verified methods for automated checkout.
+						{m.order_history_payment_channels_description()}
 					</p>
 				</div>
 				<div class="space-y-4 p-6 pt-0">
@@ -157,18 +181,15 @@
 									stroke-width="2"
 									stroke-linecap="round"
 									stroke-linejoin="round"
-									><rect width="20" height="14" x="2" y="5" rx="2" /><line
-										x1="2"
-										x2="22"
-										y1="10"
-										y2="10"
-									/></svg
 								>
+									<rect width="20" height="14" x="2" y="5" rx="2" />
+									<line x1="2" x2="22" y1="10" y2="10" />
+								</svg>
 							</div>
 							<div class="space-y-0.5">
 								<p class="text-sm leading-none font-medium">{method.name}</p>
 								<p class="text-xs text-muted-foreground">
-									{method.description ?? 'No description provided.'}
+									{method.description ?? m.order_history_no_description()}
 								</p>
 							</div>
 						</div>
@@ -179,7 +200,7 @@
 				<button
 					class="w-full rounded-md border border-input bg-background px-4 py-2 text-center text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
 				>
-					Manage Methods
+					{m.order_history_manage_methods()}
 				</button>
 			</div>
 		</div>
@@ -187,27 +208,29 @@
 
 	<div class="rounded-xl border border-border bg-card text-card-foreground shadow-sm">
 		<div class="p-6">
-			<h3 class="text-lg leading-none font-semibold tracking-tight">Pending Order Breakdown</h3>
+			<h3 class="text-lg leading-none font-semibold tracking-tight">
+				{m.order_history_pending_breakdown_title()}
+			</h3>
 			<p class="mt-1 text-sm text-muted-foreground">
-				Items linked exclusively to your open queries.
+				{m.order_history_pending_breakdown_description()}
 			</p>
 		</div>
 		<div class="overflow-x-auto border-t border-border">
 			<table class="w-full text-left text-sm">
 				<thead class="border-b border-border bg-muted/50 font-medium text-muted-foreground">
 					<tr>
-						<th class="p-4">Product Name</th>
-						<th class="p-4 text-center">Quantity</th>
-						<th class="p-4 text-right">Unit Price</th>
-						<th class="p-4 text-right">Total</th>
+						<th class="p-4">{m.order_history_product_name()}</th>
+						<th class="p-4 text-center">{m.order_history_quantity()}</th>
+						<th class="p-4 text-right">{m.order_history_unit_price()}</th>
+						<th class="p-4 text-right">{m.order_history_total()}</th>
 					</tr>
 				</thead>
 				<tbody class="divide-y divide-border">
 					{#if allItems.filter((i) => i.orderId !== null).length === 0}
 						<tr>
-							<td colspan="4" class="p-8 text-center text-muted-foreground"
-								>No active pending items found.</td
-							>
+							<td colspan="4" class="p-8 text-center text-muted-foreground">
+								{m.order_history_no_pending_items()}
+							</td>
 						</tr>
 					{:else}
 						{#each allItems as item}
@@ -215,9 +238,9 @@
 								<tr class="transition-colors hover:bg-muted/40">
 									<td class="p-4 font-medium">
 										{item.product}
-										<span class="mt-0.5 block font-mono text-xs text-muted-foreground"
-											>ID: {item.productId}</span
-										>
+										<span class="mt-0.5 block font-mono text-xs text-muted-foreground">
+											{m.order_history_id_label()}: {item.productId}
+										</span>
 									</td>
 									<td class="p-4 text-center font-mono">{item.quantity}</td>
 									<td class="p-4 text-right font-mono">ETB {item.price.toFixed(2)}</td>

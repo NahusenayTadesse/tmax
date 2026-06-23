@@ -11,32 +11,33 @@
 		ArrowRightIcon
 	} from '@lucide/svelte';
 	import { fly } from 'svelte/transition';
+	import * as m from '$lib/paraglide/messages.js';
 
 	const supportServices = [
 		{
 			icon: InfoIcon,
-			title: 'Product Information',
-			text: 'Get clear details about product features, usage, compatibility, and specifications.'
+			title: m.warranty_product_information_title,
+			text: m.warranty_product_information_text
 		},
 		{
 			icon: ShieldCheckIcon,
-			title: 'Warranty Assistance',
-			text: 'Receive support for warranty-related questions and after-purchase service needs.'
+			title: m.warranty_assistance_title,
+			text: m.warranty_assistance_text
 		},
 		{
 			icon: WrenchIcon,
-			title: 'Technical Support',
-			text: 'Our team is ready to help with technical questions and product guidance.'
+			title: m.warranty_technical_support_title,
+			text: m.warranty_technical_support_text
 		},
 		{
 			icon: RefreshCcwIcon,
-			title: 'Product Replacement Guidance',
-			text: 'Get assistance with replacement guidance when a product support case requires it.'
+			title: m.warranty_replacement_guidance_title,
+			text: m.warranty_replacement_guidance_text
 		},
 		{
 			icon: Building2Icon,
-			title: 'Corporate Customer Support',
-			text: 'Dedicated support for organizations, retailers, distributors, and bulk order customers.'
+			title: m.warranty_corporate_support_title,
+			text: m.warranty_corporate_support_text
 		}
 	];
 </script>
@@ -56,15 +57,13 @@
 				class="mx-auto inline-flex w-fit items-center gap-2 rounded-full border border-primary/20 bg-primary/10 px-4 py-1.5 text-xs font-bold tracking-widest text-primary uppercase backdrop-blur-xl"
 			>
 				<ShieldCheckIcon class="size-4" />
-				Warranty & Support
+				{m.warranty_badge()}
 			</div>
 
-			<h2 class="text-3xl font-black tracking-tight sm:text-5xl">We’re Here to Help</h2>
+			<h2 class="text-3xl font-black tracking-tight sm:text-5xl">{m.warranty_heading()}</h2>
 
 			<p class="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-				Our commitment to customer satisfaction continues long after your purchase. Contact our
-				support team for product information, warranty assistance, technical support, and
-				replacement guidance.
+				{m.warranty_description()}
 			</p>
 		</div>
 
@@ -81,9 +80,9 @@
 								<svelte:component this={service.icon} class="size-6" />
 							</div>
 
-							<h3 class="text-sm font-bold">{service.title}</h3>
+							<h3 class="text-sm font-bold">{service.title()}</h3>
 
-							<p class="mt-3 text-xs leading-relaxed text-muted-foreground">{service.text}</p>
+							<p class="mt-3 text-xs leading-relaxed text-muted-foreground">{service.text()}</p>
 						</CardContent>
 					</Card>
 				</div>
@@ -101,15 +100,14 @@
 					<HelpCircleIcon class="size-7" />
 				</div>
 
-				<h3 class="text-2xl font-black tracking-tight">Need Assistance?</h3>
+				<h3 class="text-2xl font-black tracking-tight">{m.warranty_need_assistance_title()}</h3>
 
 				<p class="text-sm leading-relaxed text-muted-foreground">
-					Contact our support team and we’ll be happy to assist with your product, warranty, or
-					service request.
+					{m.warranty_need_assistance_description()}
 				</p>
 
 				<Button href="/contact-us" size="lg" class="group mt-2 rounded-full">
-					Contact Support
+					{m.warranty_contact_support()}
 					<ArrowRightIcon class="ml-2 size-4 transition-transform group-hover:translate-x-1" />
 				</Button>
 			</div>

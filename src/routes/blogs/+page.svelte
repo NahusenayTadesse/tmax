@@ -3,6 +3,7 @@
 	import PortfolioFilters from '$lib/components/blogs/portfolio-filters.svelte';
 	import PortfolioGrid from '$lib/components/blogs/portfolio-grid.svelte';
 	import type { BlogItem } from '$lib/data/portfolio';
+	import * as m from '$lib/paraglide/messages.js';
 
 	let searchQuery = $state('');
 	let selectedCategory = $state<string | null>(null);
@@ -34,38 +35,20 @@
 </script>
 
 <svelte:head>
-	<title>TMAX Blog | Power Bank Guides, Charging Tips & Battery Safety</title>
-	<meta name="title" content="TMAX Blog | Power Bank Guides, Charging Tips & Battery Safety" />
-	<meta
-		name="description"
-		content="Read TMAX guides about power banks, fast charging, battery capacity, safe charging habits, product care, and same-day delivery in Addis Ababa."
-	/>
-	<meta
-		name="keywords"
-		content="TMAX blog, TMAX power bank, power bank Ethiopia, Addis Ababa power bank, fast charging tips, battery safety, 22.5W charging, power bank guide"
-	/>
+	<title>{m.blog_meta_title()}</title>
+	<meta name="title" content={m.blog_meta_title()} />
+	<meta name="description" content={m.blog_meta_description()} />
+	<meta name="keywords" content={m.blog_meta_keywords()} />
 
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content="https://tmax.et/blog" />
-	<meta
-		property="og:title"
-		content="TMAX Blog | Power Bank Guides, Charging Tips & Battery Safety"
-	/>
-	<meta
-		property="og:description"
-		content="Explore practical TMAX articles about choosing the right power bank, understanding fast charging, battery safety, and daily backup power."
-	/>
+	<meta property="og:title" content={m.blog_meta_title()} />
+	<meta property="og:description" content={m.blog_og_description()} />
 	<meta property="og:image" content="https://tmax.et/logo.png" />
 
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta
-		name="twitter:title"
-		content="TMAX Blog | Power Bank Guides, Charging Tips & Battery Safety"
-	/>
-	<meta
-		name="twitter:description"
-		content="Helpful TMAX power bank guides, charging tips, safety advice, and product care articles."
-	/>
+	<meta name="twitter:title" content={m.blog_meta_title()} />
+	<meta name="twitter:description" content={m.blog_twitter_description()} />
 	<meta name="twitter:image" content="https://tmax.et/logo.png" />
 
 	<link rel="canonical" href="https://tmax.et/blog" />
@@ -79,15 +62,15 @@
 			<PortfolioFilters
 				portfolioItems={data?.portfolioItems}
 				bind:searchQuery
-				placeholder="Search power bank guides"
+				placeholder={m.blog_search_placeholder()}
 				bind:selectedEventType={selectedCategory}
 			/>
 		</div>
 
 		<div class="mb-6 text-center">
 			<p class="text-sm text-muted-foreground">
-				Showing <span class="font-semibold text-foreground">{resultsCount}</span>
-				{resultsCount === 1 ? ' article' : ' articles'}
+				{m.blog_showing()} <span class="font-semibold text-foreground">{resultsCount}</span>
+				{resultsCount === 1 ? m.blog_article_singular() : m.blog_article_plural()}
 			</p>
 		</div>
 
