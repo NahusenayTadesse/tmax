@@ -5,9 +5,10 @@ import { dev } from '$app/environment';
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
 import { PROMPT, searchProductsForAi } from '$lib/server/prompt';
-import { OPENAI_KEY, CHAT_LIMIT_SECRET } from '$env/static/private';
+import { GEMINI_KEY, CHAT_LIMIT_SECRET } from '$env/static/private';
 
-import OpenAI from 'openai';
+// Import Google Gen AI SDK
+import { GoogleGenAI, Type, type Content, type FunctionResponse } from '@google/genai';
 
 const CHAT_LIMIT_COOKIE = 'tmx_chat_limit';
 
@@ -15,11 +16,13 @@ const MAX_AI_PROMPTS = 10;
 const LIMIT_WINDOW_MS = 24 * 60 * 60 * 1000;
 const COOKIE_MAX_AGE_SECONDS = 24 * 60 * 60;
 
-const openai = new OpenAI({
-	apiKey: OPENAI_KEY
+// Initialize the Google Gen AI Client
+const ai = new GoogleGenAI({
+	apiKey: GEMINI_KEY
 });
 
-const MODEL = 'gpt-5.4-mini';
+// Using a standard high-efficiency Gemini model
+const MODEL = 'gemini-2.5-flash';
 
 type ChatMessage = {
 	role: 'user' | 'assistant' | 'system';
@@ -118,76 +121,62 @@ function checkAndUpdateChatLimit(cookies: import('@sveltejs/kit').Cookies) {
 	};
 }
 
+// Map tools to Gemini's Function Declarations schema
 const tools = [
 	{
-		type: 'function',
-		name: 'searchProductsForAi',
-		description:
-			'Search the public TMax Electronics product catalog. Use only for TMax product-related questions such as product availability, prices, categories, tags, and recommendations.',
-		parameters: {
-			type: 'object',
-			properties: {
-				query: {
-					type: ['string', 'null'],
-					description:
-						'The product search query, for example "charger", "power bank", "earbuds", or "USB flash drive".'
-				},
-				categoryName: {
-					type: ['string', 'null'],
-					description:
-						'Optional product category name, for example "Mobile Accessories", "Power Solutions", "Storage Devices", "Audio Devices", or "Smart Electronics".'
-				},
-				tagNames: {
-					type: ['array', 'null'],
-					description: 'Optional product tags to filter by.',
-					items: {
-						type: 'string'
+		functionDeclarations: [
+			{
+				name: 'searchProductsForAi',
+				description:
+					'Search the public TMax Electronics product catalog. Use only for TMax product-related questions such as product availability, prices, categories, tags, and recommendations.',
+				parameters: {
+					type: Type.OBJECT,
+					properties: {
+						query: {
+							type: Type.STRING,
+							description:
+								'The product search query, for example "charger", "power bank", "earbuds".'
+						},
+						categoryName: {
+							type: Type.STRING,
+							description: 'Optional product category name, for example "Mobile Accessories".'
+						},
+						tagNames: {
+							type: Type.ARRAY,
+							description: 'Optional product tags to filter by.',
+							items: {
+								type: Type.STRING
+							}
+						},
+						inStockOnly: {
+							type: Type.BOOLEAN,
+							description: 'Whether to return only products that appear to be in stock.'
+						},
+						limit: {
+							type: Type.INTEGER,
+							description: 'Maximum number of products to return. Must be between 1 and 8.'
+						}
 					}
-				},
-				inStockOnly: {
-					type: ['boolean', 'null'],
-					description: 'Whether to return only products that appear to be in stock.'
-				},
-				limit: {
-					type: ['integer', 'null'],
-					description: 'Maximum number of products to return. Must be between 1 and 8.'
 				}
-			},
-			required: ['query', 'categoryName', 'tagNames', 'inStockOnly', 'limit'],
-			additionalProperties: false
-		},
-		strict: true
+			}
+		]
 	}
-] as const;
+];
 
-function cleanToolArgs(args: unknown) {
+function cleanToolArgs(args: any) {
 	if (!args || typeof args !== 'object') {
 		return {};
 	}
 
-	const value = args as {
-		query?: unknown;
-		categoryName?: unknown;
-		tagNames?: unknown;
-		inStockOnly?: unknown;
-		limit?: unknown;
-	};
-
 	return {
-		query: typeof value.query === 'string' ? value.query : undefined,
-
-		categoryName: typeof value.categoryName === 'string' ? value.categoryName : undefined,
-
-		tagNames: Array.isArray(value.tagNames)
-			? value.tagNames.filter((tag): tag is string => typeof tag === 'string')
+		query: typeof args.query === 'string' ? args.query : undefined,
+		categoryName: typeof args.categoryName === 'string' ? args.categoryName : undefined,
+		tagNames: Array.isArray(args.tagNames)
+			? args.tagNames.filter((tag: unknown): tag is string => typeof tag === 'string')
 			: undefined,
-
-		inStockOnly: typeof value.inStockOnly === 'boolean' ? value.inStockOnly : undefined,
-
+		inStockOnly: typeof args.inStockOnly === 'boolean' ? args.inStockOnly : undefined,
 		limit:
-			typeof value.limit === 'number'
-				? Math.max(1, Math.min(8, Math.floor(value.limit)))
-				: undefined
+			typeof args.limit === 'number' ? Math.max(1, Math.min(8, Math.floor(args.limit))) : undefined
 	};
 }
 
@@ -213,100 +202,103 @@ export const POST: RequestHandler = async ({ request, cookies }) => {
 			);
 		}
 
+		// Keep last 10 messages and transform OpenAI format to Gemini 'Content' format
 		const safeMessages = messages
 			.filter((message) => message.role === 'user' || message.role === 'assistant')
 			.slice(-10);
 
-		const input = safeMessages.map((message) => ({
-			role: message.role,
-			content: message.content
+		const contents: Content[] = safeMessages.map((message) => ({
+			role: message.role === 'assistant' ? 'model' : 'user',
+			parts: [{ text: message.content }]
 		}));
 
 		/**
 		 * First request:
-		 * The model either answers normally or asks to call searchProductsForAi.
+		 * Send history and configurations to Gemini.
 		 */
-
-		const firstResponse = await openai.responses.create({
+		const firstResponse = await ai.models.generateContent({
 			model: MODEL,
-			instructions: PROMPT,
-			input,
-			tools,
-			tool_choice: 'auto',
-			parallel_tool_calls: false
+			contents: contents,
+			config: {
+				systemInstruction: PROMPT,
+				tools: tools
+			}
 		});
 
-		const functionCalls = firstResponse.output.filter((item) => item.type === 'function_call');
+		const functionCalls = firstResponse.functionCalls;
 
 		/**
-		 * If the model did not call a function, return the normal answer.
+		 * If Gemini did not call a function, return the final text response.
 		 */
-		if (!functionCalls.length) {
+		if (!functionCalls || functionCalls.length === 0) {
 			return json({
-				reply: firstResponse.output_text || 'Sorry, I could not answer that right now.'
+				reply: firstResponse.text || 'Sorry, I could not answer that right now.'
 			});
 		}
 
 		/**
-		 * Important:
-		 * Preserve the model output, including function_call items,
-		 * before adding function_call_output items.
+		 * To chain a multi-turn conversation back to Gemini with function tool execution,
+		 * we append both the model's structure generation output and our function call output.
 		 */
-		const followUpInput = [...input, ...firstResponse.output];
+		const followUpContents = [...contents];
 
-		for (const item of functionCalls) {
-			if (item.name !== 'searchProductsForAi') {
-				followUpInput.push({
-					type: 'function_call_output',
-					call_id: item.call_id,
-					output: JSON.stringify({
-						error: 'Unknown function call.'
-					})
+		// 1. Append the model's turnaround containing the function call requests
+		if (firstResponse.candidates?.[0]?.content) {
+			followUpContents.push(firstResponse.candidates[0].content);
+		}
+
+		const functionResponses: FunctionResponse[] = [];
+
+		for (const call of functionCalls) {
+			if (call.name !== 'searchProductsForAi') {
+				functionResponses.push({
+					name: call.name,
+					response: { error: 'Unknown function call.' }
 				});
-
 				continue;
 			}
 
 			try {
-				const rawArgs = JSON.parse(item.arguments || '{}');
-				const args = cleanToolArgs(rawArgs);
-
+				const args = cleanToolArgs(call.args);
 				const result = await searchProductsForAi(args);
 
-				followUpInput.push({
-					type: 'function_call_output',
-					call_id: item.call_id,
-					output: JSON.stringify(result)
+				functionResponses.push({
+					name: call.name,
+					response: { result: result }
 				});
 			} catch (error) {
 				console.error('searchProductsForAi failed:', error);
-
-				followUpInput.push({
-					type: 'function_call_output',
-					call_id: item.call_id,
-					output: JSON.stringify({
+				functionResponses.push({
+					name: call.name,
+					response: {
 						error:
 							'Product search failed. Tell the user to visit the Shop page or contact TMax support.'
-					})
+					}
 				});
 			}
 		}
 
+		// 2. Append the execution output to the conversation history under the 'function' role
+		followUpContents.push({
+			role: 'function',
+			parts: functionResponses.map((res) => ({ functionResponse: res }))
+		});
+
 		/**
 		 * Second request:
-		 * The model now sees the product search result and writes the final reply.
+		 * Provide the tool outputs so Gemini can form its final string.
 		 */
-		const finalResponse = await openai.responses.create({
+		const finalResponse = await ai.models.generateContent({
 			model: MODEL,
-			instructions: PROMPT,
-			input: followUpInput,
-			tools,
-			tool_choice: 'auto',
-			parallel_tool_calls: false
+			contents: followUpContents,
+			config: {
+				systemInstruction: PROMPT,
+				tools: tools
+			}
 		});
 
 		return json({
-			reply: finalResponse.output_text || 'Sorry, I could not answer that right now.'
+			reply: finalResponse.text || 'Sorry, I could not answer that right now.'
 		});
 	} catch (error) {
 		console.error(error);

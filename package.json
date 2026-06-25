@@ -63,6 +63,7 @@
 	},
 	"dependencies": {
 		"@friendofsvelte/tipex": "^0.1.1",
+		"@google/genai": "^2.10.0",
 		"@lucide/svelte": "^1.17.0",
 		"@prgm/sveltekit-progress-bar": "^3.0.2",
 		"@tanstack/table-core": "^8.21.3",
@@ -75,7 +76,6 @@
 		"jspdf-autotable": "^5.0.8",
 		"mode-watcher": "^1.1.0",
 		"nodemailer": "^8.0.10",
-		"openai": "^6.42.0",
 		"papaparse": "^5.5.3",
 		"svelte-sonner": "^1.1.1",
 		"sveltekit-flash-message": "^2.4.6"
