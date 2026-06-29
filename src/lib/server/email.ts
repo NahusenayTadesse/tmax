@@ -1,20 +1,20 @@
 import nodemailer from 'nodemailer';
 
-import { HOST, USER, PASSWORD, PORT } from '$env/static/private';
+import { SMTP_HOST, SMTP_USER, SMTP_PASSWORD, SMTP_PORT } from '$env/static/private';
 
 const transporter = nodemailer.createTransport({
-	host: HOST,
-	port: PORT,
+	host: SMTP_HOST,
+	port: SMTP_PORT,
 	secure: true,
 	auth: {
-		user: USER,
-		pass: PASSWORD
+		user: SMTP_USER,
+		pass: SMTP_PASSWORD
 	}
 });
 
 export const sendEmail = async (to: string, subject: string, html: string) => {
 	await transporter.sendMail({
-		from: USER,
+		from: `"Support Team" <${SMTP_USER}>`,
 		to,
 		subject,
 		html
@@ -328,18 +328,18 @@ export const customerContactTemplate = (name: string, subject: string) => ({
 export async function sendResetPasswordEmail(toEmail: string, newPassword: string) {
 	// Create transporter
 	const transporter = nodemailer.createTransport({
-		host: HOST, // e.g smtp.gmail.com
-		port: PORT, // e.g 465 or 587
+		host: SMTP_HOST, // e.g smtp.gmail.com
+		port: SMTP_PORT, // e.g 465 or 587
 		secure: true, // true for 465, false for 587
 		auth: {
-			user: USER, // sender email
-			pass: PASSWORD // sender email password / app password
+			user: SMTP_USER, // sender email
+			pass: SMTP_PASSWORD // sender email password / app password
 		},
 		authMethod: 'PLAIN'
 	});
 
 	const mailOptions = {
-		from: `"Support Team" <${USER}>`,
+		from: `"Support Team" <${SMTP_USER}>`,
 		to: toEmail,
 		subject: 'Password Reset',
 		text: `Your password has been reset. Your new password is: ${newPassword}`,
@@ -350,7 +350,7 @@ export async function sendResetPasswordEmail(toEmail: string, newPassword: strin
     <p>Please log in and change it immediately for security reasons.</p>
   `,
 		envelope: {
-			from: `"Support Team" <${USER}>`, // <-- important
+			from: `"Support Team" <${SMTP_USER}>`, // <-- important
 			to: toEmail
 		}
 	};

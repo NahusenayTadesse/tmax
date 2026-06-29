@@ -114,6 +114,7 @@
 	"footer_connect_with_us": "Connect With Us",
 	"footer_social_description": "Stay updated with the latest tech drops.",
 	"footer_copyright": "© {year} Tmax Electronics. All rights reserved.",
+	"footer_powered_by": "Developed by",
 
 	"HEADER": "HEADER",
 	"header_logo_alt": "Tmax Electronics Logo",
@@ -629,5 +630,20 @@
 	"account_menu_my_account": "My Account",
 	"account_menu_change_password": "Change Password",
 	"account_menu_logging_out": "Logging Out",
-	"account_menu_logout": "Logout"
+	"account_menu_logout": "Logout",
+
+
+    
+    "WANE TRADING PLC": "WANE TRADING PLC",
+	"tagline": "Evolution of Wane Trading PLC",
+  "title": "A Focused Operating Group",
+  "description": "Founded in 2016 as an import and distribution business in Addis Ababa, Wane Trading PLC has evolved into a decentralized ecosystem. Today, each of our divisions operates with dedicated leadership, a distinct market promise, and an agile operating rhythm.",
+  "infraTitle": "Shared Infrastructure",
+  "infraDescription": "We empower our business divisions by handling the fundamentals. By leveraging a centralized backbone, every team stays closely connected to their customers without the friction of rebuilding core business basics.",
+  "tech": "Technology",
+  "finance": "Finance",
+  "legal": "Legal",
+  "procurement": "Procurement",
+  "brand": "Brand Infrastructure",
+  "cta": "Explore Our Divisions"
 }

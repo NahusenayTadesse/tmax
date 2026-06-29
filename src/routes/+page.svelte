@@ -22,6 +22,7 @@
 	import ImgSeparator from '$lib/components/imgSeparator.svelte';
 	import BlogCard from '$lib/components/blogs/portfolio-card.svelte';
 	import ProductSeparator from '$lib/components/productSeparator.svelte';
+	import WaneSection from '$lib/components/waneSection.svelte';
 
 	// Keeps setLocale available without changing this page UI.
 	void setLocale;
@@ -128,6 +129,9 @@
 		</div>
 	</section>
 {/if}
+<ImgSeparator />
+  
+<WaneSection />
 
 <ImgSeparator />
 {#if data?.imagesList?.length > 0}

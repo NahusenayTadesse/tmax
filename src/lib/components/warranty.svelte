@@ -3,7 +3,6 @@
 	import { Card, CardContent } from '$lib/components/ui/card';
 	import {
 		ShieldCheckIcon,
-		HelpCircleIcon,
 		InfoIcon,
 		WrenchIcon,
 		RefreshCcwIcon,
@@ -77,7 +76,7 @@
 							<div
 								class="mb-5 flex size-12 items-center justify-center rounded-2xl border border-primary/10 bg-primary/10 text-primary transition duration-500 group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground"
 							>
-								<svelte:component this={service.icon} class="size-6" />
+								<service.icon class="size-6" />
 							</div>
 
 							<h3 class="text-sm font-bold">{service.title()}</h3>

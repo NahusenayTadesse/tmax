@@ -188,8 +188,11 @@
 			</div>
 		</div>
 
-		<div class="mt-8 pt-4 text-center text-xs text-muted-foreground/60">
-			<p>{m.footer_copyright({ year: new Date().getFullYear() })}</p>
+		<div class="mt-8 pt-4 flex flex-col gap-4 justify-center items-center text-center  text-muted-foreground/60">
+			<p class="text-sm">{m.footer_copyright({ year: new Date().getFullYear() })}</p>
+			<p class="flex flex-row gap-3 text-xs">{m.footer_powered_by()}  <a href="https://digitalconstruct.io" class="text-primary hover:underline" target="_blank" rel="noopener noreferrer"> 
+			  <img src="/digitalLogo.png" alt="Digital Construct Logo" class="inline h-4 w-auto hover:scale-110 transition-transform ease-in-out duration-400" />
+			</a></p>
 		</div>
 	</div>
-</footer>
+</footer>3

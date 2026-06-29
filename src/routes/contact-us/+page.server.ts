@@ -2,7 +2,7 @@ import { superValidate, message } from 'sveltekit-superforms';
 import { zod4 } from 'sveltekit-superforms/adapters';
 import { eq } from 'drizzle-orm';
 import { sendEmail, customerContactTemplate, adminContactTemplate } from '$lib/server/email';
-import { USER } from '$env/static/private';
+import { SMTP_USER } from '$env/static/private';
 import { contactSchema } from './schema';
 import { db } from '$lib/server/db';
 import { contactMessages } from '$lib/server/db/schema';
@@ -32,7 +32,7 @@ export const actions: Actions = {
 				.values({ name, phone: phoneNumber, email, subject, message: contactMessage });
 
 			const adminMail = adminContactTemplate(form.data);
-			sendEmail(USER, adminMail.subject, adminMail.html);
+			sendEmail(SMTP_USER, adminMail.subject, adminMail.html);
 
 			const userMail = customerContactTemplate(name, subject);
 			sendEmail(email, userMail.subject, userMail.html);

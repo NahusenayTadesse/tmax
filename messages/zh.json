@@ -114,6 +114,7 @@
 	"footer_connect_with_us": "与我们联系",
 	"footer_social_description": "随时获取最新科技新品动态。",
 	"footer_copyright": "© {year} Tmax Electronics. 保留所有权利。",
+	"footer_powered_by": "网站设计与开发",
 
 	"HEADER": "页眉",
 	"header_logo_alt": "Tmax Electronics 标志",
@@ -628,5 +629,21 @@
 	"account_menu_my_account": "我的账户",
 	"account_menu_change_password": "修改密码",
 	"account_menu_logging_out": "正在退出登录",
-	"account_menu_logout": "退出登录"
+	"account_menu_logout": "退出登录",
+
+
+
+  "WANE TRADING PLC": "Wane Trading PLC",
+  "tagline": "Wane Trading PLC 的发展历程",
+  "title": "聚焦的高效运营集团",
+  "description": "Wane Trading PLC 于 2016 年在亚的斯亚贝巴成立，最初从事进出口和分销业务。如今，它已发展成为一个去中心化的生态系统。我们的每个业务部门都拥有独立的领导团队、明确的市场承诺和敏捷的运营节奏。",
+  "infraTitle": "共享基础设施",
+  "infraDescription": "我们通过处理底层核心业务来赋能各个业务部门。依托集中的骨干支持，每个团队都能紧密贴近客户，而无需耗费精力去重复构建核心业务基础。",
+  "tech": "技术支持",
+  "finance": "财务金融",
+  "legal": "法律法务",
+  "procurement": "采购管理",
+  "brand": "品牌基础设施",
+  "cta": "探索我们的业务部门"
+
 }

@@ -7,6 +7,8 @@ node_modules
 .wrangler
 /.svelte-kit
 /build
+build.tar.gz
+build.tar
 
 # OS
 .DS_Store

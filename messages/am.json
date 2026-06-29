@@ -114,6 +114,7 @@
 	"footer_connect_with_us": "ከእኛ ጋር ይገናኙ",
 	"footer_social_description": "በአዳዲስ የቴክኖሎጂ ምርቶች ወቅታዊ ይሁኑ።",
 	"footer_copyright": "© {year} Tmax Electronics. መብቱ በሕግ የተጠበቀ ነው።",
+	"footer_powered_by": "የተሰራው በ",
 
 	"HEADER": "HEADER",
 	"header_logo_alt": "የTmax Electronics ሎጎ",
@@ -629,5 +630,19 @@
 	"account_menu_my_account": "የእኔ መለያ",
 	"account_menu_change_password": "የይለፍ ቃል ቀይር",
 	"account_menu_logging_out": "በመውጣት ላይ",
-	"account_menu_logout": "ውጣ"
+	"account_menu_logout": "ውጣ",
+
+    
+    "Wane Trading Co.": "ዋኔ ትሬዲንግ ኃ/የተ/የግ/ማህበር",
+	"tagline": "የዋኔ ትሬዲንግ ኃ/የተ/የግ/ማህበር እድገት",
+  "title": "ትኩረት ያደረገ የስራ ማስኬጃ ግሩፕ",
+  "description": "በ2016 እ.ኤ.አ በአዲስ አበባ በማስመጣት እና በማከፋፈል ስራ የተመሰረተው ዋኔ ትሬዲንግ ኃ/የተ/የግ/ማህበር፣ ዛሬ ወደ ተማከለ ስነ-ምህዳር አድጓል። በአሁኑ ጊዜ እያንዳንዱ ክፍላችን በራሱ መሪነት፣ ልዩ የገበያ ቃል ኪዳን እና ቀልጣፋ የስራ ሂደት ይንቀሳቀሳል።",
+  "infraTitle": "የጋራ መሰረተ ልማት",
+  "infraDescription": "መሰረታዊ ስራዎችን በባለሙያ በመያዝ የስራ ክፍሎቻችንን እናበረታታለን። የተማከለ የጀርባ አጥንትን በመጠቀም፣ እያንዳንዱ ቡድን መሰረታዊ የንግድ ጉዳዮችን እንደገና የመገንባት ውጥረት ሳይኖርበት ከደንበኞቹ ጋር ተቀራርቦ እንዲቆይ ያስችለዋል።",
+  "tech": "ቴክኖሎጂ",
+  "finance": "ፋይናንስ",
+  "legal": "ህጋዊ ጉዳዮች",
+  "procurement": "ግዢ እና አቅርቦት",
+  "brand": "የብራንድ መሰረተ ልማት",
+  "cta": "ክፍሎቻችንን ይጎብኙ"
 }
